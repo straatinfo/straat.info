@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">straat.info</string>
+    <string name="Loading">Loading...</string>
+    <string name="login_new_user">New User? Click here</string>
+    <string name="login_sign_in">Existing user? Log in:</string>
 </resources>

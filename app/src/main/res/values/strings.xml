@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">straat.info</string>
     <string name="Loading">Loading...</string>
+
     <string name="login_new_user">New User? Click here</string>
     <string name="login_sign_in">Existing user? Log in:</string>
+    <string name="login_enter_email_add">Enter your E-mail address</string>
+    <string name="login_enter_password">Enter your password</string>
+    <string name="login_button_text">LOGIN</string>
+    <string name="login_forgot_password">Forgot Password?</string>
 </resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--top shadow-->
+    <item>
+        <shape android:shape="rectangle">
+
+            <solid android:color="#ccc"/>
+            <corners android:radius="@dimen/login_et_padding" />
+            <padding
+                android:top="3dp"
+            />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white"/>
+            <corners android:radius="@dimen/login_et_padding" />
+            <padding
+                android:top="@dimen/login_et_padding"
+                android:right="@dimen/login_et_padding"
+                android:left="@dimen/login_et_padding"
+                android:bottom="@dimen/login_et_padding"
+            />
+        </shape>
+    </item>
+</layer-list>

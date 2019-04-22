@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/color_blue" />
+            <corners android:topRightRadius="@dimen/registration_nav_radius"
+                     android:bottomRightRadius="@dimen/registration_nav_radius" />
+        </shape>
+    </item>
+    <item android:top="@dimen/registration_nav_dp" android:right="@dimen/registration_nav_dp" android:bottom="@dimen/registration_nav_dp" >
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/white" />
+            <corners android:topRightRadius="@dimen/registration_nav_radius"
+                     android:bottomRightRadius="@dimen/registration_nav_radius" />
+        </shape>
+    </item>
+
+</layer-list>

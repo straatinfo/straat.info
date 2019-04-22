@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle" xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/color_green" />
+    <corners android:radius="@dimen/login_et_padding"/>
+    <padding
+        android:top="@dimen/login_et_padding"
+        android:right="@dimen/login_et_padding"
+        android:left="@dimen/login_et_padding"
+        android:bottom="@dimen/login_et_padding"
+    />
+</shape>

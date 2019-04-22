@@ -5,4 +5,6 @@
     <dimen name="margin_bottom">10dp</dimen>
 
     <dimen name="login_et_padding">10dp</dimen>
+    <dimen name="registration_nav_dp">3dp</dimen>
+    <dimen name="registration_nav_radius">50dp</dimen>
 </resources>

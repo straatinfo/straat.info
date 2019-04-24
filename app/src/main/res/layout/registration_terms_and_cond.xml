@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/base_padding"
+              android:background="@color/color_default">
+
+    <TextView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Terms and Condition"/>
+
+    <TextView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="In case of urgency, first call 122
+
+The app straat.info is meant to support neighbourhood watch. The use of this app for any other means is not permitted.
+
+The app can in no case be seen as a legal replacement for communication with professionals like police, hospitals etc.
+
+In case of urgency always first call 112
+
+Seqretary b.v. is the owner of the app straat.info and accepts no liability of any kind for damages etc using this app. Seqretary b.v. can make changes to these general terms.
+ 
+On privacy and your data:
+In order to protect your personal data, you´ll be using a chat name in the app straat.info. You decide what name you´re going to use. Neither your phone number nor other personal data will be shown in the public part of the app.
+When you are member of a team, your team member will see your name and nothing else. So, they don´t see your phone number, address etc.
+The coordinator of your team does have full access to your data. With that he can check if the right person is in his team.
+When requested, municipalities and police can get access to your personal data and the data that is generated with the app straat.info.
+ 
+Reports and other data created with this app will be destroyed after a period of approx. six months. Teams and municipalities receive copies of the report data or part of the data that is generated with this app.
+We do not analyse the usage of this app other than to improve our services.
+We do not sell your data to other organisations.
+You can end the usage of the app straat.info and delete your personal data by requesting such through an email send to us.
+When you accept these general terms, you accept the usage of all data as described here."/>
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+        <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                style="@style/registration_button_cancel_style"
+                />
+
+        <Button
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accept Terms and Condition"
+                style="@style/registration_button_style"
+        />
+
+    </RelativeLayout>
+
+</LinearLayout>

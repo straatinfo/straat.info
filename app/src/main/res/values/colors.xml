@@ -10,4 +10,7 @@
     <color name="color_green_dark">#68A039</color>
     <color name="color_blue_dark">#4C6883</color>
     <color name="color_blue">#BDCADC</color>
+    <color name="color_registration_bg">#E9E9EF</color>
+    <color name="color_cancel">#C91F37</color>
+    <color name="color_cancel_dark">#8F1D21</color>
 </resources>

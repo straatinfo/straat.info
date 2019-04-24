@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/base_padding"
+              android:orientation="vertical"
+              android:background="@color/color_registration_bg">
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Make a Choice"
+    />
+
+    <RadioButton android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:text="I am an Individual User"
+    />
+
+    <RadioButton android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:text="I like to join an existing team"
+    />
+
+    <RadioButton android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:text="I like to create a new team"
+    />
+
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/login_button_style"
+            android:text="Register"
+    />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="When you are a volunteer, for example want to join a neighbourhood watch, then choose `yes`. When you are going to use this app as a professional, please choose ´no´."
+    />
+
+</LinearLayout>

@@ -12,13 +12,13 @@
         <activity android:name=".Controllers.RegistrationStep1Activity">
         </activity>
         <activity android:name=".Controllers.InitialActivity">
+        </activity>
+        <activity android:name=".Controllers.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity android:name=".Controllers.LoginActivity">
         </activity>
     </application>
 

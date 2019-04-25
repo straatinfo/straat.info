@@ -21,7 +21,7 @@
             android:layout_marginBottom="8dp"
             />
     <TextView
-            android:text="@string/Loading"
+            android:text="@string/splash_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView"

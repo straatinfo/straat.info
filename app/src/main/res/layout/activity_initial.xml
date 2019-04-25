@@ -16,7 +16,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/textView"/>
     <TextView
-            android:text="@string/Loading"
+            android:text="@string/splash_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView"

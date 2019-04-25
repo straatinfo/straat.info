@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">straat.info</string>
+
+    <!-- Splash -->
+    <string name="splash_loading" translatable="false">Loading...</string>
+
+    <!-- Login -->
+    <string name="login_new_user" translatable="false">New User? Click here :D</string>
+    <string name="login_sign_in" translatable="false">Existing user? Log in:</string>
+    <string name="login" translatable="false">Login</string>
+
+    <!-- Home -->
+    <string name="home_suspicious_desc" translatable="false">Hier kunt u een situatie die u verdacht vindt, delen met andere gebruikers in de app. Zodra meer mensen de situatie verdacht vinden, neem dan contact op met de politie of andere relevante instantie (bijv. brandweer). NB bij spoed altijd eerst 112 bellen!</string>
+    <string name="home_public_space_title" translatable="false">Melding Openbare Ruimte</string>
+    <string name="home_public_space_desc" translatable="false">Hier kunt een melding openbare ruimte (bijv grofvuil, losliggende stoeptegels etc) doorgeven. Deze wordt direct naar de gemeente gestuurd.</string>
+    <string name="home_no_available_reports" translatable="false">Geen beschikbare rapporten</string>
+    <string name="home_fetching_near_reports" translatable="false">rapporten ophalen</string>
+    <string name="home_unidentified_location" translatable="false">TDeze locatie is niet geïdentificeerd</string>
+    <string name="home_suspicious_situation" translatable="false">Verdachte Situatie</string>
+
+    <!-- Report -->
+    <string name="report_emergency_notif_desc" translatable="false">Spoed? Bel eerst 112</string>
+    <string name="report_persons_involved_desc" translatable="false">Vul de kenmerken van de betrokken persoon (personen) in, zoals lengte, man / vrouw, haarkleur, snor, baard, kleding, houding, tatoeage of andere opvallende details.</string>
+    <string name="report_send_report_success" translatable="false">Deze is vanaf nu voor iedereen te zien op straat.info. Een melding openbare ruimte wordt bovendien naar de gemeente gestuurd.</string>
+    <string name="report_report_success_dialog_title" translatable="false">Dank voor uw melding!</string>
+    <string name="report_emergency_notification" translatable="false">Spoedmelding</string>
+    <string name="report_select_main_category" translatable="false">Selecteer Hoofdcategorie</string>
+    <string name="report_select_sub_category" translatable="false">Selecteer Subcategorie</string>
+    <string name="report_send_report" translatable="false">Verzend rapport</string>
+
+    <!-- Error Messages -->
+    <string name="error_invalid_postal_code" translatable="false">The postal code and/or house number entry seems to be incorrect. Please fill in the correct postal code and house number</string>
+    <string name="error_response" translatable="false">Foutreactie</string>
+    <string name="error_fill_up_all_fields" translatable="false">Vul alle lege velden in</string>
+    <string name="error_invalid_code" translatable="false">Ongeldige code</string>
+    <string name="error_wrong_input" translatable="false">Verkeerde invoer</string>
+    <string name="error_invalid_email" translatable="false">Dit mailadres is al in gebruik. Voer een ander emailadres is of neem contact op via formulier op www.straat.info </string>
+    <string name="error_invalid_password" translatable="false">Je wachtwoord moet in ieder geval 8 tekens bevatten, waarvan tenminste 1 letter en 1 cijfer</string>
+    <string name="error_invalid_firstname" translatable="false">Ontbrekende voornaam</string>
+    <string name="error_invalid_lastname" translatable="false">Ontbrekende achternaam</string>
+    <string name="error_taken_username" translatable="false">Deze naam is al in gebruik of niet toegelaten. Kies een andere naam.</string>
+    <string name="error_invalid_username" translatable="false">Uw gebruikersnaam is niet geldig</string>
+    <string name="error_invalid_post_number" translatable="false">De postcode en/of huisnummer invoer lijken niet te kloppen. Vul de juiste postcode en huisnummer in.</string>
+    <string name="error_invalid_mobile_number" translatable="false">Dit nummer is niet correct of al in gebruik. Voer een ander nummer in of neem contact op via info@straat.info</string>
+    <string name="error_camera_not_available" translatable="false">Camera niet beschikbaar</string>
+    <string name="error_permission_denied" translatable="false">Geen toestemming</string>
+    <string name="error_invalid_username_password" translatable="false">ongeldige gebruikersnaam of wachtwoord</string>
+    <string name="error_failed" translatable="false">Mislukt</string>
+    <string name="error_error_occured" translatable="false">Er is een fout opgetreden, probeer het opnieuw.</string>
+    <string name="error_try_again" translatable="false">Probeer het opnieuw</string>
+    <string name="error_image_not_found" translatable="false">Afbeelding niet gevonden</string>
+    <string name="error_import_image_error" translatable="false">Er is een fout opgetreden bij het importeren van de afbeelding</string>
+    <string name="error_mobile_prefix_error" translatable="false">Het nummer dat je ingevoerd hebt, is geen mobiel nummer. Voer een 06 nummer in</string>
+    <string name="error_invalid_mobile_number_length" translatable="false">Het nummer dat je ingevoerd hebt, is niet 10 cijfers lang. Voer een 10 cijferig mobiel telefoonnummer in</string>
+    <string name="error_invalid_email_address" translatable="false">Dit mailadres is al in gebruik. Voer een ander emailadres if of neem contact op via formulier op www.straat.info</string>
+    <string name="error_invalid_report_desc" translatable="false">Controleer de inhoud van uw beschrijving</string>
+
+    <!-- Registration -->
+    <string name="registration_username_info" translatable="false">In dit veld vult u uw gebruikersnaam in. Alle andere gebruikers van de app straat.info zien alleen uw gebruikersnaam en dus niet uw mobiele nummer, eigen naam of andere gegevens.\nAls u lid bent van een team, dan zien de teamleden uw eigen naam, maar niet uw overige gegevens. De team coördinator ziet wel al uw gegevens. Hiermee kan de coördinator controleren of de juiste persoon in het team zit.\nDe gemeente en politie kunnen indien noodzakelijk inzage krijgen in uw gegevens.</string>
+    <string name="registration_reporter" translatable="false">Melder</string>
+    <string name="registration_username_info_title" translatable="false">gebruikersnaam info</string>
+    <string name="registration_title" translatable="false">Registratie</string>
+    <string name="registration_message" translatable="false">U heeft anders dan als vrijwilliger toegang gevraagd tot de app straat.info en u wilt een nieuw team starten. \nBinnenkort neemt straat.info contact met u op voor de vervolgstappen. \nAls u niet binnen vijf werkdagen reactie heeft ontvangen, zou u dan contact willen opnemen met ons via het mailadres info@straat.info?</string>
+    <string name="registration_success_desc" translatable="false">Registratie succes</string>
+    <string name="registration_fail_desc" translatable="false">Registratie mislukt</string>
+
+    <!-- Terms & Condition -->
+    <string name="tnc_always_call_112" translatable="false">Bel bij spoed altijd eerst 112\n\n\n De app straat.info is bedoeld voor het ondersteunen van buurtpreventie onder andere voor het doorgeven van meldingen aan de gemeente. Het gebruik van de app voor andere doeleinden, die niet binnen de gangbare uitleg van buurtpreventie passen, is niet toegestaan.\n\nDe app is nadrukkelijk niet bedoeld om het normale communicatie verkeer met instanties zoals de politie, de brandweer, ambulance en gemeenten te vervangen.\n\nBel bij spoed altijd eerst 112\n\nSeqretary b.v. is eigenaar van de app straat.info en aanvaardt geen enkele aansprakelijkheid voor schade op welke wijze dan ook, door het gebruik van de app. Seqretary b.v. kan de algemene voorwaarden wijzigen.\n\n\n\nOver privacy en jouw gegevens:\n\nOm je gegevens beter te beschermen, maakt de app straat.info gebruik van een chatnaam. Je mag zelf bepalen welke naam je daarvoor gebruikt. Je telefoonnummer en al je andere persoonlijke gegevens worden in het openbare deel van de app straat.info aan niemand bekend gemaakt.\n\nAls je lid bent van een team, dan zien je teamleden wel je naam, maar niet je overige gegevens. Zij zien dus niet je telefoonnummer, adres etc.\n\nDe teamcoördinator van je team heeft wel inzage in je gegevens. Hiermee kan de coördinator controleren of de juiste persoon in het team zit.\n\nDe gemeente en politie kunnen desgevraagd indien noodzakelijk inzage krijgen in jouw gegevens en gegevens die met deze app straat.info worden gegenereerd.\n\nDe meldingen met de bijbehorende berichten die met de app straat.info worden gemaakt, worden een beperkte tijd bewaard. Daarna worden deze vernietigd. Teams en de gemeente krijgen een afschrift van de meldingen.\n\nWij maken geen analyse van het gebruik van de app, anders dan ter verbetering van onze dienstverlening.\n\nWij verkopen je gegevens niet aan andere organisaties.\n\nJe kunt het gebruik van de app straat.info beëindigen en je gegevens laten verwijderen uit ons bestand door ons via de mail een verzoek daartoe te versturen.\n\nMet het accepteren van deze algemene voorwaarden stem je in met het hier beschreven gebruik van je gegevens.</string>
+
+    <!-- Enter Code -->
+    <string name="enter_code_title" translatable="false">Voer code in</string>
+
+    <!-- Profile -->
+    <string name="profile_image_source" translatable="false">Afbeeldingsbron</string>
+    <string name="profile_image_source_desc" translatable="false">Kies waar u uw afbeelding wilt nemen</string>
+    <string name="profile_camera" translatable="false">Camera</string>
+    <string name="profile_photo_library" translatable="false">Fotobibliotheek</string>
+    <string name="profile_no_changes" translatable="false">Geen veranderingen</string>
+    <string name="profile_update_profile_success" translatable="false">Uw profiel is bijgewerkt</string>
+
+    <!-- Feedback -->
+    <string name="feedback_success" translatable="false">Feedback verzonden</string>
+    <string name="feedback_failed" translatable="false">Kan geen feedback verzenden. Probeer het opnieuw</string>
+
+    <!-- Settings -->
+    <string name="settings_radius_success" translatable="false">De radiuswaarde is bijgewerkt</string>
+
+    <!-- Team -->
+    <string name="team_leader_accepts_request" translatable="false">Wacht alstublieft tot de teamleider uw verzoek accepteert</string>
+    <string name="team_send_report_invalid_approval" translatable="false">Wacht alstublieft tot de teamleider uw verzoek accepteert</string>
+</resources>

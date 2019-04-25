@@ -3,7 +3,9 @@ package com.straatinfo.straatinfo.Controllers
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.straatinfo.straatinfo.R
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -11,6 +13,9 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        loginBtn.setOnClickListener(View.OnClickListener {
+            Toast.makeText(this, "hello", Toast.LENGTH_LONG).show()
+        })
         this.hideSystemUI()
     }
 

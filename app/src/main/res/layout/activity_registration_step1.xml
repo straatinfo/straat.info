@@ -44,21 +44,21 @@
             <Button
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
-                    android:text="Data"
+                    android:text="@string/registration_nav_data"
                     android:textColor="@color/color_blue_dark"
                     android:background="@drawable/registration_nav_step1_pressed_state"
             />
             <Button
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
-                    android:text="Reporter"
+                    android:text="@string/registration_nav_reporter"
                     android:textColor="@color/color_blue_dark"
                     android:background="@drawable/registration_nav_step2_pressed_state"
             />
             <Button
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
-                    android:text="Team"
+                    android:text="@string/registration_nav_team"
                     android:textColor="@color/color_blue_dark"
                     android:background="@drawable/registration_nav_step3_pressed_state"
             />

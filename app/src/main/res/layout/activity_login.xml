@@ -40,16 +40,15 @@
             >
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/loginNewUserTV"
                 android:text="@string/login_new_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-
                 />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/loginExistingUserTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_sign_in"
@@ -57,6 +56,7 @@
                 />
 
             <EditText
+                android:id="@+id/loginEmailET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/login_enter_email_add"
@@ -64,6 +64,7 @@
                 />
 
             <EditText
+                android:id="@+id/loginPasswordET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/login_enter_password"
@@ -72,6 +73,7 @@
                 />
 
             <Button
+                    android:id="@+id/loginBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/login_button_text"

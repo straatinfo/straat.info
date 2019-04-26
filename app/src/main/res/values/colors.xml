@@ -11,6 +11,10 @@
     <color name="color_blue_dark">#4C6883</color>
     <color name="color_blue">#BDCADC</color>
     <color name="color_registration_bg">#E9E9EF</color>
-    <color name="color_cancel">#C91F37</color>
-    <color name="color_cancel_dark">#8F1D21</color>
+    <color name="color_cancel">#E74C3C</color>
+    <color name="color_cancel_dark">#C91F37</color>
+
+    <color name="color_ok">#3398DB</color>
+    <color name="color_ok_dark">#2672A4</color>
+
 </resources>

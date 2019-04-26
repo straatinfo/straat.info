@@ -7,6 +7,8 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.Utilities.LOGIN_URL
+import com.straatinfo.straatinfo.Utilities.REQUEST_HOST_WITH_CODE
+import com.straatinfo.straatinfo.Utilities.SIGNUP_V3
 import io.reactivex.Observable
 import org.json.JSONException
 import org.json.JSONObject
@@ -63,4 +65,126 @@ object AuthService {
             App.prefs.requestQueue.add(loginRequest)
         }
     }
+
+    fun login (loginName: String, password: String, completion: (error: String?, userData: JSONObject?) -> Unit) {
+        val jsonBody = JSONObject()
+        jsonBody.put("loginName", loginName)
+        jsonBody.put("password", password)
+        val requestBody = jsonBody.toString()
+
+        val loginRequest = object: JsonObjectRequest(Method.POST, LOGIN_URL, null, Response.Listener { response ->
+            // do something here with the response
+            completion(null, response)
+        }, Response.ErrorListener { error ->
+            try {
+                val err = JSONObject(String(error.networkResponse.data))
+
+                authResponseError = err.getString("message") as String
+                completion(authResponseError, null)
+            } catch (e: JSONException) {
+                Log.d("SIGNUP_ERROR", e.localizedMessage)
+                authResponseError = "Internal Server Error"
+                completion(authResponseError, null)
+            } catch (e: VolleyError) {
+                Log.d("SIGNUP_ERROR", e.localizedMessage)
+                authResponseError = "Slow Internet Connection"
+                completion(authResponseError, null)
+            } catch (e: NullPointerException) {
+                Log.d("SIGNUP_ERROR", e.localizedMessage)
+                authResponseError = "Internal Server Error"
+                completion(authResponseError, null)
+            }
+        }){
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getBody(): ByteArray {
+                return requestBody.toByteArray()
+            }
+        }
+
+        App.prefs.requestQueue.add(loginRequest)
+    }
+
+    fun register (registrationInput: JSONObject, completion: (error: String?, userData: JSONObject?) -> Unit) {
+        val requestBody = registrationInput.toString()
+
+        val loginRequest = object: JsonObjectRequest(Method.POST, SIGNUP_V3, null, Response.Listener { response ->
+            // do something here with the response
+            completion(null, response)
+        }, Response.ErrorListener { error ->
+            try {
+                val err = JSONObject(String(error.networkResponse.data))
+
+                authResponseError = err.getString("message") as String
+                completion(authResponseError, null)
+            } catch (e: JSONException) {
+                Log.d("REGISTRATION_ERROR", e.localizedMessage)
+                authResponseError = "Internal Server Error"
+                completion(authResponseError, null)
+            } catch (e: VolleyError) {
+                Log.d("REGISTRATION_ERROR", e.localizedMessage)
+                authResponseError = "Slow Internet Connection"
+                completion(authResponseError, null)
+            } catch (e: NullPointerException) {
+                Log.d("REGISTRATION_ERROR", e.localizedMessage)
+                authResponseError = "Internal Server Error"
+                completion(authResponseError, null)
+            }
+        }){
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getBody(): ByteArray {
+                return requestBody.toByteArray()
+            }
+        }
+
+        App.prefs.requestQueue.add(loginRequest)
+
+    }
+
+    fun getHostCode (code: String, completion: (error: String?, userData: JSONObject?) -> Unit) {
+        val jsonBody = JSONObject()
+        jsonBody.put("code", code)
+        val requestBody = jsonBody.toString()
+
+        val hostRequest = object: JsonObjectRequest(Method.POST, REQUEST_HOST_WITH_CODE, null, Response.Listener { response ->
+            // do something here with the response
+            completion(null, response)
+        }, Response.ErrorListener { error ->
+            try {
+                val err = JSONObject(String(error.networkResponse.data))
+
+                authResponseError = err.getString("message") as String
+                completion(authResponseError, null)
+            } catch (e: JSONException) {
+                Log.d("HOST_CODE", e.localizedMessage)
+                authResponseError = "Internal Server Error"
+                completion(authResponseError, null)
+            } catch (e: VolleyError) {
+                Log.d("HOST_CODE", e.localizedMessage)
+                authResponseError = "Slow Internet Connection"
+                completion(authResponseError, null)
+            } catch (e: NullPointerException) {
+                Log.d("HOST_CODE", e.localizedMessage)
+                authResponseError = "Internal Server Error"
+                completion(authResponseError, null)
+            }
+        }){
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getBody(): ByteArray {
+                return requestBody.toByteArray()
+            }
+        }
+
+        App.prefs.requestQueue.add(hostRequest)
+    }
+
+
 }

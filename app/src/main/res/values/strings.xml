@@ -30,21 +30,30 @@
     <string name="registration_terms_and_cond_title">Terms and Condition</string>
     <string name="registration_terms_and_cond_desc">In case of urgency, first call 122\n
 
-        The app straat.info is meant to support neighbourhood watch. The use of this app for any other means is not permitted.\n
+        The app straat.info is meant to support neighbourhood watch. The use of this app for any other means is not
+        permitted.\n
 
-        The app can in no case be seen as a legal replacement for communication with professionals like police, hospitals etc.\n
+        The app can in no case be seen as a legal replacement for communication with professionals like police,
+        hospitals etc.\n
 
         In case of urgency always first call 112\n
 
-        Seqretary b.v. is the owner of the app straat.info and accepts no liability of any kind for damages etc using this app. Seqretary b.v. can make changes to these general terms.\n
+        Seqretary b.v. is the owner of the app straat.info and accepts no liability of any kind for damages etc using
+        this app. Seqretary b.v. can make changes to these general terms.\n
          
         On privacy and your data:\n
-        In order to protect your personal data, you´ll be using a chat name in the app straat.info. You decide what name you´re going to use. Neither your phone number nor other personal data will be shown in the public part of the app.\n
-        When you are member of a team, your team member will see your name and nothing else. So, they don´t see your phone number, address etc.\n
-        The coordinator of your team does have full access to your data. With that he can check if the right person is in his team.\n
-        When requested, municipalities and police can get access to your personal data and the data that is generated with the app straat.info.\n
+        In order to protect your personal data, you´ll be using a chat name in the app straat.info. You decide what name
+        you´re going to use. Neither your phone number nor other personal data will be shown in the public part of the
+        app.\n
+        When you are member of a team, your team member will see your name and nothing else. So, they don´t see your
+        phone number, address etc.\n
+        The coordinator of your team does have full access to your data. With that he can check if the right person is
+        in his team.\n
+        When requested, municipalities and police can get access to your personal data and the data that is generated
+        with the app straat.info.\n
          
-        Reports and other data created with this app will be destroyed after a period of approx. six months. Teams and municipalities receive copies of the report data or part of the data that is generated with this app.\n
+        Reports and other data created with this app will be destroyed after a period of approx. six months. Teams and
+        municipalities receive copies of the report data or part of the data that is generated with this app.\n
         We do not analyse the usage of this app other than to improve our services.\n
         We do not sell your data to other organisations.\n
         You can end the usage of the app straat.info and delete your personal data by requesting such through an email send to us.\n
@@ -120,5 +129,8 @@
     <!-- Team -->
     <string name="team_leader_accepts_request" translatable="false">Please wait until team leader accepts your request</string>
     <string name="team_send_report_invalid_approval" translatable="false">Please wait until team leader accepts your request</string>
->>>>>>> Added localized strings
+        You can end the usage of the app straat.info and delete your personal data by requesting such through an email
+        send to us.\n
+        When you accept these general terms, you accept the usage of all data as described here.
+    </string>
 </resources>

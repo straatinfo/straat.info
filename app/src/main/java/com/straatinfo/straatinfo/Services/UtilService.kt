@@ -9,6 +9,7 @@ import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Utilities.POST_CODE_API
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.Exception
 import java.lang.NullPointerException
 
 object UtilService {
@@ -17,7 +18,7 @@ object UtilService {
     fun postcode (postCode: String, houseNumber: String, completion: (error: String?, userData: JSONObject?) -> Unit) {
         var url = "$POST_CODE_API/?postcode=${postCode}"
         if (houseNumber != null && houseNumber != "") {
-            url += "&number=${houseNumber}"
+            url += "&number=$houseNumber"
         }
 
         val getPostCodeData = object: JsonObjectRequest(Method.GET, url, null, Response.Listener { response ->
@@ -40,6 +41,8 @@ object UtilService {
                 Log.d("POST_CODE", e.localizedMessage)
                 utilResponseError = "Internal Server Error"
                 completion(utilResponseError, null)
+            } catch (e: Exception) {
+                Log.d("POST_CODE", e.localizedMessage)
             }
         }) {
             override fun getBodyContentType(): String {

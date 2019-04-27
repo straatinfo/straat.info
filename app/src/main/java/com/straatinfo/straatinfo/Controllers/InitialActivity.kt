@@ -42,7 +42,7 @@ class InitialActivity : AppCompatActivity() {
     }
 
     private val mRunnable: Runnable = Runnable {
-        val intent = Intent(applicationContext, LoginActivity::class.java)
+        val intent = Intent(applicationContext, EnterCodeActivity::class.java)
         startActivity(intent)
         finish()
     }

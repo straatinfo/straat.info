@@ -12,6 +12,8 @@ import com.straatinfo.straatinfo.Utilities.SIGNUP_V3
 import io.reactivex.Observable
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.Error
+import java.lang.Exception
 import java.lang.NullPointerException
 
 
@@ -172,6 +174,10 @@ object AuthService {
                 Log.d("HOST_CODE", e.localizedMessage)
                 authResponseError = "Internal Server Error"
                 completion(authResponseError, null)
+            } catch (e: Error) {
+                Log.d("HOST_CODE", e.localizedMessage)
+                authResponseError = "Internal Server Error"
+                completion(authResponseError, null)
             }
         }){
             override fun getBodyContentType(): String {
@@ -186,5 +192,56 @@ object AuthService {
         App.prefs.requestQueue.add(hostRequest)
     }
 
+    fun getHostCodeRx (code: String) : Observable<JSONObject?> {
+        return Observable.create {
+            val jsonBody = JSONObject()
+            jsonBody.put("code", code)
+            val requestBody = jsonBody.toString()
 
+            val hostRequest = object: JsonObjectRequest(Method.POST, REQUEST_HOST_WITH_CODE, null, Response.Listener { response ->
+                // do something here with the response
+                Log.d("CODE RESPONSE", response.toString())
+                it.onNext(response)
+            }, Response.ErrorListener { error ->
+                try {
+                   // val err = JSONObject(String(error.networkResponse.data))
+
+                   // authResponseError = err.getString("message") as String
+                    if (error.networkResponse.statusCode == 401) {
+                        authResponseError = "Incorrect Credentials"
+                    } else {
+                        authResponseError = "Internal Server Error"
+                    }
+                    Log.d("HOST_CODE", "Internal server error")
+                } catch (e: JSONException) {
+                    Log.d("HOST_CODE", e.localizedMessage)
+                    authResponseError = "Internal Server Error"
+                } catch (e: VolleyError) {
+                    Log.d("HOST_CODE", e.localizedMessage)
+                    authResponseError = "Slow Internet Connection"
+                } catch (e: NullPointerException) {
+                    Log.d("HOST_CODE", e.localizedMessage)
+                    authResponseError = "Internal Server Error"
+                } catch (e: Error) {
+                    Log.d("HOST_CODE", e.localizedMessage)
+                    authResponseError = "Internal Server Error"
+                } catch (e: Exception) {
+                    Log.d("HOST_CODE", e.localizedMessage)
+                }
+                val jsonError = JSONObject()
+                jsonError.put("error", authResponseError)
+                it.onNext(jsonError)
+            }){
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getBody(): ByteArray {
+                    return requestBody.toByteArray()
+                }
+            }
+
+            App.prefs.requestQueue.add(hostRequest)
+        }
+    }
 }

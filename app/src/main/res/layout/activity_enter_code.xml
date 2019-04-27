@@ -22,20 +22,19 @@
                 android:id="@+id/loginExistingUserTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Enter Your Code Here"
                 android:layout_marginBottom="20dp"
                 android:textAlignment="center"
                 android:textSize="@dimen/title"
-        />
+                android:text="@string/enter_code_title"/>
 
 
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter your code"
+                android:hint="@string/enter_code_title"
                 android:inputType="textPassword"
                 style="@style/login_edit_text_style"
-        />
+                android:id="@+id/enterCodeTxtBox"/>
 
 
         <RelativeLayout android:layout_width="match_parent"
@@ -45,19 +44,19 @@
             <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cancel"
+                    android:text="@android:string/cancel"
                     android:layout_marginStart="80dp"
                     style="@style/enter_code_button_cancel_style"
-            />
+                    android:id="@+id/enterCodeCancelBtn"/>
 
             <Button
                     android:layout_alignParentEnd="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="OK"
+                    android:text="@android:string/ok"
                     android:layout_marginEnd="80dp"
                     style="@style/enter_code_button_ok_style"
-            />
+                    android:id="@+id/enterCodeOkBtn" android:onClick="onSendCodeClick"/>
 
         </RelativeLayout>
 

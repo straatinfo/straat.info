@@ -1,19 +1,18 @@
 package com.straatinfo.straatinfo.Controllers
 
 import android.content.Context
-import android.content.res.Resources
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import com.straatinfo.straatinfo.R
-import kotlinx.android.synthetic.main.activity_registration_step1.*
+import kotlinx.android.synthetic.main.activity_registration.*
 
-class RegistrationStep1Activity : AppCompatActivity() {
+class RegistrationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registration_step1)
+        setContentView(R.layout.activity_registration)
 
         val switchableLayout = this.switchableLayout
         switchableLayout.removeAllViews()

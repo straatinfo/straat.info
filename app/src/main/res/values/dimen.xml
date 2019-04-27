@@ -9,4 +9,6 @@
     <dimen name="registration_nav_radius">50dp</dimen>
 
     <dimen name="title">25sp</dimen>
+    <dimen name="reg_notes_margin">50dp</dimen>
+    <dimen name="reg_margin_bottom">10dp</dimen>
 </resources>

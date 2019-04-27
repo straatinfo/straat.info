@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Controllers.RegistrationStep1Activity"
+    tools:context=".Controllers.RegistrationActivity"
     style="@style/parent_container_style"
     android:orientation="vertical"
     >
@@ -79,6 +79,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
         />
+
+        <!--<include android:layout_height="wrap_content"-->
+                 <!--android:layout_width="match_parent"-->
+                 <!--layout="@layout/registration_step2"/>-->
 
     </ScrollView>
 

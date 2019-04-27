@@ -15,7 +15,10 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/registration_edit_text_shape"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+                >
 
                 <RadioButton android:layout_width="match_parent"
                              android:layout_height="wrap_content"
@@ -39,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Enter Firstname"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
        <!--/Firstname-->
 
@@ -53,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Enter Last name"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Lastname-->
 
@@ -67,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Enter Username"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Username-->
 
@@ -81,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Enter Postal Code"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Postal Code-->
 
@@ -95,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Enter Postal Number"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Postal Number-->
 
@@ -110,6 +118,7 @@
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Street"
                 android:inputType="none"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Street name-->
 
@@ -125,6 +134,7 @@
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Town"
                 android:inputType="none"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Town-->
 
@@ -140,6 +150,7 @@
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Enter Email Address"
                 android:inputType="textEmailAddress"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Email Address-->
 
@@ -155,6 +166,7 @@
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Enter Mobile Number"
                 android:inputType="number"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Mobile Number-->
 
@@ -170,6 +182,7 @@
                 android:background="@drawable/registration_edit_text_shape"
                 android:hint="Enter Password"
                 android:inputType="number"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
         />
         <!--/Password-->
 
@@ -182,6 +195,15 @@
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
                 android:text="Terms and Condition"
         />
+
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/login_button_style"
+                android:text="Next Step"
+        />
+
 </LinearLayout>

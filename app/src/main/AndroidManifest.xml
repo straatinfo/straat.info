@@ -31,6 +31,8 @@
         </activity>
         <activity android:name=".Controllers.LoginActivity">
         </activity>
+        <activity android:name=".Controllers.MainActivity">
+        </activity>
     </application>
 
 </manifest>

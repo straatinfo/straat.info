@@ -30,8 +30,8 @@ class RegistrationActivity : AppCompatActivity() {
             switchableLayout.removeAllViews()
             switchableLayout.addView((layout(R.layout.registration_step1)))
 
-            val termsAndCond : Button = this.registration_terms_and_condition
-            termsAndCond.setOnClickListener(onClicked())
+            // val termsAndCond : Button = this.registration_terms_and_condition
+            // termsAndCond.setOnClickListener(onClicked())
 
         })
 

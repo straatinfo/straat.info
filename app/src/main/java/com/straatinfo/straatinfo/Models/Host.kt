@@ -39,6 +39,7 @@ class Host {
         this.language = hostJsonObject.getString("language")
     }
 
+
     fun getJsonObject (): JSONObject {
         var hostJson: JSONObject = JSONObject()
         hostJson.put("id", this.id)

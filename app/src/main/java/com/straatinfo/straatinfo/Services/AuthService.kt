@@ -21,8 +21,12 @@ import java.lang.NullPointerException
 object AuthService {
     var authResponseError: String? = null
 
-    private fun processUserData (it: ObservableEmitter<Boolean>, response: JSONObject) {
-        Log.d("LOGIN_RESULT", response.toString())
+    private fun processUserData (it: ObservableEmitter<Boolean>, userData: JSONObject) {
+        Log.d("LOGIN_RESULT", userData.toString())
+        val user = User(userData)
+        App.prefs.userData = user.toString()
+        App.prefs.token = userData.getString("token")
+        App.prefs.isLoggedIn = true
         it.onNext(true)
     }
 

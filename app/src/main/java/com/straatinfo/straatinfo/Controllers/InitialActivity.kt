@@ -42,7 +42,14 @@ class InitialActivity : AppCompatActivity() {
     }
 
     private val mRunnable: Runnable = Runnable {
-        val intent = Intent(applicationContext, EnterCodeActivity::class.java)
+        var intent: Intent? = null
+
+        if (App.prefs.isLoggedIn) {
+            intent = Intent(applicationContext, MainActivity::class.java)
+        } else {
+            intent = Intent(applicationContext, EnterCodeActivity::class.java)
+        }
+
         startActivity(intent)
         finish()
     }

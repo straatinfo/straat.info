@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/base_padding"
+              android:orientation="vertical"
+              android:background="@color/color_registration_bg">
+
+        <!--Gender-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gender"
+        />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/registration_edit_text_shape"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+                >
+
+                <RadioButton android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:text="Male"/>
+
+                <RadioButton android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:text="Female"/>
+
+        </LinearLayout>
+        <!--/Gender-->
+
+        <!--Firstname-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="First name"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Enter Firstname"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+       <!--/Firstname-->
+
+        <!--Lastname-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last name"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Enter Last name"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Lastname-->
+
+        <!--Username-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Username"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Enter Username"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Username-->
+
+        <!--Postal Code-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Postal Code"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Enter Postal Code"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Postal Code-->
+
+        <!--Postal Number-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Postal Number"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Enter Postal Number"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Postal Number-->
+
+        <!--Street name-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Street"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Street"
+                android:inputType="none"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Street name-->
+
+        <!--Town-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Town"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Town"
+                android:inputType="none"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Town-->
+
+        <!--Email Address-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email Adress"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Enter Email Address"
+                android:inputType="textEmailAddress"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Email Address-->
+
+        <!--Mobile Number-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mobile Number"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Enter Mobile Number"
+                android:inputType="number"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Mobile Number-->
+
+        <!--Password-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Password"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:hint="Enter Password"
+                android:inputType="number"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+        />
+        <!--/Password-->
+
+        <!--Terms and Condition-->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Terms and Condition"
+        />
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/registration_edit_text_shape"
+                android:text="Terms and Condition"
+        />
+
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/login_button_style"
+                android:text="Next Step"
+        />
+
+</LinearLayout>

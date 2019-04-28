@@ -6,6 +6,46 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:textSize">@dimen/default_text_size</item>
     </style>
 
+    <style name="parent_container_style">
+        <item name="android:background">@color/color_default</item>
+    </style>
+
+    <style name="login_edit_text_style">
+        <item name="android:background">@drawable/login_edit_text_shape</item>
+        <item name="android:layout_marginBottom">@dimen/margin_bottom</item>
+    </style>
+
+    <style name="login_button_style">
+        <item name="android:background">@drawable/default_button_pressed_state</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginTop">@dimen/base_padding</item>
+    </style>
+
+    <style name="registration_button_style">
+        <item name="android:background">@drawable/default_button_pressed_state</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginTop">@dimen/base_padding</item>
+    </style>
+
+    <style name="registration_button_cancel_style">
+        <item name="android:background">@drawable/default_button_cancel_pressed_state</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginTop">@dimen/base_padding</item>
+    </style>
+
+    <style name="enter_code_button_cancel_style">
+        <item name="android:background">@drawable/default_button_cancel_pressed_state</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginTop">@dimen/base_padding</item>
+    </style>
+
+    <style name="enter_code_button_ok_style">
+        <item name="android:background">@drawable/default_button_ok_pressed_state</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginTop">@dimen/base_padding</item>
+    </style>
 </resources>

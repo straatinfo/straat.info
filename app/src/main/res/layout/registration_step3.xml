@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/base_padding"
+              android:orientation="vertical"
+              android:background="@color/color_registration_bg">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Make a Choice"
+        android:textSize="@dimen/title"
+        android:layout_marginBottom="@dimen/reg_margin_bottom"
+    />
+
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I am an Individual User"
+        android:layout_marginBottom="@dimen/reg_margin_bottom"
+    />
+
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I like to join an existing team"
+        android:layout_marginBottom="@dimen/reg_margin_bottom"
+    />
+
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I like to create a new team"
+        android:layout_marginBottom="@dimen/reg_margin_bottom"
+    />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/registration_edit_text_shape">
+    </Spinner>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/login_button_style"
+        android:text="Register"
+    />
+
+    <TextView
+        android:layout_marginTop="@dimen/reg_notes_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="When you are a volunteer, for example want to join a neighbourhood watch, then choose `yes`. When you are going to use this app as a professional, please choose ´no´."
+    />
+
+</LinearLayout>

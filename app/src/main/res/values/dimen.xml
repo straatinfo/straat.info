@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="base_padding">16dp</dimen>
+    <dimen name="default_text_size">18sp</dimen>
+    <dimen name="margin_bottom">10dp</dimen>
+
+    <dimen name="login_et_padding">10dp</dimen>
+    <dimen name="registration_nav_dp">3dp</dimen>
+    <dimen name="registration_nav_radius">50dp</dimen>
+
+    <dimen name="title">25sp</dimen>
+    <dimen name="reg_notes_margin">50dp</dimen>
+    <dimen name="reg_margin_bottom">10dp</dimen>
+</resources>

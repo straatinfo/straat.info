@@ -3,4 +3,18 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="white">#ffffff</color>
+    <color name="color_default">#F5F5F5</color>
+    <color name="color_green">#87CF4C</color>
+    <color name="color_green_dark">#68A039</color>
+    <color name="color_blue_dark">#4C6883</color>
+    <color name="color_blue">#BDCADC</color>
+    <color name="color_registration_bg">#E9E9EF</color>
+    <color name="color_cancel">#E74C3C</color>
+    <color name="color_cancel_dark">#C91F37</color>
+
+    <color name="color_ok">#3398DB</color>
+    <color name="color_ok_dark">#2672A4</color>
+
 </resources>

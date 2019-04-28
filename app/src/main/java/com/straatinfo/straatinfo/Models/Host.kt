@@ -19,6 +19,8 @@ class Host {
     var language: String? = "en"
     var hostJsonObject: JSONObject? = null
 
+    constructor()
+
     constructor(onError: String) {
         this.error = onError
     }

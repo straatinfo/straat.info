@@ -10,7 +10,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Gender"
+                android:text="@string/gender"
         />
         <LinearLayout
                 android:layout_width="match_parent"
@@ -20,13 +20,21 @@
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
                 >
 
+            <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                 <RadioButton android:layout_width="match_parent"
                              android:layout_height="wrap_content"
-                             android:text="Male"/>
+                             android:text="@string/male"
+                             android:id="@+id/rbMale"/>
 
                 <RadioButton android:layout_width="match_parent"
                              android:layout_height="wrap_content"
-                             android:text="Female"/>
+                             android:text="@string/female"
+                             android:id="@+id/rbFemale"/>
+            </RadioGroup>
+
+
 
         </LinearLayout>
         <!--/Gender-->
@@ -35,14 +43,15 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="First name"
+                android:text="@string/first_name"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Enter Firstname"
+                android:hint="@string/enter_firstname"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtFirstName"
         />
        <!--/Firstname-->
 
@@ -50,14 +59,15 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Last name"
+                android:text="@string/last_name"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Enter Last name"
+                android:hint="@string/enter_last_name"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtLastName"
         />
         <!--/Lastname-->
 
@@ -65,14 +75,15 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Username"
+                android:text="@string/username"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Enter Username"
+                android:hint="@string/enter_username"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtUsername"
         />
         <!--/Username-->
 
@@ -80,14 +91,15 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Postal Code"
+                android:text="@string/postal_code"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Enter Postal Code"
+                android:hint="@string/enter_postal_code"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtPostalCode"
         />
         <!--/Postal Code-->
 
@@ -95,14 +107,15 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Postal Number"
+                android:text="@string/postal_number"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Enter Postal Number"
+                android:hint="@string/enter_postal_number"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtPostalNumber"
         />
         <!--/Postal Number-->
 
@@ -110,15 +123,16 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Street"
+                android:text="@string/street"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Street"
+                android:hint="@string/street"
                 android:inputType="none"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtStreet"
         />
         <!--/Street name-->
 
@@ -126,15 +140,16 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Town"
+                android:text="@string/town"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Town"
+                android:hint="@string/town"
                 android:inputType="none"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtTpwm"
         />
         <!--/Town-->
 
@@ -142,15 +157,16 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Email Adress"
+                android:text="@string/email_address"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Enter Email Address"
+                android:hint="@string/enter_email_address"
                 android:inputType="textEmailAddress"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtEmail"
         />
         <!--/Email Address-->
 
@@ -158,15 +174,16 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mobile Number"
+                android:text="@string/mobile_number"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Enter Mobile Number"
+                android:hint="@string/enter_mobile_number"
                 android:inputType="number"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtMobileNumber"
         />
         <!--/Mobile Number-->
 
@@ -174,15 +191,16 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Password"
+                android:text="@string/password"
         />
         <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:hint="Enter Password"
+                android:hint="@string/enter_password"
                 android:inputType="number"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/edtPassword"
         />
         <!--/Password-->
 
@@ -190,20 +208,20 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Terms and Condition"
+                android:text="@string/terms_and_condition"
         />
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
-                android:text="Terms and Condition"
+                android:text="@string/terms_and_condition"
         />
 
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/login_button_style"
-                android:text="Next Step"
+                android:text="@string/next_step"
         />
 
 </LinearLayout>

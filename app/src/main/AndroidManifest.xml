@@ -16,22 +16,27 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".Controllers.ReportsActivity">
+        </activity>
+        <activity
+                android:name=".Controllers.MainActivity"
+                android:label="@string/title_activity_main"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity android:name=".Controllers.RegistrationCreateTeamActivity">
         </activity>
         <activity android:name=".Controllers.EnterCodeActivity">
-        </activity>
-        <activity android:name=".Controllers.RegistrationActivity">
-        </activity>
-        <activity android:name=".Controllers.InitialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Controllers.LoginActivity">
+        <activity android:name=".Controllers.RegistrationActivity">
         </activity>
-        <activity android:name=".Controllers.MainActivity">
+        <activity android:name=".Controllers.InitialActivity">
+        </activity>
+        <activity android:name=".Controllers.LoginActivity">
         </activity>
     </application>
 

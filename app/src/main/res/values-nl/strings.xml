@@ -68,7 +68,7 @@
     <string name="report_emergency_notification" translatable="false">Spoedmelding</string>
     <string name="report_select_main_category" translatable="false">Selecteer Hoofdcategorie</string>
     <string name="report_select_sub_category" translatable="false">Selecteer Subcategorie</string>
-    <string name="report_send_report" translatable="false">Verzend rapport</string>
+    <string name="report_send_report" translatable="false">GEEF MELDING DOOR</string>
 
     <!-- Error Messages -->
     <string name="error_invalid_postal_code" translatable="false">The postal code and/or house number entry seems to be incorrect. Please fill in the correct postal code and house number</string>

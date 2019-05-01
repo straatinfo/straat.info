@@ -180,4 +180,5 @@
     <string name="team_send_report_invalid_approval" translatable="false">Please wait until team leader accepts your
         request
     </string>
+    <string name="title_activity_maps">Map</string>
 </resources>

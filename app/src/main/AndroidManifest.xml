@@ -16,7 +16,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Controllers.ReportsActivity">
+        <activity android:name=".Controllers.ReportsActivity"
+                android:parentActivityName=".Controllers.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTION"
+                android:value=".MainActivity"
+            />
         </activity>
         <activity
                 android:name=".Controllers.MainActivity"

@@ -22,8 +22,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        this.init()
+    }
+
+    private fun init() {
+
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
         ViewCompat.setLayoutDirection(toolbar, ViewCompat.LAYOUT_DIRECTION_RTL)
 
         val toggle = ActionBarDrawerToggle(
@@ -34,13 +40,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener())
         nav_view.setNavigationItemSelectedListener(this)
+
     }
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.END)) {
             drawer_layout.closeDrawer(GravityCompat.END)
-        } else {
-            super.onBackPressed()
         }
     }
 
@@ -84,6 +89,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.END)
         return true
     }
+
+
 
     private fun navigationOnClickListener() = View.OnClickListener {
         if (drawer_layout.isDrawerOpen(Gravity.END)) {

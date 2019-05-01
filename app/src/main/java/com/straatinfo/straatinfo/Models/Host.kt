@@ -21,8 +21,21 @@ class Host {
 
     constructor()
 
-    constructor(onError: String) {
-        this.error = onError
+    constructor(hostData: String) {
+        val jsonObject = JSONObject(hostData)
+        this.id = jsonObject.getString("id")
+        this.lat = jsonObject.getDouble("lat")
+        this.long = jsonObject.getDouble("long")
+        this.email = jsonObject.getString("email")
+        this.hostName = jsonObject.getString("hostName")
+        this.username = jsonObject.getString("username")
+        this.streetName = jsonObject.getString("streetName")
+        this.city = jsonObject.getString("city")
+        this.country = jsonObject.getString("country")
+        this.postalCode = jsonObject.getString("postalCode")
+        this.phoneNumber = jsonObject.getString("phoneNumber")
+        this.isVolunteer = jsonObject.getBoolean("isVolunteer")
+        this.language = jsonObject.getString("language")
     }
     constructor(hostJsonObject: JSONObject) {
         this.hostJsonObject = hostJsonObject

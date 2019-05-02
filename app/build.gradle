@@ -37,4 +37,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.android.gms:play-services-location:11.8.0'
     apply plugin: 'kotlin-android-extensions'
+    implementation 'com.github.bumptech.glide:glide:4.2.0'
+    kapt 'com.github.bumptech.glide:compiler:4.2.0'
 }

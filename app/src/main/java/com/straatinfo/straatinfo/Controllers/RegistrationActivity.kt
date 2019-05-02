@@ -4,20 +4,24 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.Button
-import android.widget.Switch
 import android.widget.Toast
 import com.straatinfo.straatinfo.R
 import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.android.synthetic.main.registration_step1.*
+import org.jetbrains.anko.toast
+
 
 class RegistrationActivity : AppCompatActivity() {
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +47,18 @@ class RegistrationActivity : AppCompatActivity() {
         this.registrationNavTeam.setOnClickListener(View.OnClickListener {
             switchableLayout.removeAllViews()
             switchableLayout.addView((layout(R.layout.registration_step3)))
+        })
+
+        edtFirstName.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                toast("Hi there!")
+            }
         })
     }
 

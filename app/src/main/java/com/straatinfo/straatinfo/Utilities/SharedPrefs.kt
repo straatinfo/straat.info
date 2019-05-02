@@ -20,6 +20,10 @@ class SharedPrefs (context: Context) {
         get() = prefs.getBoolean(IS_LOGGED_IN, false)
         set(value) = prefs.edit().putBoolean(IS_LOGGED_IN, value).apply()
 
+    var token: String
+        get() = prefs.getString(AUTH_TOKEN, "")
+        set(value) = prefs.edit().putString(AUTH_TOKEN, value).apply()
+
     var userData: String
         get() = prefs.getString(USER_DATA, "")
         set(value) = prefs.edit().putString(USER_DATA, value).apply()

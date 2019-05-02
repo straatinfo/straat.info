@@ -33,4 +33,6 @@ class SharedPrefs (context: Context) {
         set(value) = prefs.edit().putString(HOST_DATA, value).apply()
 
     val requestQueue: RequestQueue = Volley.newRequestQueue(context)
+
+    val context: Context = context
 }

@@ -1,6 +1,11 @@
 package com.straatinfo.straatinfo.Controllers
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
@@ -11,10 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.straatinfo.straatinfo.Models.Host
 import com.straatinfo.straatinfo.Models.Report
 import com.straatinfo.straatinfo.Models.User
@@ -23,10 +25,17 @@ import com.straatinfo.straatinfo.Services.ReportService
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONObject
 import java.lang.Exception
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import android.support.v4.content.ContextCompat
+import android.graphics.drawable.Drawable
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.straatinfo.straatinfo.Adapters.CustomInfoWindowGoogleMap
+
 
 class MainActivity : FragmentActivity(),
     OnMapReadyCallback,
     GoogleMap.OnMapClickListener,
+    GoogleMap.OnMarkerClickListener,
     GoogleApiClient.ConnectionCallbacks {
 
 
@@ -58,6 +67,7 @@ class MainActivity : FragmentActivity(),
         this.getLocationPoint(googleMap) { success ->
             if (success) {
                // this.loadReports(100.00)
+
             }
         }
 
@@ -76,6 +86,13 @@ class MainActivity : FragmentActivity(),
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun onMarkerClick(p0: Marker?): Boolean {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // p0!!.showInfoWindow()
+        Log.d("CLICK", p0.toString())
+        return false
+    }
+
     // private functions
     private fun getLocationPoint (googleMap: GoogleMap, onSuccess: (Boolean) -> Unit) {
         val host = Host(App.prefs.hostData)
@@ -92,9 +109,7 @@ class MainActivity : FragmentActivity(),
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 16.0f))
 
         map.getUiSettings().setZoomControlsEnabled(true)
-        map.setOnMarkerClickListener{
-            true
-        }
+        map.setOnMarkerClickListener(this)
 
         val circleOptions = CircleOptions()
         // Specifying the center of the circle
@@ -146,10 +161,33 @@ class MainActivity : FragmentActivity(),
                         val reportPos = LatLng(report.lat!! + (i.toDouble() * 0.00002), report.long!! + (i.toDouble() * 0.00002))
 
                         var reportMarker = MarkerOptions()
-                        reportMarker.position(reportPos)
+                            .position(reportPos)
+                            .title(report.mainCategoryName)
+                            .snippet(report.title)
 
-                        map.addMarker(reportMarker)
 
+
+                        if (report.reportTypeCode != null && report.reportTypeCode!!.toLowerCase() == "b") {
+                            reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_b))
+                        } else if (report.reportTypeCode != null && report.reportTypeCode!!.toLowerCase() == "c") {
+                            reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_c))
+                        } else {
+                            reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_a))
+                        }
+
+
+                        val customInfoWindow = CustomInfoWindowGoogleMap(this)
+
+
+                        map.setInfoWindowAdapter(customInfoWindow)
+
+                        val marker = map.addMarker(reportMarker)
+                        marker.tag = report
+
+
+                        // marker.showInfoWindow()
+
+                        // map!!.moveCamera(CameraUpdateFactory.newLatLng(reportPos))
                     }
                     catch (e: Exception) {
                         Log.d("REPORT_POPULATION_ERROR", e.localizedMessage)
@@ -157,6 +195,16 @@ class MainActivity : FragmentActivity(),
                 }
             }
             .run {  }
+    }
+
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+        vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+        val bitmap =
+            Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     fun setMarker (pos: LatLng) {

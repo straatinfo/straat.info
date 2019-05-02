@@ -1,5 +1,6 @@
 package com.straatinfo.straatinfo.Models
 
+import org.json.JSONArray
 import org.json.JSONObject
 
 class Report {
@@ -24,6 +25,7 @@ class Report {
     var generatedReportId: String? = null
 
     var reportJson: JSONObject? = null
+    var attachments: JSONArray? = null
 
     constructor(reportJson: JSONObject) {
         this.reportJson = reportJson
@@ -53,6 +55,8 @@ class Report {
             this.subCategoryId = subCategory.getString("_id")
             this.subCharCategoryName = subCategory.getString("name")
         }
+
+        this.attachments = reportJson.getJSONArray("attachments")
 
 //        val reporter = reportJson.getJSONObject("_reporter")
 //        this.reporterId = reporter.getString("_id")

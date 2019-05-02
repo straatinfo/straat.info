@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">straat.info</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Splash -->
     <string name="splash_loading">Loading...</string>
@@ -30,7 +32,7 @@
     <string name="registration_success_desc">Registration Success</string>
     <string name="registration_fail_desc">Registration Failed</string>
     <string name="registration_nav_data">Data</string>
-    <string name="registration_nav_reporter">Report</string>
+    <string name="registration_nav_reporter">Melder</string>
     <string name="registration_nav_team">Team</string>
 
     <string name="registration_terms_and_cond_title">Terms and Condition</string>
@@ -206,4 +208,5 @@
     <string name="terms_and_condition">Terms and Condition</string>
     <string name="next_step">Next Step</string>
     <string name="report_view_report">View Report</string>
+    <string name="app_bar_label_home">Home</string>
 </resources>

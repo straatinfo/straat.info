@@ -28,6 +28,10 @@ import java.lang.Exception
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import android.support.v4.content.ContextCompat
 import android.graphics.drawable.Drawable
+import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
+import android.view.Gravity
+import android.view.MenuItem
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.straatinfo.straatinfo.Adapters.CustomInfoWindowGoogleMap
 
@@ -36,7 +40,9 @@ class MainActivity : FragmentActivity(),
     OnMapReadyCallback,
     GoogleMap.OnMapClickListener,
     GoogleMap.OnMarkerClickListener,
-    GoogleApiClient.ConnectionCallbacks {
+    GoogleApiClient.ConnectionCallbacks,
+    NavigationView.OnNavigationItemSelectedListener {
+
 
 
     private lateinit var map: GoogleMap
@@ -91,6 +97,30 @@ class MainActivity : FragmentActivity(),
         // p0!!.showInfoWindow()
         Log.d("CLICK", p0.toString())
         return false
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
+//        when (item.itemId) {
+//            R.id.nav_home -> {
+//                if (drawer_layout.isDrawerOpen(Gravity.END)) {
+//                    drawer_layout.closeDrawer(Gravity.END)
+//                } else {
+//                    drawer_layout.isDrawerOpen(Gravity.END)
+//                }
+//            }
+//            else -> {
+//                if (drawer_layout.isDrawerOpen(Gravity.END)) {
+//                    drawer_layout.closeDrawer(Gravity.END)
+//                } else {
+//                    drawer_layout.isDrawerOpen(Gravity.END)
+//                }
+//            }
+//        }
+//
+//        drawer_layout.closeDrawer(GravityCompat.END)
+        return true
+
     }
 
     // private functions

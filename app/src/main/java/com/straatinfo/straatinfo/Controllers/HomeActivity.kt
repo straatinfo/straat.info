@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -17,12 +18,13 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private var activityViewId = R.id.nav_home
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
+        Log.d("SELECTED_ACTIVITY", "Home activity")
         this.init()
     }
 
@@ -69,25 +71,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
-        when (item.itemId) {
-            R.id.nav_home -> {
-                if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                    drawer_layout.closeDrawer(Gravity.END)
-                } else {
-                    drawer_layout.isDrawerOpen(Gravity.END)
-                }
-            }
-            else -> {
-                if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                    drawer_layout.closeDrawer(Gravity.END)
-                } else {
-                    drawer_layout.isDrawerOpen(Gravity.END)
-                }
-            }
-        }
 
-        drawer_layout.closeDrawer(GravityCompat.END)
+        this.navigationHandler(item)
         return true
     }
 
@@ -99,6 +84,37 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             drawer_layout.openDrawer(Gravity.END)
         }
-        Toast.makeText(this, "toggle", Toast.LENGTH_LONG).show()
+        // Toast.makeText(this, "toggle", Toast.LENGTH_LONG).show()
+    }
+
+    fun navigationHandler (item: MenuItem) {
+        // Handle navigation view item clicks here.
+        Log.d("ITEM_ID", item.itemId.toString())
+        if (item.itemId == activityViewId) {
+            if (drawer_layout.isDrawerOpen(Gravity.END)) {
+                drawer_layout.closeDrawer(Gravity.END)
+            } else {
+                drawer_layout.isDrawerOpen(Gravity.END)
+            }
+        } else {
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    val navMain = Intent(this, MainActivity::class.java)
+                    startActivity(navMain)
+
+                    finish()
+                }
+                else -> {
+                    if (drawer_layout.isDrawerOpen(Gravity.END)) {
+                        drawer_layout.closeDrawer(Gravity.END)
+                    } else {
+                        drawer_layout.isDrawerOpen(Gravity.END)
+                    }
+                }
+
+            }
+        }
+
+        drawer_layout.closeDrawer(GravityCompat.END)
     }
 }

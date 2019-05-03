@@ -1,6 +1,7 @@
 package com.straatinfo.straatinfo.Controllers
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -30,13 +31,20 @@ import android.support.v4.content.ContextCompat
 import android.graphics.drawable.Drawable
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.ViewCompat
+import android.support.v7.app.ActionBarDrawerToggle
 import android.view.Gravity
+import android.view.Menu
 import android.view.MenuItem
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.straatinfo.straatinfo.Adapters.CustomInfoWindowGoogleMap
+import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import android.view.View
+import android.widget.Toast
 
 
-class MainActivity : FragmentActivity(),
+class MainActivity : AppCompatActivity(),
     OnMapReadyCallback,
     GoogleMap.OnMapClickListener,
     GoogleMap.OnMarkerClickListener,
@@ -52,12 +60,15 @@ class MainActivity : FragmentActivity(),
     private lateinit var m: Marker
     private lateinit var reportList: ArrayList<Report>
 
+    private var activityViewId = R.id.nav_home
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        this.init()
     }
 
     /**
@@ -100,30 +111,64 @@ class MainActivity : FragmentActivity(),
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
-//        when (item.itemId) {
-//            R.id.nav_home -> {
-//                if (drawer_layout.isDrawerOpen(Gravity.END)) {
-//                    drawer_layout.closeDrawer(Gravity.END)
-//                } else {
-//                    drawer_layout.isDrawerOpen(Gravity.END)
-//                }
-//            }
-//            else -> {
-//                if (drawer_layout.isDrawerOpen(Gravity.END)) {
-//                    drawer_layout.closeDrawer(Gravity.END)
-//                } else {
-//                    drawer_layout.isDrawerOpen(Gravity.END)
-//                }
-//            }
-//        }
-//
-//        drawer_layout.closeDrawer(GravityCompat.END)
+        this.navigationHandler(item)
         return true
+    }
+
+    override fun onBackPressed() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.END)) {
+            drawer_layout.closeDrawer(GravityCompat.END)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_reports -> {
+                val intent = Intent(this, ReportsActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
+            else -> return super.onOptionsItemSelected(item)
+        }
 
     }
 
+
+
     // private functions
+    private fun init() {
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        ViewCompat.setLayoutDirection(toolbar, ViewCompat.LAYOUT_DIRECTION_RTL)
+
+        val toggle = ActionBarDrawerToggle(
+            this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        toolbar.setNavigationOnClickListener(navigationOnClickListener())
+        nav_view.setNavigationItemSelectedListener(this)
+
+    }
+
+    private fun navigationOnClickListener() = View.OnClickListener {
+        if (drawer_layout.isDrawerOpen(Gravity.END)) {
+            drawer_layout.closeDrawer(Gravity.END)
+        } else {
+            drawer_layout.openDrawer(Gravity.END)
+        }
+        // Toast.makeText(this, "toggle", Toast.LENGTH_LONG).show()
+    }
+
     private fun getLocationPoint (googleMap: GoogleMap, onSuccess: (Boolean) -> Unit) {
         val host = Host(App.prefs.hostData)
         val long = host.long
@@ -239,6 +284,37 @@ class MainActivity : FragmentActivity(),
 
     fun setMarker (pos: LatLng) {
         m.position = pos
+    }
+
+    fun navigationHandler (item: MenuItem) {
+        // Handle navigation view item clicks here.
+        Log.d("ITEM_ID", item.itemId.toString())
+        if (item.itemId == activityViewId) {
+            if (drawer_layout.isDrawerOpen(Gravity.END)) {
+                drawer_layout.closeDrawer(Gravity.END)
+            } else {
+                drawer_layout.isDrawerOpen(Gravity.END)
+            }
+        } else {
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    val navMain = Intent(this, MainActivity::class.java)
+                    startActivity(navMain)
+
+                    finish()
+                }
+                else -> {
+                    if (drawer_layout.isDrawerOpen(Gravity.END)) {
+                        drawer_layout.closeDrawer(Gravity.END)
+                    } else {
+                        drawer_layout.isDrawerOpen(Gravity.END)
+                    }
+                }
+
+            }
+        }
+
+        drawer_layout.closeDrawer(GravityCompat.END)
     }
 
 }

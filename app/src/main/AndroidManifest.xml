@@ -63,7 +63,9 @@
                 android:name=".Controllers.MapsActivity"
                 android:label="@string/title_activity_maps">
         </activity>
-        <activity android:name=".Controllers.MainActivity">
+        <activity android:name=".Controllers.MainActivity"
+                  android:label="@string/app_bar_label_home"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

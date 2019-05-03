@@ -123,7 +123,7 @@ class InitialActivity : AppCompatActivity() {
          var intent: Intent? = null
         if (App.prefs.isLoggedIn) {
             // intent = Intent(applicationContext, MainActivity::class.java)
-            intent = Intent(this, HomeActivity::class.java)
+            intent = Intent(this, MainActivity::class.java)
         } else {
             intent = Intent(applicationContext, EnterCodeActivity::class.java)
         }

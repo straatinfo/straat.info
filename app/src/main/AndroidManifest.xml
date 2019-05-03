@@ -19,11 +19,16 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning,InnerclassSeparator">
-        <activity android:name=".Controllers.ReportsActivity">
-        </activity>
-        <activity android:name=".Controllers.HomeActivity"
+        <activity android:name=".Controllers.MyTeamActivity"
                   android:label="@string/app_bar_label_home"
                   android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".Controllers.ReportsActivity">
+        </activity>
+        <activity
+                android:name=".Controllers.HomeActivity"
+                android:label="@string/app_bar_label_home"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <meta-data
@@ -63,9 +68,10 @@
                 android:name=".Controllers.MapsActivity"
                 android:label="@string/title_activity_maps">
         </activity>
-        <activity android:name=".Controllers.MainActivity"
-                  android:label="@string/app_bar_label_home"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity
+                android:name=".Controllers.MainActivity"
+                android:label="@string/app_bar_label_home"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

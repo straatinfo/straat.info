@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var postion: MarkerOptions
-    private lateinit var m: Marker
     private lateinit var reportList: ArrayList<Report>
 
     private var activityViewId = R.id.nav_home
@@ -87,9 +86,6 @@ class MainActivity : AppCompatActivity(),
 
             }
         }
-
-
-
     }
 
     override fun onConnected(p0: Bundle?) {
@@ -282,14 +278,10 @@ class MainActivity : AppCompatActivity(),
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
-    fun setMarker (pos: LatLng) {
-        m.position = pos
-    }
-
-    fun navigationHandler (item: MenuItem) {
+    private fun navigationHandler (item: MenuItem) {
         // Handle navigation view item clicks here.
         Log.d("ITEM_ID", item.itemId.toString())
-        if (item.itemId == activityViewId) {
+        if (item.itemId == this.activityViewId) {
             if (drawer_layout.isDrawerOpen(Gravity.END)) {
                 drawer_layout.closeDrawer(Gravity.END)
             } else {
@@ -301,6 +293,11 @@ class MainActivity : AppCompatActivity(),
                     val navMain = Intent(this, MainActivity::class.java)
                     startActivity(navMain)
 
+                    finish()
+                }
+                R.id.nav_my_team -> {
+                    val myTeam = Intent(this, MyTeamActivity::class.java)
+                    startActivity(myTeam)
                     finish()
                 }
                 else -> {
@@ -315,6 +312,38 @@ class MainActivity : AppCompatActivity(),
         }
 
         drawer_layout.closeDrawer(GravityCompat.END)
+    }
+
+    private fun loaduserMap (point: LatLng) {
+        val circleOptions = CircleOptions()
+        // Specifying the center of the circle
+        circleOptions.center(point)
+
+        // Radius of the circle
+        circleOptions.radius(200.toDouble())
+
+        // Border color of the circle
+        circleOptions.strokeColor(0x30ff0000)
+
+        // Fill color of the circle
+        circleOptions.fillColor(0x30ff0000)
+
+        // Border width of the circle
+        circleOptions.strokeWidth(2F)
+
+        this.map.addCircle(circleOptions)
+    }
+
+    private fun getUserCoordinates (): LatLng {
+
+
+        return LatLng(0.0, 0.0)
+    }
+
+    fun onCreateReport (view: View) {
+        this.map.clear()
+        val userPoint = this.getUserCoordinates()
+        this.loaduserMap(userPoint)
     }
 
 }

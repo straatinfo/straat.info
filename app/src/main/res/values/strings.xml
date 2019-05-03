@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">straat.info</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Splash -->
-    <string name="splash_loading" translatable="false">Loading...</string>
+    <string name="splash_loading">Loading...</string>
 
     <!-- Login -->
-    <string name="login" translatable="false">Login</string>
+    <string name="login">Login</string>
     <string name="login_new_user">New User? Click here</string>
     <string name="login_sign_in">Existing user? Log in:</string>
     <string name="login_enter_email_add">Enter your E-mail address</string>
@@ -15,20 +17,20 @@
     <string name="login_forgot_password">Forgot Password?</string>
 
     <!-- Registration -->
-    <string name="registration_username_info" translatable="false">Please enter your username here. All other users can
+    <string name="registration_username_info">Please enter your username here. All other users can
         only see your username; your phone number, your name or other data is not shown.\n However, when you are member
         of a team, your team members will be able to see your real name, but not other data like your phonenumber. Your
         team coordinator can see all your data; with this (s)he can check if the right person is in the team.\n When
         needed the police and other officials will be given access to your data.
     </string>
-    <string name="registration_username_info_title" translatable="false">Username Info</string>
-    <string name="registration_title" translatable="false">Registration</string>
-    <string name="registration_message" translatable="false">You’ve asked access as a non volunteer to create a new
+    <string name="registration_username_info_title">Username Info</string>
+    <string name="registration_title">Registration</string>
+    <string name="registration_message">You’ve asked access as a non volunteer to create a new
         team. straat.info will contact you. If you haven’t heard anything within 5 days, please mail us at
         info@straat.info
     </string>
-    <string name="registration_success_desc" translatable="false">Registration Success</string>
-    <string name="registration_fail_desc" translatable="false">Registration Failed</string>
+    <string name="registration_success_desc">Registration Success</string>
+    <string name="registration_fail_desc">Registration Failed</string>
     <string name="registration_nav_data">Data</string>
     <string name="registration_nav_reporter">Melder</string>
     <string name="registration_nav_team">Team</string>
@@ -68,75 +70,75 @@
     </string>
 
     <!-- Home -->
-    <string name="home_suspicious_desc" translatable="false">Here you\'re able to share a situation that might be
+    <string name="home_suspicious_desc">Here you\'re able to share a situation that might be
         suspicious with other members of your team. At the moment other members agree with you. that is needed looks
         suspicious call the police or other relevant organisation. Emergency? First call 112 before continuing to use
         this app!
     </string>
-    <string name="home_public_space_title" translatable="false">Public Space</string>
-    <string name="home_public_space_desc" translatable="false">Here you\'re able to make a report on public space (e.g.
+    <string name="home_public_space_title">Public Space</string>
+    <string name="home_public_space_desc">Here you\'re able to make a report on public space (e.g.
         trash on the street, broken street light etc). This report will be send to the local government
     </string>
-    <string name="home_no_available_reports" translatable="false">No available reports</string>
-    <string name="home_fetching_near_reports" translatable="false">Fetching near reports</string>
-    <string name="home_unidentified_location" translatable="false">This location is unindentified</string>
-    <string name="home_suspicious_situation" translatable="false">Suspicious Situation</string>
+    <string name="home_no_available_reports">No available reports</string>
+    <string name="home_fetching_near_reports">Fetching near reports</string>
+    <string name="home_unidentified_location">This location is unindentified</string>
+    <string name="home_suspicious_situation">Suspicious Situation</string>
 
     <!-- Report -->
-    <string name="report_emergency_notif_desc" translatable="false">Urgent? First Call 112</string>
-    <string name="report_persons_involved_desc" translatable="false">Fill in characteristics of the person(s) involved,
+    <string name="report_emergency_notif_desc">Urgent? First Call 112</string>
+    <string name="report_persons_involved_desc">Fill in characteristics of the person(s) involved,
         such as height, man/woman, color hair, mustache, beard, clothing, posture, tattoo or other striking details.
     </string>
-    <string name="report_send_report_success" translatable="false">Thank you for your report! From now on everybody can
+    <string name="report_send_report_success">Thank you for your report! From now on everybody can
         see in the app. If the report is about public space, it is also mailed to the host.
     </string>
-    <string name="report_report_success_dialog_title" translatable="false">Thank you for your report!</string>
-    <string name="report_emergency_notification" translatable="false">Emergency Notification</string>
-    <string name="report_select_main_category" translatable="false">Select Main Category</string>
-    <string name="report_select_sub_category" translatable="false">Select Sub Category</string>
-    <string name="report_send_report" translatable="false">Send Report</string>
+    <string name="report_report_success_dialog_title">Thank you for your report!</string>
+    <string name="report_emergency_notification">Emergency Notification</string>
+    <string name="report_select_main_category">Select Main Category</string>
+    <string name="report_select_sub_category">Select Sub Category</string>
+    <string name="report_send_report">Send Report</string>
 
     <!-- Error Messages -->
-    <string name="error_invalid_postal_code" translatable="false">The postal code and/or house number entry seems to be
+    <string name="error_invalid_postal_code">The postal code and/or house number entry seems to be
         incorrect. Please fill in the correct postal code and house number
     </string>
-    <string name="error_response" translatable="false">Error Response</string>
-    <string name="error_fill_up_all_fields" translatable="false">Please fill up all the empty fields</string>
-    <string name="error_invalid_code" translatable="false">Invalid code</string>
-    <string name="error_wrong_input" translatable="false">Wrong input</string>
-    <string name="error_invalid_email" translatable="false">Your e-mail is not valid</string>
-    <string name="error_invalid_password" translatable="false">Your password is not valid or must be atleast 6
+    <string name="error_response">Error Response</string>
+    <string name="error_fill_up_all_fields">Please fill up all the empty fields</string>
+    <string name="error_invalid_code">Invalid code</string>
+    <string name="error_wrong_input">Wrong input</string>
+    <string name="error_invalid_email">Your e-mail is not valid</string>
+    <string name="error_invalid_password">Your password is not valid or must be atleast 6
         alphanumeric characters
     </string>
-    <string name="error_invalid_firstname" translatable="false">Your firstname is not valid</string>
-    <string name="error_invalid_lastname" translatable="false">Your lastname is not valid</string>
-    <string name="error_taken_username" translatable="false">This username is already in use or not allowed. Please
+    <string name="error_invalid_firstname">Your firstname is not valid</string>
+    <string name="error_invalid_lastname">Your lastname is not valid</string>
+    <string name="error_taken_username">This username is already in use or not allowed. Please
         choose a different name.
     </string>
-    <string name="error_invalid_username" translatable="false">Your username is not valid</string>
-    <string name="error_invalid_post_number" translatable="false">The postal code and/or house number entry seems to be
+    <string name="error_invalid_username">Your username is not valid</string>
+    <string name="error_invalid_post_number">The postal code and/or house number entry seems to be
         incorrect. Please fill in the correct postal code and house number"
     </string>
-    <string name="error_invalid_mobile_number" translatable="false">This number is not correct or already in use, please
+    <string name="error_invalid_mobile_number">This number is not correct or already in use, please
         enter a different number or contact us through info@straat.info
     </string>
-    <string name="error_camera_not_available" translatable="false">Camera not available</string>
-    <string name="error_permission_denied" translatable="false">Permission denied</string>
-    <string name="error_invalid_username_password" translatable="false">Invalid username or password</string>
-    <string name="error_failed" translatable="false">Failed</string>
-    <string name="error_error_occured" translatable="false">An error occurred please try again.</string>
-    <string name="error_try_again" translatable="false">Try Again</string>
-    <string name="error_image_not_found" translatable="false">Image not found</string>
-    <string name="error_import_image_error" translatable="false">Error occured when importing image</string>
-    <string name="error_mobile_prefix_error" translatable="false">Prefix number must be 06</string>
-    <string name="error_invalid_mobile_number_length" translatable="false">Invalid mobile number length</string>
-    <string name="error_invalid_email_address" translatable="false">This email address is already being used. Enter a
+    <string name="error_camera_not_available">Camera not available</string>
+    <string name="error_permission_denied">Permission denied</string>
+    <string name="error_invalid_username_password">Invalid username or password</string>
+    <string name="error_failed">Failed</string>
+    <string name="error_error_occured">An error occurred please try again.</string>
+    <string name="error_try_again">Try Again</string>
+    <string name="error_image_not_found">Image not found</string>
+    <string name="error_import_image_error">Error occured when importing image</string>
+    <string name="error_mobile_prefix_error">Prefix number must be 06</string>
+    <string name="error_invalid_mobile_number_length">Invalid mobile number length</string>
+    <string name="error_invalid_email_address">This email address is already being used. Enter a
         different email address if or contact us via form on www.straat.info
     </string>
-    <string name="error_invalid_report_desc" translatable="false">Please check your description content</string>
+    <string name="error_invalid_report_desc">Please check your description content</string>
 
     <!-- Terms & Condition -->
-    <string name="tnc_always_call_112" translatable="false">Always call 112 first\n\n\n The app street.info is intended
+    <string name="tnc_always_call_112">Always call 112 first\n\n\n The app street.info is intended
         for supporting neighborhood prevention, among other things, for passing on reports to the municipality. The use
         of the app for other purposes, which do not fit within the current explanation of neighborhood prevention, is
         not permitted. \n\n The app is emphatically not intended to replace normal communication traffic with agencies
@@ -157,27 +159,27 @@
     </string>
 
     <!-- Enter Code -->
-    <string name="enter_code_title" translatable="false">Enter Code</string>
+    <string name="enter_code_title">Enter Code</string>
 
     <!-- Profile -->
-    <string name="profile_image_source" translatable="false">Image Source</string>
-    <string name="profile_image_source_desc" translatable="false">Please choose where to take your image</string>
-    <string name="profile_camera" translatable="false">Camera</string>
-    <string name="profile_photo_library" translatable="false">Photo Library</string>
-    <string name="profile_no_changes" translatable="false">No Changes</string>
-    <string name="profile_update_profile_success" translatable="false">Successfully updated your profile</string>
+    <string name="profile_image_source">Image Source</string>
+    <string name="profile_image_source_desc">Please choose where to take your image</string>
+    <string name="profile_camera">Camera</string>
+    <string name="profile_photo_library">Photo Library</string>
+    <string name="profile_no_changes">No Changes</string>
+    <string name="profile_update_profile_success">Successfully updated your profile</string>
 
     <!-- Feedback -->
-    <string name="feedback_success" translatable="false">Successfully sent feedback</string>
-    <string name="feedback_failed" translatable="false">Unable to send feedback</string>
+    <string name="feedback_success">Successfully sent feedback</string>
+    <string name="feedback_failed">Unable to send feedback</string>
 
     <!-- Settings -->
-    <string name="settings_radius_success" translatable="false">Successfully updated radius value</string>
+    <string name="settings_radius_success">Successfully updated radius value</string>
 
     <!-- Team -->
-    <string name="team_leader_accepts_request" translatable="false">Please wait until team leader accepts your request
+    <string name="team_leader_accepts_request">Please wait until team leader accepts your request
     </string>
-    <string name="team_send_report_invalid_approval" translatable="false">Please wait until team leader accepts your
+    <string name="team_send_report_invalid_approval">Please wait until team leader accepts your
         request
     </string>
     <string name="title_activity_maps">Map</string>
@@ -205,4 +207,6 @@
     <string name="enter_password">Enter Password</string>
     <string name="terms_and_condition">Terms and Condition</string>
     <string name="next_step">Next Step</string>
+    <string name="report_view_report">View Report</string>
+    <string name="app_bar_label_home">Home</string>
 </resources>

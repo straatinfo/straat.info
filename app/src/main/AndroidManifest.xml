@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.straatinfo.straatinfo">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -16,12 +17,22 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            tools:ignore="AllowBackup,GoogleAppIndexingWarning,InnerclassSeparator">
+        <activity android:name=".Controllers.ReportsActivity">
+        </activity>
+        <activity android:name=".Controllers.HomeActivity"
+                  android:label="@string/app_bar_label_home"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="@string/google_maps_key"/>
 
-        <activity android:name=".Controllers.RegistrationCreateTeamActivity">
+        <activity
+                android:name=".Controllers.RegistrationCreateTeamActivity"
+                tools:ignore="InnerclassSeparator">
         </activity>
         <activity android:name=".Controllers.EnterCodeActivity">
         </activity>
@@ -52,7 +63,9 @@
                 android:name=".Controllers.MapsActivity"
                 android:label="@string/title_activity_maps">
         </activity>
-        <activity android:name=".Controllers.MainActivity">
+        <activity android:name=".Controllers.MainActivity"
+                  android:label="@string/app_bar_label_home"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

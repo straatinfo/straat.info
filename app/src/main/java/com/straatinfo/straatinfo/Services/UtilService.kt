@@ -1,12 +1,21 @@
 package com.straatinfo.straatinfo.Services
 
+import android.content.Context
+import android.content.Intent
+import android.support.v4.view.GravityCompat
 import android.util.Log
+import android.view.Gravity
+import android.view.MenuItem
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.RequestFuture
 import com.straatinfo.straatinfo.Controllers.App
+import com.straatinfo.straatinfo.Controllers.HomeActivity
+import com.straatinfo.straatinfo.Controllers.MainActivity
+import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Utilities.POST_CODE_API
+import kotlinx.android.synthetic.main.activity_home.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Exception

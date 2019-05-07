@@ -53,4 +53,13 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="report_input_style">
+        <item name="android:background">@drawable/create_report_input_box</item>
+        <item name="android:textColor">@color/color_blue_dark</item>
+        <item name="android:layout_marginTop">@dimen/base_padding</item>
+    </style>
+    <style name="upload_photo">
+        <item name="android:background">@drawable/upload_photo_box</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
 </resources>

@@ -21,6 +21,7 @@ import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
 import java.util.jar.Manifest
 
 
@@ -28,7 +29,6 @@ class InitialActivity : AppCompatActivity() {
 
     private var mDelayHandler: Handler? = null
     private val SPLASH_DELAY: Long = 3000 //3 seconds
-    private val INTERNET_RECORD_CODE = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class InitialActivity : AppCompatActivity() {
         // super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when (requestCode) {
-            INTERNET_RECORD_CODE -> {
+            LOCATION_RECORD_CODE -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Log.d("PERMISSION", "Permission has been denied by user")
                     this.makeRequest()
@@ -111,7 +111,7 @@ class InitialActivity : AppCompatActivity() {
             arrayOf(
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ), INTERNET_RECORD_CODE)
+            ), LOCATION_RECORD_CODE)
     }
 
     private val mRunnable: Runnable = Runnable {

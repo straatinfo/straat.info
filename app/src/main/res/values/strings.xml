@@ -209,4 +209,6 @@
     <string name="next_step">Next Step</string>
     <string name="report_view_report">View Report</string>
     <string name="app_bar_label_home">Home</string>
+    <string name="report_suspicious_situation">Suspicious Situation</string>
+    <string name="report_public_space">Public Space</string>
 </resources>

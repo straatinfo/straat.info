@@ -147,4 +147,6 @@
     <string name="enter_password">Enter Password</string>
     <string name="report_view_report">Bekijik Melding</string>
     <string name="app_bar_label_home">Home</string>
+    <string name="report_suspicious_situation">Verdachte Situatie</string>
+    <string name="report_public_space">Melding Openbare Ruimte</string>
 </resources>

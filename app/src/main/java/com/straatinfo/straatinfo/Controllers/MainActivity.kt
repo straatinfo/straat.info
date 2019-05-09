@@ -40,6 +40,8 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -48,17 +50,16 @@ import com.straatinfo.straatinfo.Adapters.CustomInfoWindowGoogleMap
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import com.straatinfo.straatinfo.Models.*
 import com.straatinfo.straatinfo.Services.CategoryService
+import com.straatinfo.straatinfo.Services.MediaService
 import com.straatinfo.straatinfo.Services.UtilService
 import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
 import kotlinx.android.synthetic.main.activity_home.drawer_layout
 import kotlinx.android.synthetic.main.activity_home.nav_view
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.style
 import org.json.JSONArray
 import java.io.IOException
 
@@ -94,6 +95,19 @@ class MainActivity : AppCompatActivity(),
     private val CAMERA = 2
     var btnClicked = 0
 
+    // report inputs
+    var _mainCatId: String? = null
+    var _subCatId: String? = null
+    var _emergencyNotif: Boolean = false
+    var _description: String? = null
+    var _img1: Media? = null
+    var _img2: Media? = null
+    var _img3: Media? = null
+    var _location: String? = null
+    var _long: Double? = null
+    var _lat: Double? = null
+    var _isValid: Boolean = false
+    var btnChose: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -201,6 +215,8 @@ class MainActivity : AppCompatActivity(),
             .subscribeOn(Schedulers.io())
             .subscribe { result ->
                 reportCurrentLoc.text = this.parseGeocodeData(result)
+                this.setLocation(this.parseGeocodeData(result))
+                this.setLongLat(p0!!.position.longitude, p0!!.position.latitude)
             }
             .run {  }
     }
@@ -275,7 +291,7 @@ class MainActivity : AppCompatActivity(),
 
         map.addCircle(circleOptions)
 
-        this.loadReports(100.00)
+        this.loadReports(1000.00)
 
 
         onSuccess(true)
@@ -632,6 +648,7 @@ class MainActivity : AppCompatActivity(),
 
                 if (position == 0 && mainCatSelectedPos > 0) {
                     val mc = mainCategories[mainCatSelectedPos - 1]
+                    setMainCatId(mc.id!!)
                     Log.d("MAIN_C", mc.toString())
                     Log.d("SUB_CAT", mc.subCategories.toString())
                     if (mc.subCategories != null && mc.subCategories!!.length() > 0) {
@@ -645,6 +662,7 @@ class MainActivity : AppCompatActivity(),
 
                 if (position > 0 && mainCatSelectedPos > 0) {
                     val mc = mainCategories[mainCatSelectedPos - 1]
+                    setMainCatId(mc.id!!)
                     Log.d("MAIN_C", mc.toString())
                     Log.d("SUB_CAT", mc.subCategories.toString())
                     if (mc.subCategories != null && mc.subCategories!!.length() > 0) {
@@ -666,6 +684,7 @@ class MainActivity : AppCompatActivity(),
     fun populateSubCat (scJSON: JSONArray, cb: () -> Unit) {
         var overige: SubCategory? = null
         var count = 0
+        this.unSetSubCatId()
         for (i in 0..(scJSON.length()) - 1) {
             val scO = SubCategory(scJSON[i] as JSONObject)
             if (scO.name == "others" || scO.name == "overige") {
@@ -697,10 +716,14 @@ class MainActivity : AppCompatActivity(),
                 override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                     if (position > 0) {
                         subCatPos = position
+                        val sc = subCategories[subCatPos - 1]
+                        setSubCatId(sc.id!!)
                     }
 
                     if (position == 0 && subCatPos > 0) {
                         subCatSpinner.setSelection(subCatPos)
+                        val sc = subCategories[subCatPos - 1]
+                        setSubCatId(sc.id!!)
                     }
 
                 } // to close the onItemSelected
@@ -742,13 +765,13 @@ class MainActivity : AppCompatActivity(),
                 {
                     val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI) as Bitmap
 
-                    Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
+                    // Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
                     setImage(bitmap, btnClicked)
 
                 }
                 catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Failed to process photo", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -760,17 +783,40 @@ class MainActivity : AppCompatActivity(),
             // imageview!!.setImageBitmap(thumbnail)
             setImage(thumbnail, btnClicked)
             // saveImage(thumbnail)
-            Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
         }
     }
 
     fun setImage (img: Bitmap, viewId: Int) {
         try {
             val view = findViewById<ImageView>(viewId)
-            view.setImageBitmap(img)
-            view.scaleType = ImageView.ScaleType.CENTER_CROP
+            MediaService.publicUpload(img, "title")
+                .subscribeOn(Schedulers.io())
+                .subscribe { data ->
+                    try {
+                        if (MediaService.errorMessage != null) {
+                            Toast.makeText(this, MediaService.errorMessage, Toast.LENGTH_SHORT).show()
+                        } else {
+                            view.setImageBitmap(img)
+                            view.scaleType = ImageView.ScaleType.CENTER_CROP
+                            Log.d("UPLOAD_PHOTO_SUCCESS", data.toString())
+                            val media = Media(data)
+                            when (btnChose) {
+                                R.id.photo1Btn -> this._img1 = media
+                                R.id.photo2Btn -> this._img2 = media
+                                R.id.photo3Btn -> this._img3 = media
+                                else -> this._img1 = media
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.d("SET_IMAGE", e.localizedMessage)
+                        Toast.makeText(this, "Error on processing image", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .run {  }
         } catch (e: Exception) {
             Log.d("SET_IMAGE", e.localizedMessage)
+            Toast.makeText(this, "Error on processing image", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -779,6 +825,7 @@ class MainActivity : AppCompatActivity(),
         pictureDialog.setTitle("Select Action")
         val pictureDialogItems = arrayOf("Select photo from gallery", "Capture photo from camera")
 
+        btnChose = view.id
         pictureDialog.setItems(pictureDialogItems) { dialog, which ->
             when (which) {
                 0 -> choosePhotoFromGallary()
@@ -795,25 +842,207 @@ class MainActivity : AppCompatActivity(),
     // on create report section
 
     fun onCreateReport (view: View) {
+        this.resetForm()
+        val reportDetailsTxt = findViewById(R.id.reportDetailsTxtBox) as TextView
+
+        reportDetailsTxt.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                setDescription()
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                setDescription()
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                setDescription()
+            }
+
+        })
+
+
         UtilService.setLocationPermission(this, LOCATION_RECORD_CODE)
 
         getUserCoordinates { point ->
             this.map.clear()
             val hostCoordinates = this.getHostCoordinates()
             this.loadMapCircle(hostCoordinates)
-            Log.d("POINT_LOADED", point.toString())
-            UtilService.geocode(point.longitude, point.latitude)
+            // val pointToUse = point
+            val pointToUse = hostCoordinates // for testing
+            Log.d("POINT_LOADED", pointToUse.toString())
+            UtilService.geocode(pointToUse.longitude, pointToUse.latitude)
                 .subscribeOn(Schedulers.io())
                 .subscribe { result ->
                     Log.d("POINT", this.parseGeocodeData(result))
                     reportCurrentLoc.text = this.parseGeocodeData(result)
+                    this.setLocation(this.parseGeocodeData(result))
+                    this.setLongLat(pointToUse.longitude, pointToUse.latitude)
                 }
                 .run {  }
-            // this.loadReportPointer(hostCoordinates) // for testing
-            this.loadReportPointer(point)
+            this.loadReportPointer(pointToUse)
             showSendReportP1()
         }
 
+    }
+
+    // input checking and update
+    fun evaluateInput () {
+        if (
+            this._location != null &&
+            this._mainCatId != null &&
+            this._description != null &&
+            // reportDetailsTxtBox.text.toString() != "" &&
+            this._long != null &&
+            this._lat != null
+        ) {
+            this._isValid = true
+        }
+    }
+    fun setButtonEnablement () {
+        if (this._isValid) {
+            sendReportABtn.setBackgroundColor(getResources().getColor(R.color.color_green))
+        } else {
+            sendReportABtn.setBackgroundColor(getResources().getColor(R.color.color_blue_dark))
+        }
+    }
+
+    fun setMainCatId (id: String) {
+        this._mainCatId = id
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun unsetMainCatId () {
+        this._mainCatId = null
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun setSubCatId (id: String) {
+        this._subCatId = id
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun unSetSubCatId () {
+        this._subCatId = null
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun setLongLat (long: Double, lat: Double) {
+        this._long = long
+        this._lat = lat
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun setLocation (loc: String) {
+        this._location = loc
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun unsetLocation () {
+        this._location = null
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun setEmergencyNotif(isEmergency: Boolean) {
+        this._emergencyNotif = isEmergency
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun setDescription() {
+        if (reportDetailsTxtBox.text.toString() != "") {
+            this._description = reportDetailsTxtBox.text.toString()
+        } else {
+            this._description = null
+        }
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun unsetDesc() {
+        this._description = null
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun resetForm () {
+        _mainCatId = null
+        _subCatId = null
+        _emergencyNotif = false
+        _description = null
+        _img1 = null
+        _img2 = null
+        _img3 = null
+        _location = null
+        _long = null
+        _lat = null
+        _isValid = false
+    }
+
+    fun promptUser () {
+        Toast.makeText(this, "Please supply missing fields", Toast.LENGTH_LONG).show()
+    }
+
+    // actual sending
+    fun onSendReportTypeA (view: View) {
+        if (!_isValid) promptUser()
+        else {
+            val user = User(JSONObject(App.prefs.userData))
+
+            val jsonReport = JSONObject()
+            jsonReport.put("title", "Public Space")
+            jsonReport.put("description", this._description)
+            jsonReport.put("location", this._location)
+            jsonReport.put("lat", this._lat)
+            jsonReport.put("long", this._long)
+            jsonReport.put("_reporter", user.id)
+            jsonReport.put("_host", user.host_id)
+            jsonReport.put("_mainCategory", this._mainCatId)
+            jsonReport.put("_reportType", "5a7888bb04866e4742f74955")
+
+            if (this._subCatId != null) jsonReport.put("_subCategory", this._subCatId)
+            jsonReport.put("isUrgent", this._emergencyNotif)
+
+            if (user.team_id != null) jsonReport.put("_team", user.team_id)
+
+            var uploadedPhotos = JSONArray()
+
+            if (this._img1 != null) {
+                uploadedPhotos.put(uploadedPhotos.length(), this._img1!!.jsonData)
+            }
+
+            if (this._img2 != null) {
+                uploadedPhotos.put(uploadedPhotos.length(), this._img2!!.jsonData)
+            }
+
+            if (this._img3 != null) {
+                uploadedPhotos.put(uploadedPhotos.length(), this._img3!!.jsonData)
+            }
+
+            jsonReport.put("reportUploadedPhotos", uploadedPhotos)
+
+            Log.d("REPORT_DETAILS", jsonReport.toString())
+
+            ReportService.sendReportV2(jsonReport)
+                .subscribeOn(Schedulers.io())
+                .subscribe {
+                    when(it) {
+                        true -> {
+                            reload()
+                        }
+                        else -> {
+                            Toast.makeText(this, "An error occured while sending the report", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+                .run {  }
+        }
     }
 
 }

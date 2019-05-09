@@ -14,6 +14,8 @@ const val REQUEST_HOST_WITH_CODE = "$BASE_URL/v3/api/registration/validation/hos
 const val POST_CODE_API = "$BASE_URL/v3/api/utility/postcode"
 const val REPORT_NEAR = "$BASE_URL/v1/api/report/near"
 const val GET_MAIN_CAT = "$BASE_URL/v1/api/category/app/mainCategory/withGeneral/hostId/"
+const val PUBLIC_UPLOAD = "$BASE_URL/v1/api/upload/public"
+const val SEND_REPORT_V2 = "$BASE_URL/v1/api/report/V2"
 
 const val GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json"
 const val GOOGLE_API_KEY = "AIzaSyDuQd44hbjRx-70DSsFUWuAtt2uMe_Hotk"

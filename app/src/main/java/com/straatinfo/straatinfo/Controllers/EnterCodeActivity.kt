@@ -38,17 +38,24 @@ class EnterCodeActivity : AppCompatActivity() {
 ////                        Log.d("HOST_CODE_ERROR", error)
 ////                    }
 
-                    val data = result!!.getJSONObject("data")
-                    val host = Host(data)
+                    if (AuthService.authResponseError != null) {
+                        enterCodeTxtBox.text.clear()
+                        val dialog = UtilService.showDefaultAlert(this, "Error", "Je hebt geen of niet goede code. \nProbeer opnieuw of maa een andere keuze.")
+                        dialog.show()
+                    } else {
+                        val data = result!!.getJSONObject("data")
+                        val host = Host(data)
 
-                    App.prefs.hostData = host.getJsonObject().toString()
-                    Log.d("HOST_ID", host.id)
+                        App.prefs.hostData = host.getJsonObject().toString()
+                        Log.d("HOST_ID", host.id)
 
-                    Log.d("HOST_DATA_FETCH", data.toString())
+                        Log.d("HOST_DATA_FETCH", data.toString())
 
-                    val loginIntent = Intent(this, LoginActivity::class.java)
-                    startActivity(loginIntent)
-                    finish()
+                        val loginIntent = Intent(this, LoginActivity::class.java)
+                        startActivity(loginIntent)
+                        finish()
+                    }
+
                 }
                 catch (e: Exception) {
                     Log.d("ON_SEND_CODE_ERROR", e.localizedMessage)

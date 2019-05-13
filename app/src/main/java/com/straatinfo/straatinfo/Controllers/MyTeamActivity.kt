@@ -108,6 +108,11 @@ class MyTeamActivity : AppCompatActivity(),
                     startActivity(myTeam)
                     finish()
                 }
+                R.id.nav_logout -> {
+                    val login = Intent(this, LoginActivity::class.java)
+                    startActivity(login)
+                    finish()
+                }
                 else -> {
                     if (drawer_layout.isDrawerOpen(Gravity.END)) {
                         drawer_layout.closeDrawer(Gravity.END)

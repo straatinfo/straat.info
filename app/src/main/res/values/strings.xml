@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">straat.info</string>
+    <string name="app_name">Straat.Info</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -11,7 +11,7 @@
     <string name="login">Login</string>
     <string name="login_new_user">New User? Click here</string>
     <string name="login_sign_in">Existing user? Log in:</string>
-    <string name="login_enter_email_add">Enter your E-mail address</string>
+    <string name="login_enter_email_add">Enter your email</string>
     <string name="login_enter_password">Enter your password</string>
     <string name="login_button_text">LOGIN</string>
     <string name="login_forgot_password">Forgot Password?</string>
@@ -32,7 +32,7 @@
     <string name="registration_success_desc">Registration Success</string>
     <string name="registration_fail_desc">Registration Failed</string>
     <string name="registration_nav_data">Data</string>
-    <string name="registration_nav_reporter">Melder</string>
+    <string name="registration_nav_reporter">Reporter</string>
     <string name="registration_nav_team">Team</string>
 
     <string name="registration_terms_and_cond_title">Terms and Condition</string>
@@ -187,16 +187,16 @@
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="first_name">First name</string>
+    <string name="first_name">Firstname</string>
     <string name="enter_firstname">Enter Firstname</string>
-    <string name="last_name">Last name</string>
-    <string name="enter_last_name">Enter Last name</string>
+    <string name="last_name">Lastname</string>
+    <string name="enter_last_name">Enter Lastname</string>
     <string name="username">Username</string>
     <string name="enter_username">Enter Username</string>
     <string name="postal_code">Postal Code</string>
     <string name="enter_postal_code">Enter Postal Code</string>
-    <string name="postal_number">Postal Number</string>
-    <string name="enter_postal_number">Enter Postal Number</string>
+    <string name="postal_number">House Number</string>
+    <string name="enter_postal_number">Enter House Number</string>
     <string name="street">Street</string>
     <string name="town">Town</string>
     <string name="email_address">Email Address</string>
@@ -211,4 +211,25 @@
     <string name="app_bar_label_home">Home</string>
     <string name="report_suspicious_situation">Suspicious Situation</string>
     <string name="report_public_space">Public Space</string>
+    <string name="initial_loading">Loading...</string>
+    <string name="registration_tac_accept">Accept</string>
+    <string name="registration_tac_cancel">Cancel</string>
+    <string name="registration_ask_volunteer">Do you use Straat.info as Volunteer?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="registration_ask_as_pro">When you are a volunteer, for example want to join a neighborhood watch, then
+        choose \'yes\'. When you are going to use this app as a professional, please choose \'no\'.
+    </string>
+    <string name="registration_ask_join_team">Make choice of the three below:</string>
+    <string name="registration_individual_reporter">I am an individual reporter</string>
+    <string name="registration_want_to_join_team">I want to join an existing team</string>
+    <string name="registration_want_new_team">I want to start a new team</string>
+    <string name="register">Register</string>
+    <string name="registration_create_new_team">Create New Team</string>
+    <string name="team_email_address">Team Email Address</string>
+    <string name="enter_team_email_address">Enter Team Email Address</string>
+    <string name="team_name">Team Name</string>
+    <string name="enter_team_name">Enter Team Name</string>
+    <string name="select_logo">Select Logo</string>
+    <string name="back">Back</string>
 </resources>

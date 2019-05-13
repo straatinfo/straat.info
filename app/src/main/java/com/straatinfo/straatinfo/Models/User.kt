@@ -47,8 +47,6 @@ class User {
 
     constructor(userJsonData: JSONObject) {
         val userJson = userJsonData.getJSONObject("user")
-        val settingJson = userJsonData.getJSONObject("setting")
-        val designJson = userJsonData.getJSONObject("_activeDesign")
         this.userJsonData = userJsonData
         this.id = userJson.getString("_id")
         this.firstname = userJson.getString("fname")
@@ -61,28 +59,36 @@ class User {
         this.streetName = userJson.getString("streetName")
         this.city = userJson.getString("city")
         this.gender = userJson.getString("gender")
-        this.isNotification = settingJson.getBoolean("isNotification")
-        this.vibrate = settingJson.getBoolean("vibrate")
-        this.sound = settingJson.getBoolean("sound")
-        this.radius = settingJson.getDouble("radius")
+
+        if (userJsonData.has("setting")) {
+            val settingJson = userJsonData.getJSONObject("setting")
+            this.isNotification = settingJson.getBoolean("isNotification")
+            this.vibrate = settingJson.getBoolean("vibrate")
+            this.sound = settingJson.getBoolean("sound")
+            this.radius = settingJson.getDouble("radius")
+        }
+
 
         val hostJson = userJson.getJSONObject("_host")
         this.host_id = hostJson.getString("_id")
         this.host_name = hostJson.getString("hostName")
 
-        val designId = designJson.getString("_id")
-        val colorOne = designJson.getString("colorOne")
-        val colorTwo = designJson.getString("colorTwo")
-        val colorThree = designJson.getString("colorThree")
-        val hostId = designJson.getString("_host")
-        val profilePicJson = designJson.getJSONObject("_profilePic")
+        if (userJsonData.has("_activeDesign")) {
+            val designJson = userJsonData.getJSONObject("_activeDesign")
+            val designId = designJson.getString("_id")
+            val colorOne = designJson.getString("colorOne")
+            val colorTwo = designJson.getString("colorTwo")
+            val colorThree = designJson.getString("colorThree")
+            val hostId = designJson.getString("_host")
+            val profilePicJson = designJson.getJSONObject("_profilePic")
+            val logoUrl = profilePicJson.getString("secure_url")
+            val designName = designJson.getString("designName")
 
-        val logoUrl = profilePicJson.getString("secure_url")
-        val designName = designJson.getString("designName")
+            val design = Design(designId, hostId, colorOne, colorTwo, colorThree, logoUrl, designName)
 
-        val design = Design(designId, hostId, colorOne, colorTwo, colorThree, logoUrl, designName)
+            this.activeDesign = design
+        }
 
-        this.activeDesign = design
     }
 
     fun toJson (): JSONObject {

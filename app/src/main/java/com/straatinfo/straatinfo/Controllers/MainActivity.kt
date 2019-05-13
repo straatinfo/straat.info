@@ -59,7 +59,6 @@ import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
 import kotlinx.android.synthetic.main.activity_home.drawer_layout
 import kotlinx.android.synthetic.main.activity_home.nav_view
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.style
 import org.json.JSONArray
 import java.io.IOException
 
@@ -301,7 +300,6 @@ class MainActivity : AppCompatActivity(),
         val host = Host(App.prefs.hostData)
         val long = host.long
         val lat = host.lat
-        val userData = JSONObject(App.prefs.userData)
         Log.d("USER_DATA", App.prefs.userData)
         val user = User(JSONObject(App.prefs.userData))
         val userId = user.id
@@ -389,6 +387,11 @@ class MainActivity : AppCompatActivity(),
                 R.id.nav_my_team -> {
                     val myTeam = Intent(this, MyTeamActivity::class.java)
                     startActivity(myTeam)
+                    finish()
+                }
+                R.id.nav_logout -> {
+                    val login = Intent(this, LoginActivity::class.java)
+                    startActivity(login)
                     finish()
                 }
                 else -> {
@@ -867,8 +870,8 @@ class MainActivity : AppCompatActivity(),
             this.map.clear()
             val hostCoordinates = this.getHostCoordinates()
             this.loadMapCircle(hostCoordinates)
-            // val pointToUse = point
-            val pointToUse = hostCoordinates // for testing
+            val pointToUse = point
+            // val pointToUse = hostCoordinates // for testing
             Log.d("POINT_LOADED", pointToUse.toString())
             UtilService.geocode(pointToUse.longitude, pointToUse.latitude)
                 .subscribeOn(Schedulers.io())

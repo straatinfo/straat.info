@@ -6,6 +6,13 @@
               android:orientation="vertical"
               android:background="@color/color_registration_bg">
 
+        <!--@TODO find a way to not use this hack to extend layout horizontally-->
+
+        <TextView
+                android:text="asdfasdfasdfasdfasdfasdfasdfadfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf"
+                android:layout_width="match_parent"
+                android:layout_height="1dp" android:id="@+id/textView7"/>
+
         <!--Gender-->
         <TextView
                 android:layout_width="match_parent"
@@ -18,22 +25,21 @@
                 android:orientation="vertical"
                 android:background="@drawable/registration_edit_text_shape"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
-                >
+        >
 
-            <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <RadioButton android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
-                             android:text="@string/male"
-                             android:id="@+id/rbMale"/>
+                <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/genderRb">
+                        <RadioButton android:layout_width="match_parent"
+                                     android:layout_height="wrap_content"
+                                     android:text="@string/male"
+                                     android:id="@+id/rbMale"/>
 
-                <RadioButton android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
-                             android:text="@string/female"
-                             android:id="@+id/rbFemale"/>
-            </RadioGroup>
-
+                        <RadioButton android:layout_width="match_parent"
+                                     android:layout_height="wrap_content"
+                                     android:text="@string/female"
+                                     android:id="@+id/rbFemale"/>
+                </RadioGroup>
 
 
         </LinearLayout>
@@ -53,7 +59,7 @@
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
                 android:id="@+id/edtFirstName"
         />
-       <!--/Firstname-->
+        <!--/Firstname-->
 
         <!--Lastname-->
         <TextView
@@ -77,14 +83,24 @@
                 android:layout_height="wrap_content"
                 android:text="@string/username"
         />
-        <EditText
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/registration_edit_text_shape"
-                android:hint="@string/enter_username"
-                android:layout_marginBottom="@dimen/reg_margin_bottom"
-                android:id="@+id/edtUsername"
-        />
+                android:layout_height="match_parent">
+                <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/registration_edit_text_shape"
+                        android:hint="@string/enter_username"
+                        android:layout_marginBottom="@dimen/reg_margin_bottom"
+                        android:id="@+id/edtUsername"
+                        android:layout_weight="2"/>
+                <TextView
+                        android:text="_ID:"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:id="@+id/usernameIdTxt" android:layout_weight="1"
+                        android:layout_marginLeft="5dp"/>
+        </LinearLayout>
         <!--/Username-->
 
         <!--Postal Code-->
@@ -116,7 +132,7 @@
                 android:hint="@string/enter_postal_number"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
                 android:id="@+id/edtPostalNumber"
-        />
+                android:editable="true"/>
         <!--/Postal Number-->
 
         <!--Street name-->
@@ -133,7 +149,7 @@
                 android:inputType="none"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
                 android:id="@+id/edtStreet"
-        />
+                android:clickable="false" android:editable="false"/>
         <!--/Street name-->
 
         <!--Town-->
@@ -149,8 +165,8 @@
                 android:hint="@string/town"
                 android:inputType="none"
                 android:layout_marginBottom="@dimen/reg_margin_bottom"
-                android:id="@+id/edtTpwm"
-        />
+                android:id="@+id/edtCity"
+                android:editable="false" android:clickable="false"/>
         <!--/Town-->
 
         <!--Email Address-->
@@ -193,15 +209,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/password"
         />
-        <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/registration_edit_text_shape"
-                android:hint="@string/enter_password"
-                android:inputType="number"
-                android:layout_marginBottom="@dimen/reg_margin_bottom"
-                android:id="@+id/edtPassword"
-        />
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/registration_edit_text_shape"
+            android:hint="@string/enter_password"
+            android:inputType="textPassword"
+            android:layout_marginBottom="@dimen/reg_margin_bottom"
+            android:id="@+id/edtPassword"
+    />
         <!--/Password-->
 
         <!--Terms and Condition-->
@@ -215,13 +231,13 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/registration_edit_text_shape"
                 android:text="@string/terms_and_condition"
-        />
+                android:onClick="onTermsAndConditionBtnClick"/>
 
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/login_button_style"
                 android:text="@string/next_step"
-        />
+                android:id="@+id/btnNextStep" android:onClick="goToStep2"/>
 
 </LinearLayout>

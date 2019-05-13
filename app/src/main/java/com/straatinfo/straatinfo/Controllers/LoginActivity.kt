@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.AuthService
+import com.straatinfo.straatinfo.Services.UtilService
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -15,6 +16,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        App.prefs.isLoggedIn = false
 
 //        loginBtn.setOnClickListener(View.OnClickListener {
 //            Toast.makeText(this, "hello", Toast.LENGTH_LONG).show()
@@ -77,6 +80,8 @@ class LoginActivity : AppCompatActivity() {
                     this.goToMainActivity()
                 } else {
                     // show error message pop up
+                    val dialog = UtilService.showDefaultAlert(this, "Error", "Ongeldige Inloggeevens")
+                    dialog.show()
                 }
             }
         }

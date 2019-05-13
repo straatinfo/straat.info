@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">straat.info</string>
+    <string name="app_name" translatable="false">Straat.Info</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -8,13 +8,13 @@
     <string name="splash_loading" translatable="false">Loading...</string>
 
     <!-- Login -->
-    <string name="login_new_user" translatable="false">New User? Click here :D</string>
-    <string name="login_sign_in" translatable="false">Existing user? Log in:</string>
+    <string name="login_new_user" translatable="false">Nieuwe gebruiker? Klik hier</string>
+    <string name="login_sign_in" translatable="false">Existing user? Inloggen:</string>
     <string name="login" translatable="false">Login</string>>
-    <string name="login_enter_email_add">Enter your E-mail address</string>
-    <string name="login_enter_password">Enter your password</string>
-    <string name="login_button_text">LOGIN</string>
-    <string name="login_forgot_password">Forgot Password?</string>
+    <string name="login_enter_email_add">E-mailadres</string>
+    <string name="login_enter_password">Wachtwoord</string>
+    <string name="login_button_text">INLOGGEN</string>
+    <string name="login_forgot_password">Wachtwoord vergeten?</string>
 
     <!-- Registration -->
     <string name="registration_username_info" translatable="false">In dit veld vult u uw gebruikersnaam in. Alle andere gebruikers van de app straat.info zien alleen uw gebruikersnaam en dus niet uw mobiele nummer, eigen naam of andere gegevens.\nAls u lid bent van een team, dan zien de teamleden uw eigen naam, maar niet uw overige gegevens. De team coördinator ziet wel al uw gegevens. Hiermee kan de coördinator controleren of de juiste persoon in het team zit.\nDe gemeente en politie kunnen indien noodzakelijk inzage krijgen in uw gegevens.</string>
@@ -28,7 +28,7 @@
     <string name="registration_nav_reporter">Melder</string>
     <string name="registration_nav_team">Team</string>
 
-    <string name="registration_terms_and_cond_title">Terms and Condition</string>
+    <string name="registration_terms_and_cond_title">Algemene Voorwaarden</string>
     <string name="registration_terms_and_cond_desc">In case of urgency, first call 122\n
 
         The app straat.info is meant to support neighbourhood watch. The use of this app for any other means is not permitted.\n
@@ -124,29 +124,43 @@
     <string name="team_leader_accepts_request" translatable="false">Wacht alstublieft tot de teamleider uw verzoek accepteert</string>
     <string name="team_send_report_invalid_approval" translatable="false">Wacht alstublieft tot de teamleider uw verzoek accepteert</string>
 
-    <string name="gender">Gender</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
-    <string name="first_name">First name</string>
-    <string name="enter_firstname">Enter Firstname</string>
-    <string name="last_name">Last name</string>
-    <string name="enter_last_name">Enter Last name</string>
-    <string name="username">Username</string>
-    <string name="enter_username">Enter Username</string>
-    <string name="postal_code">Postal Code</string>
-    <string name="enter_postal_code">Enter Postal Code</string>
-    <string name="postal_number">Postal Number</string>
-    <string name="enter_postal_number">Enter Postal Number</string>
+    <string name="gender">Geslacht</string>
+    <string name="male">Man</string>
+    <string name="female">Vrouw</string>
+    <string name="first_name">Voornaam</string>
+    <string name="enter_firstname">Voornaam</string>
+    <string name="last_name">Achternaam</string>
+    <string name="enter_last_name">Achternaam</string>
+    <string name="username">Gebruikersnaam</string>
+    <string name="enter_username">Gebruikersnaam</string>
+    <string name="postal_code">Postcode</string>
+    <string name="enter_postal_code">Postcode</string>
+    <string name="postal_number">Huisnummer</string>
+    <string name="enter_postal_number">Huisnummer</string>
     <string name="street">Straat</string>
-    <string name="town">Town</string>
-    <string name="email_address">Email Address</string>
-    <string name="enter_email_address">Enter Email Address</string>
-    <string name="mobile_number">Mobile Number</string>
-    <string name="enter_mobile_number">Enter Mobile Number</string>
-    <string name="password">Password</string>
-    <string name="enter_password">Enter Password</string>
+    <string name="town">Plaats</string>
+    <string name="email_address">Emailadres</string>
+    <string name="enter_email_address">E-mailadres</string>
+    <string name="mobile_number">Mobiel nummer</string>
+    <string name="enter_mobile_number">Mobiel nummer</string>
+    <string name="password">Wachtwoord</string>
+    <string name="enter_password">Wachtwoord</string>
     <string name="report_view_report">Bekijik Melding</string>
     <string name="app_bar_label_home">Home</string>
     <string name="report_suspicious_situation">Verdachte Situatie</string>
     <string name="report_public_space">Melding Openbare Ruimte</string>
+    <string name="terms_and_condition">Algemene Voorwaarden</string>
+    <string name="next_step">Volgende Stap</string>
+    <string name="initial_loading">Bezig met laden…</string>
+    <string name="registration_tac_accept">Accepteer</string>
+    <string name="registration_tac_cancel">"Annuleren "</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    <string name="registration_ask_as_pro">Als u vrijwilliger bent, bijvoorbeeld aan een BIT of BPT meedoet, kies dan
+        “ja”. Als u bijvoorbeeld bij de overheid werkt en u de app voor uw werk wilt gebruiken, klik dan “nee”.
+    </string>
+    <string name="registration_ask_join_team">Maak een keuze</string>
+    <string name="registration_individual_reporter">Ik ben een individuele melder</string>
+    <string name="registration_want_to_join_team">Ik wil graag bij een bestaand team</string>
+    <string name="registration_want_new_team">Ik wil een nieuw team starten</string>
 </resources>

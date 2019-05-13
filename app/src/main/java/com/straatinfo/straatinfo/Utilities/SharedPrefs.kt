@@ -15,6 +15,8 @@ class SharedPrefs (context: Context) {
     val REPORTER_ID = "reporterId"
     val USER_HOST = "userHost"
     val HOST_DATA = "HOST_DATA"
+    val REG_DATA = "REG_DATA"
+    val REG_PAGE = "REG_PAGE"
 
     var isLoggedIn: Boolean
         get() = prefs.getBoolean(IS_LOGGED_IN, false)
@@ -31,6 +33,19 @@ class SharedPrefs (context: Context) {
     var hostData: String
         get() = prefs.getString(HOST_DATA, "")
         set(value) = prefs.edit().putString(HOST_DATA, value).apply()
+
+    var registrationData: String
+        get() = prefs.getString(REG_DATA, "")
+        set(value) = prefs.edit().putString(REG_DATA, value).apply()
+
+    var registrationPage: Int
+        get() = prefs.getInt(REG_PAGE, 1)
+        set(value) = prefs.edit().putInt(REG_PAGE, value).apply()
+
+    // temporary bug missing password in registration
+    var registrationPassword: String
+        get() = prefs.getString("PASS", "")
+        set(value) = prefs.edit().putString("PASS", value).apply()
 
     val requestQueue: RequestQueue = Volley.newRequestQueue(context)
 

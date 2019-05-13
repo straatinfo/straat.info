@@ -10,7 +10,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Do you use Straat.info as Volunteer?"
+            android:text="@string/registration_ask_volunteer"
             android:textSize="@dimen/title"
     />
 
@@ -19,15 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/login_button_style"
-            android:text="Yes"
-    />
+            android:text="@string/yes"
+            android:onClick="setAsVolunteer"/>
 
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/login_button_style"
-            android:text="No"
-    />
+            android:text="@string/no"
+            android:onClick="setAsNonVolunteer"/>
 
     <TextView
             android:layout_marginTop="@dimen/reg_notes_margin"

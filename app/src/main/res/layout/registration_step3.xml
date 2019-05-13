@@ -7,52 +7,55 @@
               android:background="@color/color_registration_bg">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Make a Choice"
-        android:textSize="@dimen/title"
-        android:layout_marginBottom="@dimen/reg_margin_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/registration_ask_join_team"
+            android:textSize="@dimen/title"
+            android:layout_marginBottom="@dimen/reg_margin_bottom"
     />
 
-    <RadioButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="I am an Individual User"
-        android:layout_marginBottom="@dimen/reg_margin_bottom"
-    />
-
-    <RadioButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="I like to join an existing team"
-        android:layout_marginBottom="@dimen/reg_margin_bottom"
-    />
-
-    <RadioButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="I like to create a new team"
-        android:layout_marginBottom="@dimen/reg_margin_bottom"
-    />
+    <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/onTeamCreationSelect">
+        <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/registration_individual_reporter"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:clickable="false" android:checked="false"
+                android:textColor="@android:color/tertiary_text_light"/>
+        <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/registration_want_to_join_team"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/joinTeamRb"/>
+        <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/registration_want_new_team"
+                android:layout_marginBottom="@dimen/reg_margin_bottom"
+                android:id="@+id/createTeamRb"/>
+    </RadioGroup>
 
     <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/registration_edit_text_shape">
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/send_report_spinner_bg" android:id="@+id/teamListSpinner">
     </Spinner>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/login_button_style"
-        android:text="Register"
-    />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/login_button_style"
+            android:text="@string/register"
+            android:onClick="register"/>
 
     <TextView
-        android:layout_marginTop="@dimen/reg_notes_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="When you are a volunteer, for example want to join a neighbourhood watch, then choose `yes`. When you are going to use this app as a professional, please choose ´no´."
+            android:layout_marginTop="@dimen/reg_notes_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/registration_ask_as_pro"
     />
 
 </LinearLayout>

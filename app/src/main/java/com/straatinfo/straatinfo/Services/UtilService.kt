@@ -30,6 +30,8 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Exception
 import java.lang.NullPointerException
+import java.lang.StringBuilder
+import kotlin.random.Random
 
 object UtilService {
     var utilResponseError: String? = null
@@ -37,6 +39,7 @@ object UtilService {
     var utilsError : String? = null
 
     fun postcode (postCode: String, houseNumber: String, completion: (error: String?, userData: JSONObject?) -> Unit) {
+        utilResponseError = null
         var url = "$POST_CODE_API/?postcode=${postCode}"
         if (houseNumber != null && houseNumber != "") {
             url += "&number=$houseNumber"
@@ -49,21 +52,23 @@ object UtilService {
                 val err = JSONObject(String(error.networkResponse.data))
 
                 utilResponseError = err.getString("message") as String
-                completion(utilResponseError, null)
+                completion(utilResponseError, JSONObject())
             } catch (e: JSONException) {
                 Log.d("POST_CODE", e.localizedMessage)
                 utilResponseError = "Internal Server Error"
-                completion(utilResponseError, null)
+                completion(utilResponseError, JSONObject())
             } catch (e: VolleyError) {
                 Log.d("POST_CODE", e.localizedMessage)
                 utilResponseError = "Slow Internet Connection"
-                completion(utilResponseError, null)
+                completion(utilResponseError, JSONObject())
             } catch (e: NullPointerException) {
                 Log.d("POST_CODE", e.localizedMessage)
                 utilResponseError = "Internal Server Error"
-                completion(utilResponseError, null)
+                completion(utilResponseError, JSONObject())
             } catch (e: Exception) {
                 Log.d("POST_CODE", e.localizedMessage)
+                utilResponseError = "Internal Server Error"
+                completion(utilResponseError, JSONObject())
             }
         }) {
             override fun getBodyContentType(): String {
@@ -155,5 +160,25 @@ object UtilService {
 
             App.prefs.requestQueue.add(geoCodeRequest)
         }
+    }
+
+    fun showDefaultAlert (context: Context, title: String, message: String) : android.app.AlertDialog {
+        val builder = android.app.AlertDialog.Builder(context)
+        builder
+            .setTitle(title)
+            .setMessage(message)
+
+        return builder.create()
+    }
+
+    fun randomStringGenerator (strLength: Int): String {
+        val alphaNum: String = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        val random = Random
+        val sb = StringBuilder()
+        for (i in 0..(strLength - 1)) {
+            sb.append(alphaNum[random.nextInt(alphaNum.length - 1)])
+        }
+
+        return sb.toString()
     }
 }

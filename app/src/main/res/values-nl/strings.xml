@@ -8,11 +8,11 @@
     <string name="splash_loading" translatable="false">Loading...</string>
 
     <!-- Login -->
-    <string name="login_new_user" translatable="false">Nieuwe gebruiker? Klik hier</string>
-    <string name="login_sign_in" translatable="false">Existing user? Inloggen:</string>
+    <string name="login_new_user" translatable="false">Nieuwe gebruiker? klik hier</string>
+    <string name="login_sign_in" translatable="false">Bestaande gebruiker? Inloggen:</string>
     <string name="login" translatable="false">Login</string>>
     <string name="login_enter_email_add">E-mailadres</string>
-    <string name="login_enter_password">Wachtwoord</string>
+    <string name="login_enter_password">uw eigen wachtwoord</string>
     <string name="login_button_text">INLOGGEN</string>
     <string name="login_forgot_password">Wachtwoord vergeten?</string>
 
@@ -70,7 +70,7 @@
     <string name="report_emergency_notification" translatable="false">Spoedmelding</string>
     <string name="report_select_main_category" translatable="false">Selecteer Hoofdcategorie</string>
     <string name="report_select_sub_category" translatable="false">Selecteer Subcategorie</string>
-    <string name="report_send_report" translatable="false">Verzend rapport</string>
+    <string name="report_send_report" translatable="false">Geef melding door</string>
 
     <!-- Error Messages -->
     <string name="error_invalid_postal_code" translatable="false">The postal code and/or house number entry seems to be incorrect. Please fill in the correct postal code and house number</string>
@@ -145,7 +145,7 @@
     <string name="enter_mobile_number">Mobiel nummer</string>
     <string name="password">Wachtwoord</string>
     <string name="enter_password">Wachtwoord</string>
-    <string name="report_view_report">Bekijik Melding</string>
+    <string name="report_view_report">Bekijk melding</string>
     <string name="app_bar_label_home">Home</string>
     <string name="report_suspicious_situation">Verdachte Situatie</string>
     <string name="report_public_space">Melding Openbare Ruimte</string>
@@ -163,4 +163,20 @@
     <string name="registration_individual_reporter">Ik ben een individuele melder</string>
     <string name="registration_want_to_join_team">Ik wil graag bij een bestaand team</string>
     <string name="registration_want_new_team">Ik wil een nieuw team starten</string>
+    <string name="tnc_accept">Ik accepteer hierbij de algemene voorwaarden</string>
+    <string name="error">Fout</string>
+    <string name="error_tac_not_accepted">U hebt geen algemene voorwaarden geaccepteerd</string>
+    <string name="register">Registreren</string>
+    <string name="select_team_logo">Selecteer teamlogo</string>
+    <string name="enter_team_email_address">Team e-mailadres</string>
+    <string name="enter_team_name">Team Naam</string>
+    <string name="registration_create_new_team">Een nieuw team starten</string>
+    <string name="team_name">Team Naam</string>
+    <string name="team_email_address">Team e-mailadres</string>
+    <string name="choose_team">Kies een team</string>
+    <string name="registration_when_volunteer_info">Als u vrijwilliger bent, bijvoorbeeld aan een BIT of BPT meedoet,
+        kies dan “ja”. Als u bijvoorbeeld bij de overheid werkt en u de app voor uw werk wilt gebruiken, klik dan “nee”
+    </string>
+    <string name="registration_ask_volunteer">Gebruikt u straat.info als vrijwilliger?</string>
+    <string name="report_window_info_no_photo">geen foto</string>
 </resources>

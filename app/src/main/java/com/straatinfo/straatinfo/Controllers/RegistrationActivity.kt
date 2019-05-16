@@ -35,9 +35,8 @@ class RegistrationActivity : AppCompatActivity() {
     var isTorAccepted = false
     var isEmailValid = false
     var isPhoneNumberValid = false
-
     var teamList = mutableListOf<Team>()
-    var teamLabels = mutableListOf("Select Team")
+    var teamLabels = mutableListOf<String>()
     var selectedTeamPos = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +49,7 @@ class RegistrationActivity : AppCompatActivity() {
         userInput.hostId = host.id!!
         userInput.saveInput()
         this.loadPage1()
+        teamLabels = mutableListOf(getString(R.string.choose_team))
 //        when (userInput.getPage()) {
 //            1 -> this.loadPage1()
 //            2 -> this.loadPage2()
@@ -72,6 +72,17 @@ class RegistrationActivity : AppCompatActivity() {
         this.registrationNavTeam.setOnClickListener(View.OnClickListener {
             this.loadPage3()
         })
+    }
+
+    private fun hideSystemUI() {
+        val decorView = window.decorView
+        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                // Hide the nav bar and status bar
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 
     private fun layout(res: Int): View {
@@ -145,6 +156,8 @@ class RegistrationActivity : AppCompatActivity() {
         val edtPhone = findViewById<EditText>(R.id.edtMobileNumber)
         val edtGender = findViewById<RadioGroup>(R.id.genderRb)
         val edtPassword = findViewById<EditText>(R.id.edtPassword)
+        val btnNextStep = findViewById<Button>(R.id.btnNextStep)
+
 
         edtFirstName.setText(this.userInput.fname)
         edtLastName.setText(this.userInput.lname)
@@ -182,6 +195,8 @@ class RegistrationActivity : AppCompatActivity() {
             }
         }
 
+        btnNextStep.isEnabled = this.checkPage1Validity()
+
         edtGender.setOnCheckedChangeListener { group, checkedId ->
             when (group.checkedRadioButtonId) {
                 R.id.rbMale -> {
@@ -195,6 +210,7 @@ class RegistrationActivity : AppCompatActivity() {
                     userInput.saveInput()
                 }
             }
+            btnNextStep.isEnabled = this.checkPage1Validity()
         }
 
         edtFirstName.addTextChangedListener(object : TextWatcher {
@@ -207,6 +223,7 @@ class RegistrationActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 userInput.fname = edtFirstName.text.toString()
                 userInput.saveInput()
+                btnNextStep.isEnabled = checkPage1Validity()
             }
         })
 
@@ -220,6 +237,7 @@ class RegistrationActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 userInput.lname = edtLastName.text.toString()
                 userInput.saveInput()
+                btnNextStep.isEnabled = checkPage1Validity()
             }
         })
 
@@ -234,6 +252,7 @@ class RegistrationActivity : AppCompatActivity() {
                 userInput.usernameInput = edtUsername.text.toString()
                 userInput.username = edtUsername.text.toString() + edtUsernameRandom.text.toString()
                 userInput.saveInput()
+                btnNextStep.isEnabled = checkPage1Validity()
             }
         })
 
@@ -254,20 +273,26 @@ class RegistrationActivity : AppCompatActivity() {
                 } else {
                     isEmailValid = false
                 }
+                btnNextStep.isEnabled = checkPage1Validity()
             }
         })
 
         edtEmail.setOnFocusChangeListener { v, hasFocus ->
             val email = edtEmail.text.toString()
-            if (RegexService.testEmail(email)) {
+            if (!RegexService.testEmail(email) && !hasFocus) {
+                isEmailValid = false
+                Log.d("EMAIL_VALIDATION", "false")
+                // Toast.makeText(this, "Invalid Email", Toast.LENGTH_LONG).show()
+                val error = getString(R.string.error)
+                val message = getString(R.string.error_invalid_email)
+                val dialog = UtilService.showDefaultAlert(this, error, message)
+                dialog.show()
+            } else {
                 userInput.email = email
                 userInput.saveInput()
                 isEmailValid = true
-            } else {
-                isEmailValid = false
-                Log.d("EMAIL_VALIDATION", "false")
-                Toast.makeText(this, "Invalid Email", Toast.LENGTH_LONG).show()
             }
+            btnNextStep.isEnabled = checkPage1Validity()
         }
 
         edtPostalCode.setOnFocusChangeListener { v, hasFocus ->
@@ -285,21 +310,33 @@ class RegistrationActivity : AppCompatActivity() {
                         userInput.saveInput()
                     } else {
                         Log.d("POST_CODE_ERROR", "Invalid address")
-                        // this.callDialog("Fout", "ongeldig adres")
+                        val errorMessage = getString(R.string.error)
+                        val invalidPostcode = getString(R.string.error_invalid_postal_code)
+                        val dialog = UtilService.showDefaultAlert(this, errorMessage, invalidPostcode)
 
                         edtStreetName.setText("")
                         edtCity.setText("")
                         userInput.city = null
                         userInput.streetName = null
-                        Toast.makeText(this, "ongeldig adres", Toast.LENGTH_LONG).show()
+                        // Toast.makeText(this, "ongeldig adres", Toast.LENGTH_LONG).show()
+                        dialog.show()
                     }
                 }
+            } else if (postcode == "") {
+                val error = getString(R.string.error)
+                val missingPostCodeError = getString(R.string.error_invalid_postal_code)
+                val dialog = UtilService.showDefaultAlert(this, error, missingPostCodeError)
+                dialog.show()
             }
+            btnNextStep.isEnabled = checkPage1Validity()
         }
 
         edtHouseNumber.setOnFocusChangeListener { v, hasFocus ->
             val postcode = edtPostalCode.text.toString()
             val houseNumber = edtHouseNumber.text.toString()
+            val error = getString(R.string.error)
+            val message = getString(R.string.error_invalid_postal_code)
+            val dialog = UtilService.showDefaultAlert(this, error, message)
             if (postcode != "" &&  houseNumber != "") {
                 this.getPostCode(postcode, houseNumber) { success, streetName, city ->
                     if (success && streetName != "" && city != "") {
@@ -316,12 +353,14 @@ class RegistrationActivity : AppCompatActivity() {
                         edtCity.setText("")
                         userInput.city = null
                         userInput.streetName = null
-                        Toast.makeText(this, "ongeldig adres", Toast.LENGTH_LONG).show()
-                        val dialog = UtilService.showDefaultAlert(this, "Fout", "ongeldig adres")
+                        // Toast.makeText(this, "ongeldig adres", Toast.LENGTH_LONG).show()
                         dialog.show()
                     }
                 }
+            } else if (houseNumber == "") {
+                dialog.show()
             }
+            btnNextStep.isEnabled = checkPage1Validity()
         }
 
 
@@ -334,33 +373,48 @@ class RegistrationActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val phoneNumber = edtPhone.text.toString()
-                if (RegexService.testPhoneNumber(phoneNumber)) {
-                    userInput.phoneNumber = phoneNumber
-                    userInput.saveInput()
-                    isPhoneNumberValid = true
-                } else {
+                if (!RegexService.testPhoneNumber(phoneNumber)) {
                     userInput.phoneNumber = phoneNumber
                     userInput.saveInput()
                     isPhoneNumberValid = false
+                } else {
+                    userInput.phoneNumber = phoneNumber
+                    userInput.saveInput()
+                    isPhoneNumberValid = true
                 }
+                btnNextStep.isEnabled = checkPage1Validity()
             }
         })
 
         edtPhone.setOnFocusChangeListener { v, hasFocus ->
             val phoneNumber = edtPhone.text.toString()
-            if (RegexService.testPhoneNumber(phoneNumber)) {
-                userInput.phoneNumber = phoneNumber
-                userInput.saveInput()
-                isPhoneNumberValid = true
-            } else {
+            if (phoneNumber.length < 10) {
+                val error = getString(R.string.error)
+                val message = getString(R.string.error_invalid_mobile_number_length)
+                val dialog = UtilService.showDefaultAlert(this, error, message)
                 userInput.phoneNumber = phoneNumber
                 userInput.saveInput()
                 isPhoneNumberValid = false
-                val dialog = UtilService.showDefaultAlert(this, "Fout", "ongeldig adres")
-
-                Toast.makeText(this, "Invalid Phone number", Toast.LENGTH_LONG).show()
+                // Toast.makeText(this, "Invalid Phone number", Toast.LENGTH_LONG).show()
                 dialog.show()
+            } else if (!RegexService.testPhoneNumber(phoneNumber) && !hasFocus) {
+                userInput.phoneNumber = phoneNumber
+                userInput.saveInput()
+                isPhoneNumberValid = false
+                val error = getString(R.string.error)
+                val message = getString(R.string.error_invalid_mobile_number)
+                val dialog = UtilService.showDefaultAlert(this, error, message)
+
+                // Toast.makeText(this, "Invalid Phone number", Toast.LENGTH_LONG).show()
+                dialog.show()
+
+            } else {
+                userInput.phoneNumber = phoneNumber
+                userInput.saveInput()
+                isPhoneNumberValid = true
             }
+
+            btnNextStep.isEnabled = checkPage1Validity()
         }
 
         edtPassword.addTextChangedListener(object : TextWatcher {
@@ -375,13 +429,22 @@ class RegistrationActivity : AppCompatActivity() {
                 userInput.password = password
                 userInput.saveInput()
                 App.prefs.registrationPassword = password
+                btnNextStep.isEnabled = checkPage1Validity()
             }
         })
 
         edtPassword.setOnFocusChangeListener { v, hasFocus ->
-            val password = edtPassword.text.toString()
-            userInput.password = password
-            userInput.saveInput()
+            if (!hasFocus && (edtPassword.text.toString() == "" || edtPassword.text.toString().length < 8)) {
+                val error = getString(R.string.error)
+                val message = getString(R.string.error_invalid_password)
+                val dialog = UtilService.showDefaultAlert(this, error, message)
+                dialog.show()
+            } else {
+                val password = edtPassword.text.toString()
+                userInput.password = password
+                userInput.saveInput()
+                btnNextStep.isEnabled = checkPage1Validity()
+            }
         }
 
     }
@@ -460,7 +523,7 @@ class RegistrationActivity : AppCompatActivity() {
             && userInput.streetName != null && userInput.streetName != ""
             && userInput.city != null && userInput.city != ""
             && userInput.phoneNumber != null && userInput.phoneNumber != ""
-            && userInput.password != null && userInput.password != ""
+            && userInput.password != null && userInput.password != "" && userInput.password!!.length >= 8
             && isEmailValid && isPhoneNumberValid && isTorAccepted
         )
 
@@ -538,6 +601,16 @@ class RegistrationActivity : AppCompatActivity() {
 
     fun onCancelClick (view: View) {
         this.torDialog.hide()
+        this.isTorAccepted = false
+        this.userInput.tac = false
+        this.userInput.saveInput()
+        val btnNextStep = findViewById<Button>(R.id.btnNextStep)
+        btnNextStep.isEnabled = checkPage1Validity()
+        val error = getString(R.string.error)
+        val message = getString(R.string.error_tac_not_accepted)
+        val errorDialog = UtilService.showDefaultAlert(this, error, message)
+
+        errorDialog.show()
     }
 
     fun onYesClick (view:View) {
@@ -545,6 +618,8 @@ class RegistrationActivity : AppCompatActivity() {
         this.isTorAccepted = true
         this.userInput.tac = true
         this.userInput.saveInput()
+        val btnNextStep = findViewById<Button>(R.id.btnNextStep)
+        btnNextStep.isEnabled = checkPage1Validity()
     }
 
     fun goToStep2 (view: View) {
@@ -578,7 +653,12 @@ class RegistrationActivity : AppCompatActivity() {
             .subscribe {
                 when (it) {
                     true -> {
-                        val activity = Intent(this, LoginActivity::class.java)
+                        var activity: Intent
+                        if (userInput.isVolunteer != null && userInput.isVolunteer!!) {
+                            activity = Intent(this, MainActivity::class.java)
+                        } else {
+                            activity = Intent(this, LoginActivity::class.java)
+                        }
                         startActivity(activity)
                         finish()
                     }

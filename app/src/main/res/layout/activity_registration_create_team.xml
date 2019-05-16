@@ -47,7 +47,7 @@
                                 android:layout_height="wrap_content"
                                 style="@style/login_button_style"
                                 android:layout_marginBottom="@dimen/reg_margin_bottom"
-                                android:text="@string/select_logo" android:onClick="showPictureDialog"
+                                android:text="@string/select_team_logo" android:onClick="showPictureDialog"
                                 android:id="@+id/selectLogoBtn"/>
                         <RelativeLayout
                                 android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                         <Button
                                 android:text="@string/back"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" android:id="@+id/button"
+                                android:layout_height="wrap_content" android:id="@+id/regCreateTeamBtn"
                                 android:layout_marginTop="10dp"
                                 android:background="@color/color_blue_dark" android:textColor="@color/white"
                                 android:onClick="onGoBack"/>

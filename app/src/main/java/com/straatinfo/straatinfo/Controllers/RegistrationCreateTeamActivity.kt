@@ -1,5 +1,6 @@
 package com.straatinfo.straatinfo.Controllers
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,8 +8,12 @@ import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import com.straatinfo.straatinfo.Models.Host
@@ -44,6 +49,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
         Log.d("LOADING_INPUT_FROM_CT1", userInput.toRequestObject().toString())
         Log.d("LOADING_INPUT_FROM_CT2", userInput.toJson().toString())
         userInput.saveInput()
+        loadRegistrationBtn()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -58,6 +64,53 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                     Log.d("PERMISSION", "Permission has been granted by user")
 
                 }
+            }
+        }
+    }
+
+    fun loadRegistrationBtn () {
+        val button = findViewById<Button>(R.id.registerFromCreateTeamBtn)
+        button.isEnabled = false
+        val teamEmail = findViewById<EditText>(R.id.teamEmailAddressTxt)
+        val teamName = findViewById<EditText>(R.id.teamNameTxt)
+
+        teamName.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                button.isEnabled = teamEmail.text.toString() == "" && teamName.text.toString() !== ""
+            }
+        })
+
+        teamName.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus && teamName.text.toString() == "") {
+                button.isEnabled = false
+            } else if (teamName.text.toString() != "") {
+                button.isEnabled = true
+            }
+        }
+
+        teamEmail.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                button.isEnabled = teamEmail.text.toString() == "" && teamName.text.toString() !== ""
+            }
+        })
+
+        teamEmail.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus && teamEmail.text.toString() == "") {
+                button.isEnabled = false
+            } else if (teamEmail.text.toString() != "") {
+                button.isEnabled = true
             }
         }
     }
@@ -177,12 +230,17 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                 .subscribe {
                     when (it) {
                         true -> {
-                            val activity = Intent(this, LoginActivity::class.java)
+                            var activity: Intent
+                            if (userInput.isVolunteer != null && userInput.isVolunteer!!) {
+                                activity = Intent(this, MainActivity::class.java)
+                            } else {
+                                activity = Intent(this, LoginActivity::class.java)
+                            }
                             startActivity(activity)
                             finish()
                         }
                         else -> {
-                            val builder = android.app.AlertDialog.Builder(this)
+                            val builder = AlertDialog.Builder(this)
                             builder
                                 .setTitle("Create Team Error")
                                 .setMessage("An error occured while processing data")
@@ -194,7 +252,8 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                 }
                 .run {  }
         } else {
-            val dialog = UtilService.showDefaultAlert(this, "Error", "Please complete the form")
+            val error = getString(R.string.error)
+            val dialog = UtilService.showDefaultAlert(this, error, "Please complete the form")
             dialog.show()
         }
     }

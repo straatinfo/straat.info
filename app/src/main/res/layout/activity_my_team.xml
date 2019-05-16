@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:fitsSystemWindows="true"
-            app:menu="@menu/activity_main_drawer"/>
+            app:menu="@menu/activity_main_drawer" tools:visibility="gone"/>
 
 
 </android.support.v4.widget.DrawerLayout>

@@ -54,8 +54,8 @@
     <TextView
             android:layout_marginTop="@dimen/reg_notes_margin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="21dp"
             android:text="@string/registration_ask_as_pro"
-    />
+            android:visibility="invisible"/>
 
 </LinearLayout>

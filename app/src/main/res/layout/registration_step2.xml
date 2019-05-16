@@ -33,6 +33,6 @@
             android:layout_marginTop="@dimen/reg_notes_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="When you are a volunteer, for example want to join a neighbourhood watch, then choose `yes`. When you are going to use this app as a professional, please choose ´no´."
+            android:text="@string/registration_when_volunteer_info"
     />
 </LinearLayout>

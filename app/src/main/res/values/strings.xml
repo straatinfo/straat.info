@@ -232,4 +232,13 @@
     <string name="enter_team_name">Enter Team Name</string>
     <string name="select_logo">Select Logo</string>
     <string name="back">Back</string>
+    <string name="tnc_accept">I hereby accept the general terms</string>
+    <string name="error">Error</string>
+    <string name="error_tac_not_accepted">You did not accept terms and condition</string>
+    <string name="select_team_logo">Select Team Logo</string>
+    <string name="choose_team">Choose Team</string>
+    <string name="registration_when_volunteer_info">When you are a volunteer, for example want to join a neighbourhood
+        watch, then choose `yes`. When you are going to use this app as a professional, please choose ´no´.
+    </string>
+    <string name="report_window_info_no_photo">No Photo</string>
 </resources>

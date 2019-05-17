@@ -23,8 +23,8 @@
 
             <ImageView
                     android:src="@drawable/ic_logo"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:id="@+id/imageView2"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
@@ -35,7 +35,7 @@
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:orientation="horizontal"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/registration_logo"

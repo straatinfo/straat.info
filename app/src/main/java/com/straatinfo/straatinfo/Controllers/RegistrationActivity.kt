@@ -298,7 +298,7 @@ class RegistrationActivity : AppCompatActivity() {
         edtPostalCode.setOnFocusChangeListener { v, hasFocus ->
             val postcode = edtPostalCode.text.toString()
             val houseNumber = edtHouseNumber.text.toString()
-            if (postcode != "" &&  houseNumber != "") {
+            if (!hasFocus && postcode != "" &&  houseNumber != "") {
                 this.getPostCode(postcode, houseNumber) { success, streetName, city ->
                     if (success && streetName != "" && city != "") {
                         edtStreetName.setText(streetName)
@@ -322,7 +322,7 @@ class RegistrationActivity : AppCompatActivity() {
                         dialog.show()
                     }
                 }
-            } else if (postcode == "") {
+            } else if (!hasFocus && postcode == "") {
                 val error = getString(R.string.error)
                 val missingPostCodeError = getString(R.string.error_invalid_postal_code)
                 val dialog = UtilService.showDefaultAlert(this, error, missingPostCodeError)
@@ -337,7 +337,7 @@ class RegistrationActivity : AppCompatActivity() {
             val error = getString(R.string.error)
             val message = getString(R.string.error_invalid_postal_code)
             val dialog = UtilService.showDefaultAlert(this, error, message)
-            if (postcode != "" &&  houseNumber != "") {
+            if (!hasFocus && postcode != "" &&  houseNumber != "") {
                 this.getPostCode(postcode, houseNumber) { success, streetName, city ->
                     if (success && streetName != "" && city != "") {
                         edtStreetName.setText(streetName)
@@ -357,7 +357,7 @@ class RegistrationActivity : AppCompatActivity() {
                         dialog.show()
                     }
                 }
-            } else if (houseNumber == "") {
+            } else if (!hasFocus && houseNumber == "") {
                 dialog.show()
             }
             btnNextStep.isEnabled = checkPage1Validity()
@@ -388,7 +388,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         edtPhone.setOnFocusChangeListener { v, hasFocus ->
             val phoneNumber = edtPhone.text.toString()
-            if (phoneNumber.length < 10) {
+            if (!hasFocus && phoneNumber.length < 10) {
                 val error = getString(R.string.error)
                 val message = getString(R.string.error_invalid_mobile_number_length)
                 val dialog = UtilService.showDefaultAlert(this, error, message)
@@ -434,7 +434,8 @@ class RegistrationActivity : AppCompatActivity() {
         })
 
         edtPassword.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus && (edtPassword.text.toString() == "" || edtPassword.text.toString().length < 8)) {
+            val password = edtPassword.text.toString()
+            if (!hasFocus && (password == "" || password.length < 8 || !RegexService.testpassword(password))) {
                 val error = getString(R.string.error)
                 val message = getString(R.string.error_invalid_password)
                 val dialog = UtilService.showDefaultAlert(this, error, message)

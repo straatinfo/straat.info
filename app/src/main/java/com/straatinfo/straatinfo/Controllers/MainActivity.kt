@@ -3,6 +3,7 @@ package com.straatinfo.straatinfo.Controllers
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -74,9 +75,9 @@ class MainActivity : AppCompatActivity(),
 
     lateinit var locationManager: LocationManager
     var mainCategories = mutableListOf<MainCategory>()
-    var mainCatList = mutableListOf("Select Main Category")
+    var mainCatList = mutableListOf<String>()
     var subCategories = mutableListOf<SubCategory>()
-    var subCatList = mutableListOf("Select Sub Category")
+    var subCatList = mutableListOf<String>()
     private var hasGps = false
     private var hasNetwork = false
     private var locationGps: Location? = null
@@ -114,6 +115,8 @@ class MainActivity : AppCompatActivity(),
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        mainCatList = mutableListOf(getString(R.string.report_select_main_category))
+        subCatList = mutableListOf(getString(R.string.report_select_sub_category))
         this.init()
     }
 
@@ -214,6 +217,7 @@ class MainActivity : AppCompatActivity(),
             .subscribeOn(Schedulers.io())
             .subscribe { result ->
                 reportCurrentLoc.text = this.parseGeocodeData(result)
+                sendReportTypeALocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
                 this.setLocation(this.parseGeocodeData(result))
                 this.setLongLat(p0!!.position.longitude, p0!!.position.latitude)
             }
@@ -620,6 +624,7 @@ class MainActivity : AppCompatActivity(),
         sendReportPage2TB.setNavigationOnClickListener {
             this.reload()
         }
+        reportTypeBBtn.visibility = View.INVISIBLE
         reportTypeABtn.setOnClickListener {
             this.showSendReportTypeA()
         }
@@ -710,7 +715,7 @@ class MainActivity : AppCompatActivity(),
 
     fun loadRpASubCatSpinner (mc: MainCategory) {
         subCategories = mutableListOf()
-        subCatList = mutableListOf("Select Sub Category")
+        subCatList = mutableListOf(getString(R.string.report_select_sub_category))
         populateSubCat(mc.subCategories as JSONArray) {
             subCatSpinner.visibility = View.VISIBLE
             val subAa = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, this.subCatList)
@@ -826,8 +831,11 @@ class MainActivity : AppCompatActivity(),
 
     fun showPictureDialog (view: View) {
         val pictureDialog = AlertDialog.Builder(this)
-        pictureDialog.setTitle("Select Action")
-        val pictureDialogItems = arrayOf("Select photo from gallery", "Capture photo from camera")
+        val title = getString(R.string.media_select_action)
+        val fromGallery = getString(R.string.media_select_photo_from_gallery)
+        val fromCamera = getString(R.string.medial_capture_photo_from_camera)
+        pictureDialog.setTitle(title)
+        val pictureDialogItems = arrayOf(fromGallery, fromCamera)
 
         btnChose = view.id
         pictureDialog.setItems(pictureDialogItems) { dialog, which ->
@@ -840,6 +848,16 @@ class MainActivity : AppCompatActivity(),
         btnClicked = view.id
 
         pictureDialog.show()
+    }
+
+    // send repor a info
+    fun onCheckReportAInfo (view: View) {
+        var title = getString(R.string.report_suspicious_situation)
+        var message = getString(R.string.report_type_a_info)
+
+        val dialog = UtilService.showDefaultAlert(this, title, message)
+
+        dialog.show()
     }
 
 
@@ -879,6 +897,7 @@ class MainActivity : AppCompatActivity(),
                 .subscribe { result ->
                     Log.d("POINT", this.parseGeocodeData(result))
                     reportCurrentLoc.text = this.parseGeocodeData(result)
+                    sendReportTypeALocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
                     this.setLocation(this.parseGeocodeData(result))
                     this.setLongLat(pointToUse.longitude, pointToUse.latitude)
                 }
@@ -903,11 +922,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
     fun setButtonEnablement () {
-        if (this._isValid) {
-            sendReportABtn.setBackgroundColor(getResources().getColor(R.color.color_green))
-        } else {
-            sendReportABtn.setBackgroundColor(getResources().getColor(R.color.color_blue_dark))
-        }
+        sendReportABtn.isEnabled = this._isValid
     }
 
     fun setMainCatId (id: String) {
@@ -990,7 +1005,11 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun promptUser () {
-        Toast.makeText(this, "Please supply missing fields", Toast.LENGTH_LONG).show()
+        val title = getString(R.string.error)
+        val message = getString(R.string.report_error_supply_missing_fields)
+        // Toast.makeText(this, "Please supply missing fields", Toast.LENGTH_LONG).show()
+        val dialog = UtilService.showDefaultAlert(this, title, message)
+        dialog.show()
     }
 
     // actual sending
@@ -1038,10 +1057,25 @@ class MainActivity : AppCompatActivity(),
                 .subscribe {
                     when(it) {
                         true -> {
-                            reload()
+                            val title = getString(R.string.success)
+                            val message = getString(R.string.report_send_report_success)
+                            val yes = getString(R.string.yes)
+                            val dialog = AlertDialog.Builder(this)
+                                .setTitle(title)
+                                .setMessage(message)
+                                .setPositiveButton(yes, DialogInterface.OnClickListener { dialog, i ->
+                                    //set what would happen when positive button is clicked
+                                    // finish()
+                                    reload()
+                                })
+                            dialog.show()
                         }
                         else -> {
-                            Toast.makeText(this, "An error occured while sending the report", Toast.LENGTH_LONG).show()
+                            val title = getString(R.string.error)
+                            val message = getString(R.string.report_error_internal_server)
+                            val dialog = UtilService.showDefaultAlert(this, title, message)
+                            dialog.show()
+                            // Toast.makeText(this, "An error occured while sending the report", Toast.LENGTH_LONG).show()
                         }
                     }
                 }

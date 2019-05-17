@@ -107,9 +107,7 @@
     <string name="error_invalid_code">Invalid code</string>
     <string name="error_wrong_input">Wrong input</string>
     <string name="error_invalid_email">Your e-mail is not valid</string>
-    <string name="error_invalid_password">Your password is not valid or must be atleast 6
-        alphanumeric characters
-    </string>
+    <string name="error_invalid_password">"Your password is not valid or must be atleast 8 alphanumeric characters "</string>
     <string name="error_invalid_firstname">Your firstname is not valid</string>
     <string name="error_invalid_lastname">Your lastname is not valid</string>
     <string name="error_taken_username">This username is already in use or not allowed. Please
@@ -241,4 +239,18 @@
         watch, then choose `yes`. When you are going to use this app as a professional, please choose ´no´.
     </string>
     <string name="report_window_info_no_photo">No Photo</string>
+    <string name="registration_invalid_post_code">Invalid Postal Code</string>
+    <string name="registration_invalid_house_number">Invalid House Number</string>
+    <string name="report_marker_instruction">You can put the blue pointer on a different place on the map</string>
+    <string name="report_type_a_info">Here you’re able to share a situation that might be suspicious with other members
+        of your team. At the moment other members agree with you, that is indeed looks suspicious call the police or
+        other relevant organisation.\\nEmergency? First call 112 before continuing to use this app!
+    </string>
+    <string name="location_col">"Location: "</string>
+    <string name="media_select_action">Select Action</string>
+    <string name="media_select_photo_from_gallery">Select photo from gallery</string>
+    <string name="medial_capture_photo_from_camera">Capture photo from camera</string>
+    <string name="report_error_supply_missing_fields">Please supply missing fields</string>
+    <string name="report_error_internal_server">An error occured while sending the report</string>
+    <string name="success">Success</string>
 </resources>

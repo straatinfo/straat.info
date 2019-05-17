@@ -1,11 +1,14 @@
 package com.straatinfo.straatinfo.Controllers
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.NavUtils
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toolbar
 import com.straatinfo.straatinfo.R
+import kotlinx.android.synthetic.main.app_bar_main.*
 
 class ReportsActivity : AppCompatActivity() {
 
@@ -15,6 +18,7 @@ class ReportsActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         Log.d("SELECTED_ACTIVITY", "Reports activity")
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -24,6 +28,11 @@ class ReportsActivity : AppCompatActivity() {
 //                return true
 //            }
 //        }
+        val mainActivity = Intent(this, MainActivity::class.java)
+        startActivity(mainActivity)
+        finish()
         return super.onOptionsItemSelected(item)
     }
+
+
 }

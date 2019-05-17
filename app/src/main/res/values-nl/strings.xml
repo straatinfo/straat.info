@@ -68,12 +68,14 @@
     <string name="report_send_report_success" translatable="false">Deze is vanaf nu voor iedereen te zien op straat.info. Een melding openbare ruimte wordt bovendien naar de gemeente gestuurd.</string>
     <string name="report_report_success_dialog_title" translatable="false">Dank voor uw melding!</string>
     <string name="report_emergency_notification" translatable="false">Spoedmelding</string>
-    <string name="report_select_main_category" translatable="false">Selecteer Hoofdcategorie</string>
-    <string name="report_select_sub_category" translatable="false">Selecteer Subcategorie</string>
+    <string name="report_select_main_category" translatable="false">Kies Hoofdcategorie</string>
+    <string name="report_select_sub_category" translatable="false">Kies Subcategorie</string>
     <string name="report_send_report" translatable="false">Geef melding door</string>
 
     <!-- Error Messages -->
-    <string name="error_invalid_postal_code" translatable="false">The postal code and/or house number entry seems to be incorrect. Please fill in the correct postal code and house number</string>
+    <string name="error_invalid_postal_code" translatable="false">De postcode en / of het huisnummer is onjuist. Vul
+        alstublieft de juiste postcode en het huisnummer in
+    </string>
     <string name="error_response" translatable="false">Foutreactie</string>
     <string name="error_fill_up_all_fields" translatable="false">Vul alle lege velden in</string>
     <string name="error_invalid_code" translatable="false">Ongeldige code</string>
@@ -179,4 +181,18 @@
     </string>
     <string name="registration_ask_volunteer">Gebruikt u straat.info als vrijwilliger?</string>
     <string name="report_window_info_no_photo">geen foto</string>
+    <string name="registration_invalid_post_code">Ongeldige postcode</string>
+    <string name="registration_invalid_house_number">Ongeldig huisnummer</string>
+    <string name="report_marker_instruction">U kunt de blauwe pointer op een andere plek op de kaart zetten</string>
+    <string name="report_type_a_info">Hier kunt u een situatie die u verdacht vindt, delen met andere gebruikers in de
+        app. Zodra meer mensen de situatie verdacht vinden, neem dan contact op met de politie of andere relevante
+        instantie (bijv. brandweer). NB bij spoed altijd eerst 112 bellen!
+    </string>
+    <string name="location_col">"Locatie: "</string>
+    <string name="media_select_action">voeg foto aan de melding toe …</string>
+    <string name="media_select_photo_from_gallery">uit gallerie</string>
+    <string name="medial_capture_photo_from_camera">maak een nieuwe foto</string>
+    <string name="report_error_supply_missing_fields">Geef ontbrekende velden op</string>
+    <string name="report_error_internal_server">Er is een fout opgetreden tijdens het verzenden van het rapport</string>
+    <string name="success">Succes</string>
 </resources>

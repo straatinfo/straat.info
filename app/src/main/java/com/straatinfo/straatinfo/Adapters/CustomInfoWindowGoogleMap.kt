@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.Marker
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Models.Report
 import com.straatinfo.straatinfo.R
+import com.straatinfo.straatinfo.Services.UtilService
 import com.straatinfo.straatinfo.Utilities.WINDOW_INFO_REPORT_DATE_FORMAT
 import kotlinx.android.synthetic.main.layout_custom_map_marker.view.*
 import org.json.JSONObject
@@ -37,7 +38,7 @@ class CustomInfoWindowGoogleMap(val context: Context) : GoogleMap.InfoWindowAdap
 
 
         mInfoView.reportDateTxt.text = dateFormat.format(date)
-        mInfoView.mainCatTxt.text = mInfoWindow!!.mainCategoryName
+        mInfoView.mainCatTxt.text = UtilService.shortenedChar(mInfoWindow!!.mainCategoryName!!, 12)
         val preview: ImageView = mInfoView.reportPreviewImg
         val noPhoto: TextView = mInfoView.windowInfoNoPhotoTxt
         preview.setImageResource(R.drawable.ic_logo)

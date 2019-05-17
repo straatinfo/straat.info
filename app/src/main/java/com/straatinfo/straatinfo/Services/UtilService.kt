@@ -181,4 +181,20 @@ object UtilService {
 
         return sb.toString()
     }
+
+    fun shortenedChar (originalString: String, limit: Int): String {
+        // main categor... || 15
+
+        if (originalString.length <= limit) {
+            return originalString
+        }
+
+        val sb = StringBuilder()
+
+        for (i in 0..(limit -1)) {
+            sb.append(originalString[i])
+        }
+
+        return "$sb..."
+    }
 }

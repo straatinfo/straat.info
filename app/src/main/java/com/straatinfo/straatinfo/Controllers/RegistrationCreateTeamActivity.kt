@@ -82,7 +82,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                button.isEnabled = teamEmail.text.toString() == "" && teamName.text.toString() !== ""
+                button.isEnabled = teamEmail.text.toString() != "" && teamName.text.toString() != ""
             }
         })
 
@@ -102,7 +102,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                button.isEnabled = teamEmail.text.toString() == "" && teamName.text.toString() !== ""
+                button.isEnabled = teamEmail.text.toString() != "" && teamName.text.toString() != ""
             }
         })
 
@@ -203,8 +203,8 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
 
     fun showPictureDialog (view: View) {
         val pictureDialog = AlertDialog.Builder(this)
-        pictureDialog.setTitle("Select Action")
-        val pictureDialogItems = arrayOf("Select photo from gallery")
+        pictureDialog.setTitle(getString(R.string.media_select_action))
+        val pictureDialogItems = arrayOf(getString(R.string.media_select_photo_from_gallery))
 
         pictureDialog.setItems(pictureDialogItems) { dialog, which ->
             when (which) {
@@ -242,8 +242,8 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                         else -> {
                             val builder = AlertDialog.Builder(this)
                             builder
-                                .setTitle("Create Team Error")
-                                .setMessage("An error occured while processing data")
+                                .setTitle(getString(R.string.error))
+                                .setMessage(getString(R.string.error_team_duplicate_credentials))
 
                             builder.create()
                             builder.show()
@@ -253,7 +253,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                 .run {  }
         } else {
             val error = getString(R.string.error)
-            val dialog = UtilService.showDefaultAlert(this, error, "Please complete the form")
+            val dialog = UtilService.showDefaultAlert(this, error, getString(R.string.error_fill_up_all_fields))
             dialog.show()
         }
     }

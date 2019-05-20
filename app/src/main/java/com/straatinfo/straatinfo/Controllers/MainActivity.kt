@@ -1,6 +1,7 @@
 package com.straatinfo.straatinfo.Controllers
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -33,6 +34,7 @@ import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.opengl.Visibility
 import android.provider.MediaStore
 import android.provider.Settings
@@ -52,6 +54,8 @@ import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import android.view.View
 import android.widget.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.FutureTarget
 import com.straatinfo.straatinfo.Models.*
 import com.straatinfo.straatinfo.Services.CategoryService
 import com.straatinfo.straatinfo.Services.MediaService
@@ -60,6 +64,7 @@ import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
 import kotlinx.android.synthetic.main.activity_home.drawer_layout
 import kotlinx.android.synthetic.main.activity_home.nav_view
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_custom_map_marker.view.*
 import org.json.JSONArray
 import java.io.IOException
 
@@ -397,6 +402,11 @@ class MainActivity : AppCompatActivity(),
                 R.id.nav_logout -> {
                     val login = Intent(this, LoginActivity::class.java)
                     startActivity(login)
+                    finish()
+                }
+                R.id.nav_profile -> {
+                    val profile = Intent(this, MyProfile::class.java)
+                    startActivity(profile)
                     finish()
                 }
                 else -> {

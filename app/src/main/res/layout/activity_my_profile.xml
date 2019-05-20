@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="start"
+        tools:openDrawer="end">
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".Controllers.MyProfile" android:background="#EBEAEA">
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="80dp"
+        >
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical">
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/profile_frame_layout_container"
+                        android:layout_marginBottom="10dp">
+
+                    <android.support.constraint.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                        <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp" app:srcCompat="@drawable/ic_menu_profile"
+                                android:id="@+id/profileProfilePicImg" app:layout_constraintEnd_toEndOf="parent"
+                                android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                                android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                                app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:background="@android:color/darker_gray" android:scaleType="centerCrop"/>
+                    </android.support.constraint.ConstraintLayout>
+                </FrameLayout>
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/profile_frame_layout_container"
+                        android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        <TextView
+                                android:text="@string/first_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/textView10"
+                                android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profileFnameTxt" android:background="@drawable/profile_edit_text_shape"
+                                android:hint="@string/first_name" tools:text="John" android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/profile_frame_layout_container"
+                        android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        <TextView
+                                android:text="@string/last_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" android:id="@+id/textView11"
+                                tools:text="@string/last_name" android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profileLnameTxt"
+                                android:background="@drawable/profile_edit_text_shape" tools:text="Doe"
+                                android:hint="@string/last_name"
+                                android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/profile_frame_layout_container"
+                        android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        <TextView
+                                android:text="@string/address"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" android:id="@+id/textView12"
+                                android:layout_marginBottom="5dp" android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profileHouseNumberTxt"
+                                android:background="@drawable/profile_edit_text_shape"
+                                android:hint="@string/postal_number" android:layout_marginBottom="5dp" tools:text="1"
+                                android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/profile_edit_text_shape"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profilePostCodeTxt" android:layout_marginBottom="5dp"
+                                tools:text="2521AA" android:hint="@string/postal_code"
+                                android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/profile_edit_text_shape"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profileStreetNameTxt" android:layout_marginBottom="5dp"
+                                tools:text="Calandkade" android:hint="@string/street"
+                                android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/profile_edit_text_shape"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profileCityTxt" tools:text="'s-Gravenhage"
+                                android:hint="@string/town"
+                                android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/profile_frame_layout_container"
+                        android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        <TextView
+                                android:text="@string/profile_contact_details"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" android:id="@+id/textView14"
+                                android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profileEmailTxt" tools:text="johndoe@domain.com"
+                                android:background="@drawable/profile_edit_text_shape"
+                                android:hint="@string/email_address" android:layout_marginBottom="5dp"
+                                android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profilePhoneNumberTxt" tools:text="0612345678"
+                                android:background="@drawable/profile_edit_text_shape"
+                                android:hint="@string/mobile_number"
+                                android:enabled="false"
+                                android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/profile_frame_layout_container"
+                        android:layout_marginBottom="10dp">
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        <TextView
+                                android:text="@string/username"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" android:id="@+id/textView15"
+                                android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName"
+                                android:ems="10"
+                                android:id="@+id/profileUsernameTxt" tools:text="test_ID:IZNXA"
+                                android:background="@drawable/profile_edit_text_shape" android:hint="@string/username"
+                                android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/profile_frame_layout_container"
+                        android:layout_marginBottom="10dp">
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        <TextView
+                                android:text="@string/password"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" android:id="@+id/textView16"
+                                android:textColor="@android:color/black"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPersonName|textPassword"
+                                android:ems="10"
+                                android:id="@+id/profilePasswordTxt" tools:text="mysupersecretpassword"
+                                android:background="@drawable/profile_edit_text_shape" android:hint="@string/password"
+                                android:enabled="false"
+                                android:selectAllOnFocus="false" android:focusable="false"
+                                android:text="mysupersecretpassword"
+                                android:textColor="@android:color/black"/>
+                    </LinearLayout>
+                </FrameLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </android.support.constraint.ConstraintLayout>
+    <include
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/activity_main_drawer" tools:visibility="gone"/>
+
+
+</android.support.v4.widget.DrawerLayout>

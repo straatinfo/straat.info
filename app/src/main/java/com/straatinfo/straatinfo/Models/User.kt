@@ -1,5 +1,6 @@
 package com.straatinfo.straatinfo.Models
 
+import android.util.Log
 import org.json.JSONObject
 
 class User {
@@ -15,6 +16,8 @@ class User {
     var streetName: String? = null
     var city: String? = null
     var gender: String? = null
+
+    var profilePic: JSONObject? = null
 
     var isNotification: Boolean? = null
     var vibrate: Boolean? = null
@@ -87,6 +90,11 @@ class User {
             val design = Design(designId, hostId, colorOne, colorTwo, colorThree, logoUrl, designName)
 
             this.activeDesign = design
+        }
+
+        if (userJsonData.has("_profilePic")) {
+            Log.d("USER_MODEL", "Has photo")
+            this.profilePic = userJsonData.getJSONObject("_profilePic")
         }
 
     }

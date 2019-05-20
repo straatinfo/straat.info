@@ -601,7 +601,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     fun onCancelClick (view: View) {
-        this.torDialog.hide()
+
         this.isTorAccepted = false
         this.userInput.tac = false
         this.userInput.saveInput()
@@ -612,6 +612,7 @@ class RegistrationActivity : AppCompatActivity() {
         val errorDialog = UtilService.showDefaultAlert(this, error, message)
 
         errorDialog.show()
+        this.torDialog.hide()
     }
 
     fun onYesClick (view:View) {
@@ -641,6 +642,12 @@ class RegistrationActivity : AppCompatActivity() {
         this.userInput.isVolunteer = false
         this.userInput.saveInput()
         this.loadPage3()
+    }
+
+    fun goToLogin (view: View) {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     fun register (view: View) {

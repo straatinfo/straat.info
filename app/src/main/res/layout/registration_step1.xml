@@ -239,5 +239,10 @@
                 style="@style/login_button_style"
                 android:text="@string/next_step"
                 android:id="@+id/btnNextStep" android:onClick="goToStep2"/>
+        <TextView
+                android:text="@string/registration_are_you_existing_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/goToLoginTxt" android:textAlignment="center"
+                android:onClick="goToLogin"/>
 
 </LinearLayout>

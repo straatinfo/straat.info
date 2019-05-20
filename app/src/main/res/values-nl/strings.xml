@@ -98,7 +98,9 @@
     <string name="error_import_image_error" translatable="false">Er is een fout opgetreden bij het importeren van de afbeelding</string>
     <string name="error_mobile_prefix_error" translatable="false">Het nummer dat je ingevoerd hebt, is geen mobiel nummer. Voer een 06 nummer in</string>
     <string name="error_invalid_mobile_number_length" translatable="false">Het nummer dat je ingevoerd hebt, is niet 10 cijfers lang. Voer een 10 cijferig mobiel telefoonnummer in</string>
-    <string name="error_invalid_email_address" translatable="false">Dit mailadres is al in gebruik. Voer een ander emailadres if of neem contact op via formulier op www.straat.info</string>
+    <string name="error_invalid_email_address" translatable="false">Dit mailadres is niet compleet of al in gebruik.
+        Voer een ander emailadres if of neem contact op via formulier op www.straat.info
+    </string>
     <string name="error_invalid_report_desc" translatable="false">Controleer de inhoud van uw beschrijving</string>
 
     <!-- Terms & Condition -->
@@ -195,4 +197,24 @@
     <string name="report_error_supply_missing_fields">Geef ontbrekende velden op</string>
     <string name="report_error_internal_server">Er is een fout opgetreden tijdens het verzenden van het rapport</string>
     <string name="success">Succes</string>
+    <string name="enter_code_info">De app straat.info is nog in de testfase en voorlopig alleen toegankelijk met een
+        toegangscode. Als je de code hebt en wilt testen, graag. Geef dan alle feedback zsm aan ons door! Veel dank en
+        test plezier
+    </string>
+    <string name="error_team_duplicate_credentials">Teamnaam of Team-e-mailadres dat al in gebruik is</string>
+    <string name="registration_are_you_existing_user">Bent u een bestaande gebruiker?</string>
+    <string name="app_test_info">De app straat.info is nog in de testfase en voorlopig alleen toegankelijk met een
+        toegangscode. Als je de code hebt en wilt testen, graag. Geef dan alle feedback zsm aan ons door! Veel dank en
+        test plezier
+    </string>
+    <string name="menu_home">Home</string>
+    <string name="menu_my_notifications">Mijn meldingen</string>
+    <string name="menu_my_team">Mijn team</string>
+    <string name="menu_profile">Profiel</string>
+    <string name="menu_settings">Instellingen</string>
+    <string name="menu_about_us">Over ons</string>
+    <string name="menu_feedback">Terugkoppeling</string>
+    <string name="menu_logout">Uitloggen</string>
+    <string name="address">Adres</string>
+    <string name="profile_contact_details">Contact details</string>
 </resources>

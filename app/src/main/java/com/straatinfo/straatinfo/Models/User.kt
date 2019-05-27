@@ -28,6 +28,7 @@ class User {
     var team_name: String? = null
     var team_email: String? = null
     var team_is_approved: Boolean? = null
+    var team_is_volunteer: Boolean? = null
 
     var host_id: String? = null
     var isVolunteer: Boolean? = null
@@ -62,6 +63,7 @@ class User {
         this.streetName = userJson.getString("streetName")
         this.city = userJson.getString("city")
         this.gender = userJson.getString("gender")
+        this.isVolunteer = userJson.getBoolean("isVolunteer")
 
         if (userJsonData.has("setting")) {
             val settingJson = userJsonData.getJSONObject("setting")
@@ -90,6 +92,15 @@ class User {
             val design = Design(designId, hostId, colorOne, colorTwo, colorThree, logoUrl, designName)
 
             this.activeDesign = design
+        }
+
+        if (userJson.has("_activeTeam")) {
+            val activeTeam = userJson.getJSONObject("_activeTeam")
+            this.team_email = activeTeam.getString("teamEmail")
+            this.team_id = activeTeam.getString("_id")
+            this.team_name = activeTeam.getString("teamName")
+            this.team_is_approved = activeTeam.getBoolean("isApproved")
+            this.team_is_volunteer = activeTeam.getBoolean("isVolunteer")
         }
 
         if (userJsonData.has("_profilePic")) {

@@ -19,9 +19,16 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning,InnerclassSeparator">
-        <activity android:name=".Controllers.MyProfile"
-                  android:label="@string/menu_profile"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".Controllers.TeamFormActivity">
+        </activity>
+        <activity android:name=".Controllers.TeamMemberRequestActivity">
+        </activity>
+        <activity android:name=".Controllers.TeamDetailsActivity">
+        </activity>
+        <activity
+                android:name=".Controllers.MyProfile"
+                android:label="@string/menu_profile"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".Controllers.MyTeamActivity"

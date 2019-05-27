@@ -4,12 +4,10 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
+import com.bumptech.glide.request.RequestListener
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Models.User
-import com.straatinfo.straatinfo.Utilities.LOGIN_URL
-import com.straatinfo.straatinfo.Utilities.REQUEST_HOST_WITH_CODE
-import com.straatinfo.straatinfo.Utilities.SIGNUP_V2
-import com.straatinfo.straatinfo.Utilities.SIGNUP_V3
+import com.straatinfo.straatinfo.Utilities.*
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import org.json.JSONException
@@ -300,6 +298,106 @@ object AuthService {
             }
 
             App.prefs.requestQueue.add(hostRequest)
+        }
+    }
+
+    fun userRefresh (email: String) : Observable<Boolean> {
+        var requestBody = JSONObject()
+        requestBody.put("email", email)
+
+        authResponseError = null
+        return Observable.create {
+            val refreshRequest = object: JsonObjectRequest(Method.POST, REFRESH_AUTH, null, Response.Listener { response ->
+                // do something here with the response
+                Log.d("REFRESH_TOKEN", response.toString())
+                val data = response.getJSONObject("data")
+                this.processUserData(it, data)
+            }, Response.ErrorListener { error ->
+                var user: User
+                try {
+                    val err = JSONObject(String(error.networkResponse.data))
+
+                    authResponseError = err.getString("message") as String
+                    it.onNext(false)
+                } catch (e: JSONException) {
+                    Log.d("SIGNUP_ERROR", e.localizedMessage)
+                    authResponseError = "Internal Server Error"
+                    it.onNext(false)
+                } catch (e: VolleyError) {
+                    Log.d("SIGNUP_ERROR", e.localizedMessage)
+                    authResponseError = "Slow Internet Connection"
+                    it.onNext(false)
+                } catch (e: NullPointerException) {
+                    Log.d("SIGNUP_ERROR", e.localizedMessage)
+                    authResponseError = "Internal Server Error"
+                    it.onNext(false)
+                }
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getBody(): ByteArray {
+                    return requestBody.toString().toByteArray()
+                }
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(refreshRequest)
+        }
+    }
+
+    fun validateRegistrationInput (type: String, value: String) : Observable<Boolean> {
+        val requestBody = JSONObject()
+        requestBody.put(type, value)
+
+        return Observable.create {
+            val validationRequest = object: JsonObjectRequest(Method.POST, REGISTRATIN_VALIDATION, null, Response.Listener { response ->
+                if (response.has("data")) {
+                    val data = response.getJSONObject("data")
+                    if (!data.has("data") && !data.has("message")) {
+                        it.onNext(false)
+                    } else {
+                        val message = if (data.has("data"))  data.getString("data") else data.getString("message")
+
+                        if (message == "Invalid Input" || message == "already taken") {
+                            it.onNext(false)
+                        } else {
+                            it.onNext(true)
+                        }
+                    }
+
+                } else {
+                    it.onNext(false)
+                }
+            }, Response.ErrorListener { error ->
+                it.onNext(false)
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getBody(): ByteArray {
+                    return requestBody.toString().toByteArray()
+                }
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(validationRequest)
         }
     }
 }

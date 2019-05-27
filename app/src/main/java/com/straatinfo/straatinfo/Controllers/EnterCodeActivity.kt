@@ -18,6 +18,9 @@ class EnterCodeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_enter_code)
+
+        App.prefs.registrationData = ""
+        App.prefs.registrationPassword = ""
     }
 
     fun onSendCodeClick (view: View) {

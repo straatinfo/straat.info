@@ -23,6 +23,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         App.prefs.isLoggedIn = false
+        App.prefs.registrationData = ""
+        App.prefs.registrationPassword = ""
 
         loadFormSettings()
 

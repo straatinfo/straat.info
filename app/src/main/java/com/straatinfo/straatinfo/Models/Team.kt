@@ -7,6 +7,9 @@ class Team {
     var email: String? = null
     var name: String? = null
     var profilePic: JSONObject? = null
+    var isVolunteer: Boolean? = null
+    var isApproved: Boolean? = null
+
 
     constructor(id: String, email: String, name: String) {
         this.id = id
@@ -21,15 +24,28 @@ class Team {
         this.profilePic = profilePic
     }
 
+    constructor(teamJson: JSONObject) {
+        if (teamJson.has("_id")) this.id = teamJson.getString("_id")
+        if (teamJson.has("teamName")) this.name = teamJson.getString("teamName")
+        if (teamJson.has("teamEmail")) this.email = teamJson.getString("teamEmail")
+        if (teamJson.has("_profilePic")) this.profilePic = teamJson.getJSONObject("_profilePic")
+        if (teamJson.has("isVolunteer")) this.isVolunteer = teamJson.getBoolean("isVolunteer")
+        if (teamJson.has("isApproved")) this.isApproved = teamJson.getBoolean("isApproved")
+    }
+
     fun toJson () : JSONObject {
         val json = JSONObject()
 
         json.put("id", this.id)
         json.put("_id", this.id)
         json.put("email", this.email)
+        json.put("teamName", this.name)
+        json.put("teamEmail", this.email)
         json.put("name", this.name)
         json.put("profilePic", this.profilePic)
         json.put("_profilePic", this.profilePic)
+        json.put("isVolunteer", this.isVolunteer)
+        json.put("isApproved", this.isApproved)
 
         return json
     }

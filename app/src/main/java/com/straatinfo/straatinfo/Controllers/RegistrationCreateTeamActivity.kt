@@ -90,7 +90,23 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
             if (!hasFocus && teamName.text.toString() == "") {
                 button.isEnabled = false
             } else if (teamName.text.toString() != "") {
-                button.isEnabled = true
+                validateInput("teamName", teamName.text.toString()) { valid ->
+                    when (valid) {
+                        false -> {
+                            val title = getString(R.string.error)
+                            val message = getString(R.string.registration_cannot_use_team_name)
+                            val dialog = AlertDialog.Builder(this)
+                                .setTitle(title)
+                                .setMessage(message)
+
+                            dialog.show()
+                            button.isEnabled = false
+                        }
+                        true -> {
+                            button.isEnabled = true
+                        }
+                    }
+                }
             }
         }
 
@@ -243,7 +259,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                             val builder = AlertDialog.Builder(this)
                             builder
                                 .setTitle(getString(R.string.error))
-                                .setMessage(getString(R.string.error_team_duplicate_credentials))
+                                .setMessage(getString(R.string.registration_generic_error))
 
                             builder.create()
                             builder.show()
@@ -256,5 +272,14 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
             val dialog = UtilService.showDefaultAlert(this, error, getString(R.string.error_fill_up_all_fields))
             dialog.show()
         }
+    }
+
+    fun validateInput (type: String, value: String, compeltion: (Boolean) -> Unit) {
+        AuthService.validateRegistrationInput(type, value)
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                compeltion(it)
+            }
+            .run {  }
     }
 }

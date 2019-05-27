@@ -217,4 +217,25 @@
     <string name="menu_logout">Uitloggen</string>
     <string name="address">Adres</string>
     <string name="profile_contact_details">Contact details</string>
+    <string name="registration_invalid_username">Verboden gebruikersnaam! Wijzig uw gebruikersnaam.</string>
+    <string name="registration_cannot_use_team_name">Kan deze teamnaam niet gebruiken</string>
+    <string name="registration_generic_error">Er is een fout opgetreden tijdens het aanmelden</string>
+    <string name="non_volunteer_waiting_to_be_approved">Wacht tot de teamleider uw verzoek accepteert voordat u een
+        melding doet
+    </string>
+    <string name="send_report">Verzend rapport</string>
+    <string name="team_list_view_member_request">Bekijk ledenverzoek</string>
+    <string name="team_details_list_of_members">Ledenlijst</string>
+    <string name="team_member_request_accept_user_confirmation">Weet je zeker dat je deze gebruiker wilt accepteren?</string>
+    <string name="team_member_request_confirmation_title">Lid accepteren</string>
+    <string name="team_member_request_success">Succesvol geaccepteerde gebruiker</string>
+    <string name="team_member_request_failed">Kan gebruiker niet accepteren. Probeer het opnieuw</string>
+    <string name="cancel">annuleren</string>
+    <string name="team_update_profile">Teamprofiel bijwerken</string>
+    <string name="team_create_new">Maak een nieuw team</string>
+    <string name="team_details_update_team_profile">Werk teamprofiel bij</string>
+    <string name="team_profile_update_success">Het teamprofiel is bijgewerkt</string>
+    <string name="team_profile_update_failed">Kan teamprofiel niet bijwerken. Probeer het later opnieuw</string>
+    <string name="create_new_team_success">Succesvol nieuw team gemaakt</string>
+    <string name="create_new_team_failed">Kan geen nieuw team maken. Probeer het opnieuw</string>
 </resources>

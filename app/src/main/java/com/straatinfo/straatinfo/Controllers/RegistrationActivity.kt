@@ -34,6 +34,7 @@ class RegistrationActivity : AppCompatActivity() {
     lateinit var userInput: Registration
     var isTorAccepted = false
     var isEmailValid = false
+    var isUsernameValid = false
     var isPhoneNumberValid = false
     var teamList = mutableListOf<Team>()
     var teamLabels = mutableListOf<String>()
@@ -161,14 +162,14 @@ class RegistrationActivity : AppCompatActivity() {
 
         edtFirstName.setText(this.userInput.fname)
         edtLastName.setText(this.userInput.lname)
-        edtUsername.setText(this.userInput.usernameInput)
+        // edtUsername.setText(this.userInput.usernameInput)
         edtUsernameRandom.setText("_ID:${UtilService.randomStringGenerator(5)}")
-        edtEmail.setText(this.userInput.email)
+        // edtEmail.setText(this.userInput.email)
         edtPostalCode.setText(this.userInput.postalCode)
         edtHouseNumber.setText(this.userInput.houseNumber)
         edtStreetName.setText(this.userInput.streetName)
         edtCity.setText(this.userInput.city)
-        edtPhone.setText(this.userInput.phoneNumber)
+        // edtPhone.setText(this.userInput.phoneNumber)
         edtPassword.setText(this.userInput.password)
 
         if (userInput.email != null && RegexService.testEmail(userInput.email!!)) {
@@ -256,6 +257,33 @@ class RegistrationActivity : AppCompatActivity() {
             }
         })
 
+        edtUsername.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) {
+                validateInput("username", edtUsername.text.toString()) { success ->
+                    when (success) {
+                        true -> {
+                            userInput.usernameInput = edtUsername.text.toString()
+                            userInput.username = edtUsername.text.toString() + edtUsernameRandom.text.toString()
+                            userInput.saveInput()
+                            isUsernameValid = true
+                            btnNextStep.isEnabled = checkPage1Validity()
+                        }
+                        false -> {
+                            userInput.usernameInput = edtUsername.text.toString()
+                            userInput.username = edtUsername.text.toString() + edtUsernameRandom.text.toString()
+                            userInput.saveInput()
+                            isUsernameValid = false
+                            btnNextStep.isEnabled = checkPage1Validity()
+                            val title = getString(R.string.error)
+                            val message = getString(R.string.registration_invalid_username)
+                            val dialog = UtilService.showDefaultAlert(this, title, message)
+                            dialog.show()
+                        }
+                    }
+                }
+            }
+        }
+
         edtEmail.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
@@ -287,6 +315,26 @@ class RegistrationActivity : AppCompatActivity() {
                 val message = getString(R.string.error_invalid_email)
                 val dialog = UtilService.showDefaultAlert(this, error, message)
                 dialog.show()
+            } else if (!hasFocus) {
+                validateInput("email", email) { valid ->
+                    when (valid) {
+                        false -> {
+                            isEmailValid = false
+                            Log.d("EMAIL_VALIDATION", "false")
+                            // Toast.makeText(this, "Invalid Email", Toast.LENGTH_LONG).show()
+                            val error = getString(R.string.error)
+                            val message = getString(R.string.error_invalid_email)
+                            val dialog = UtilService.showDefaultAlert(this, error, message)
+                            dialog.show()
+                        }
+                        true -> {
+                            userInput.email = email
+                            userInput.saveInput()
+                            isEmailValid = true
+                        }
+                    }
+                    btnNextStep.isEnabled = checkPage1Validity()
+                }
             } else {
                 userInput.email = email
                 userInput.saveInput()
@@ -408,6 +456,28 @@ class RegistrationActivity : AppCompatActivity() {
                 // Toast.makeText(this, "Invalid Phone number", Toast.LENGTH_LONG).show()
                 dialog.show()
 
+            } else if (!hasFocus) {
+                validateInput("phoneNumber", phoneNumber) { valid ->
+                    when (valid) {
+                        false -> {
+                            userInput.phoneNumber = phoneNumber
+                            userInput.saveInput()
+                            isPhoneNumberValid = false
+                            val error = getString(R.string.error)
+                            val message = getString(R.string.error_invalid_mobile_number)
+                            val dialog = UtilService.showDefaultAlert(this, error, message)
+
+                            // Toast.makeText(this, "Invalid Phone number", Toast.LENGTH_LONG).show()
+                            dialog.show()
+                        }
+                        true -> {
+                            userInput.phoneNumber = phoneNumber
+                            userInput.saveInput()
+                            isPhoneNumberValid = true
+                        }
+                    }
+                    btnNextStep.isEnabled = checkPage1Validity()
+                }
             } else {
                 userInput.phoneNumber = phoneNumber
                 userInput.saveInput()
@@ -518,7 +588,7 @@ class RegistrationActivity : AppCompatActivity() {
             && userInput.fname != null && userInput.fname != ""
             && userInput.lname != null && userInput.lname != ""
             && userInput.email != null && userInput.email != ""
-            && userInput.username != null && userInput.username != ""
+            && userInput.username != null && userInput.username != "" && isUsernameValid
             && userInput.postalCode != null && userInput.postalCode != ""
             && userInput.houseNumber != null && userInput.houseNumber != ""
             && userInput.streetName != null && userInput.streetName != ""
@@ -673,13 +743,22 @@ class RegistrationActivity : AppCompatActivity() {
                     else -> {
                         val builder = android.app.AlertDialog.Builder(this)
                         builder
-                            .setTitle("Create Team Error")
-                            .setMessage("An error occured while processing data")
+                            .setTitle(getString(R.string.error))
+                            .setMessage(getString(R.string.registration_generic_error))
 
                         builder.create()
                         builder.show()
                     }
                 }
+            }
+            .run {  }
+    }
+
+    fun validateInput (type: String, value: String, completion: (Boolean) -> Unit) {
+        AuthService.validateRegistrationInput(type, value)
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                completion(it)
             }
             .run {  }
     }

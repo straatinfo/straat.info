@@ -19,10 +19,11 @@ object ReportService {
     var reportError: String? = null
     var TAG = "REPORT_API"
 
-    fun getNearReport (userId: String, long: Double, lat: Double, radius: Double) : Observable<JSONArray> {
+    fun getNearReport (userId: String, long: Double, lat: Double, radius: Double, reportId: String?) : Observable<JSONArray> {
         reportError = null
         return Observable.create { it ->
-            val url = REPORT_NEAR + "/" + long.toString() + "/" + lat.toString() + "/" + radius.toString() + "/?" + "language=nl" + "&" + "_reporter=$userId"
+            var url = REPORT_NEAR + "/" + long.toString() + "/" + lat.toString() + "/" + radius.toString() + "/?" + "language=nl" + "&" + "_reporter=$userId"
+            if (reportId != null && reportId != "") url += "&reportId=$reportId"
 
             val getReportRequest = object: JsonObjectRequest(Method.GET, url, null, Response.Listener { response ->
                 Log.d(TAG, response.toString())
@@ -66,31 +67,37 @@ object ReportService {
         }
     }
 
-    fun sendReportV2 (report: JSONObject): Observable<Boolean> {
+    fun sendReportV2 (report: JSONObject): Observable<JSONObject> {
         reportError = null
         return Observable.create {
             val requestBody = report.toString()
             val sendReportRequest = object: JsonObjectRequest(Method.POST, SEND_REPORT_V2, null, Response.Listener { response ->
                 Log.d(TAG, response.toString())
-                it.onNext(true)
+                val json = JSONObject()
+                json.put("success", true)
+                val data = response.getJSONObject("data")
+                if (data.has("_id")) json.put("reportId", data.getString("_id"))
+                it.onNext(json)
             }, Response.ErrorListener { error ->
+                val json = JSONObject()
+                json.put("success", false)
                 try {
                     val err = JSONObject(String(error.networkResponse.data))
 
                     reportError = err.getString("message") as String
-                    it.onNext(false)
+                    it.onNext(json)
                 } catch (e: JSONException) {
                     Log.d(TAG, e.localizedMessage)
                     reportError = "Internal Server Error"
-                    it.onNext(false)
+                    it.onNext(json)
                 } catch (e: VolleyError) {
                     Log.d(TAG, e.localizedMessage)
                     reportError = "Slow Internet Connection"
-                    it.onNext(false)
+                    it.onNext(json)
                 } catch (e: NullPointerException) {
                     Log.d(TAG, e.localizedMessage)
                     reportError = "Internal Server Error"
-                    it.onNext(false)
+                    it.onNext(json)
                 }
             }) {
                 override fun getBodyContentType(): String {

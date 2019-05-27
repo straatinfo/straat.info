@@ -26,6 +26,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_home)
         Log.d("SELECTED_ACTIVITY", "Home activity")
         this.init()
+        App.prefs.registrationData = ""
+        App.prefs.registrationPassword = ""
     }
 
     private fun init() {

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Controllers.TeamDetailsActivity">
+
+    <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp" app:srcCompat="@drawable/ic_logo"
+            android:id="@+id/teamDetailsTeamLogo" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"/>
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/teamDetailsTeamName" app:layout_constraintStart_toEndOf="@+id/teamDetailsTeamLogo"
+            android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="@+id/teamDetailsTeamLogo"
+            android:textColor="@android:color/black" tools:text="John Doe's Team" android:textStyle="bold"
+            android:textSize="20sp"/>
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/teamDetailsTeamEmail" app:layout_constraintStart_toStartOf="@+id/teamDetailsTeamName"
+            app:layout_constraintTop_toBottomOf="@+id/teamDetailsTeamName"
+            android:textColor="@android:color/black" tools:text="johndoe@domain.com"/>
+    <TextView
+            android:text="@string/team_details_list_of_members"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView9" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/teamDetailsTeamLogo" android:textColor="@android:color/black"
+            android:background="#DDDDDD" android:padding="10dp"/>
+    <android.support.v7.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/teamDetailsListOfMembersRecyclerView"/>
+    <TextView
+            android:text="@string/team_details_update_team_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/teamDetailsUpdateTeamProfileTxt"
+            app:layout_constraintTop_toBottomOf="@+id/teamDetailsTeamEmail"
+            app:layout_constraintStart_toStartOf="@+id/teamDetailsTeamEmail" android:textColor="#2196F3"/>
+</android.support.constraint.ConstraintLayout>

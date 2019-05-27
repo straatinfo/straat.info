@@ -3,6 +3,7 @@ package com.straatinfo.straatinfo.Controllers
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -24,7 +25,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.straatinfo.straatinfo.R
-import com.straatinfo.straatinfo.Services.ReportService
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONObject
 import java.lang.Exception
@@ -57,9 +57,7 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.FutureTarget
 import com.straatinfo.straatinfo.Models.*
-import com.straatinfo.straatinfo.Services.CategoryService
-import com.straatinfo.straatinfo.Services.MediaService
-import com.straatinfo.straatinfo.Services.UtilService
+import com.straatinfo.straatinfo.Services.*
 import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
 import kotlinx.android.synthetic.main.activity_home.drawer_layout
 import kotlinx.android.synthetic.main.activity_home.nav_view
@@ -79,6 +77,7 @@ class MainActivity : AppCompatActivity(),
 
 
     lateinit var locationManager: LocationManager
+    lateinit var progressBar: ProgressBar
     var mainCategories = mutableListOf<MainCategory>()
     var mainCatList = mutableListOf<String>()
     var subCategories = mutableListOf<SubCategory>()
@@ -122,7 +121,19 @@ class MainActivity : AppCompatActivity(),
         mapFragment.getMapAsync(this)
         mainCatList = mutableListOf(getString(R.string.report_select_main_category))
         subCatList = mutableListOf(getString(R.string.report_select_sub_category))
-        this.init()
+
+        progressBar = findViewById(R.id.mainActivityProgressBar)
+
+        val user = User(JSONObject(App.prefs.userData))
+        AuthService.userRefresh(user.email!!)
+            .subscribeOn(Schedulers.io())
+            .subscribe{
+                progressBar.visibility = View.VISIBLE
+                this.init()
+                this.checkActiveTeam()
+            }
+            .run{}
+
     }
 
     /**
@@ -163,7 +174,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        this.navigationHandler(item)
+        NavigationService.navigationHandler(this, item, activityViewId, drawer_layout)
         return true
     }
 
@@ -193,15 +204,21 @@ class MainActivity : AppCompatActivity(),
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         // super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
+        Log.d("NUM_PERMISSIONS", grantResults.count().toString())
+        Log.d("NUM_PERMISSIONS", grantResults.toString())
         when (requestCode) {
             LOCATION_RECORD_CODE -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Log.d("PERMISSION", "Permission has been denied by user")
                     UtilService.makeRequest(this, LOCATION_RECORD_CODE)
+                } else if (grantResults.isEmpty() || (grantResults.count() > 1 && grantResults[1] != PackageManager.PERMISSION_GRANTED)) {
+                    Log.d("PERMISSION", "Permission has been denied by user")
+                    UtilService.makeRequest(this, LOCATION_RECORD_CODE)
+                } else if (grantResults.isEmpty() || (grantResults.count() > 2 && grantResults[2] != PackageManager.PERMISSION_GRANTED)) {
+                    Log.d("PERMISSION", "Permission has been denied by user")
+                    UtilService.makeRequest(this, LOCATION_RECORD_CODE)
                 } else {
                     Log.d("PERMISSION", "Permission has been granted by user")
-
                 }
             }
         }
@@ -238,7 +255,6 @@ class MainActivity : AppCompatActivity(),
         finish()
     }
     private fun init() {
-
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.title = "Straat.Info"
@@ -254,6 +270,7 @@ class MainActivity : AppCompatActivity(),
         toolbar.setNavigationOnClickListener(navigationOnClickListener())
         nav_view.setNavigationItemSelectedListener(this)
 
+        progressBar.visibility = View.GONE
     }
 
     private fun navigationOnClickListener() = View.OnClickListener {
@@ -266,44 +283,47 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun getLocationPoint (googleMap: GoogleMap, onSuccess: (Boolean) -> Unit) {
-        val host = Host(App.prefs.hostData)
-        val long = host.long
-        val lat = host.lat
-        map = googleMap
+        getUserCoordinates { point ->
+            val host = Host(App.prefs.hostData)
+            val long = host.long
+            val lat = host.lat
+            map = googleMap
 
-        Log.d("LOCATION", "${long.toString()}, ${lat.toString()}")
+            Log.d("LOCATION", "${long.toString()}, ${lat.toString()}")
 
-        // Add a marker in Sydney and move the camera
-        val point = LatLng(lat!!, long!!)
-        postion = MarkerOptions().position(point).title("Marker in Sydney")
-        // m = map.addMarker(postion)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 16.0f))
+            // Add a marker in Sydney and move the camera
+            val hostPoint = LatLng(lat!!, long!!)
+            // postion = MarkerOptions().position(point).title("Marker in Sydney")
+            // m = map.addMarker(postion)
+            loadReportPointer(point)
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 16.0f))
 
-        map.getUiSettings().setZoomControlsEnabled(true)
-        map.setOnMarkerClickListener(this)
+            map.getUiSettings().setZoomControlsEnabled(true)
+            map.setOnMarkerClickListener(this)
 
-        val circleOptions = CircleOptions()
-        // Specifying the center of the circle
-        circleOptions.center(point)
+            val circleOptions = CircleOptions()
+            // Specifying the center of the circle
+            circleOptions.center(hostPoint)
 
-        // Radius of the circle
-        circleOptions.radius(200.toDouble())
+            // Radius of the circle
+            circleOptions.radius(200.toDouble())
 
-        // Border color of the circle
-        circleOptions.strokeColor(0x30ff0000)
+            // Border color of the circle
+            circleOptions.strokeColor(0x30ff0000)
 
-        // Fill color of the circle
-        circleOptions.fillColor(0x30ff0000)
+            // Fill color of the circle
+            circleOptions.fillColor(0x30ff0000)
 
-        // Border width of the circle
-        circleOptions.strokeWidth(2F)
+            // Border width of the circle
+            circleOptions.strokeWidth(2F)
 
-        map.addCircle(circleOptions)
+            map.addCircle(circleOptions)
 
-        this.loadReports(1000.00)
+            this.loadReports(10000.00)
 
 
-        onSuccess(true)
+            onSuccess(true)
+        }
     }
 
     private fun loadReports (radius: Double) {
@@ -313,7 +333,8 @@ class MainActivity : AppCompatActivity(),
         Log.d("USER_DATA", App.prefs.userData)
         val user = User(JSONObject(App.prefs.userData))
         val userId = user.id
-        ReportService.getNearReport(userId!!, long!!, lat!!, radius)
+        var reportId: String? = intent.getStringExtra("REPORT_ID")
+        ReportService.getNearReport(userId!!, long!!, lat!!, radius, reportId)
             .subscribeOn(Schedulers.io())
             .subscribe { reports ->
                 Log.d("REPORTS_LIST", reports.toString())
@@ -354,10 +375,13 @@ class MainActivity : AppCompatActivity(),
                         val marker = map.addMarker(reportMarker)
                         marker.tag = report
 
+                        // @TODO temporary fix need to be more specific by using id
+                        val reportId = intent.getStringExtra("REPORT_ID")
+                        if (reportId != null && reportId != "" && report.id == reportId) {
+                             marker.showInfoWindow()
 
-                        // marker.showInfoWindow()
-
-                        // map!!.moveCamera(CameraUpdateFactory.newLatLng(reportPos))
+                             map!!.moveCamera(CameraUpdateFactory.newLatLng(reportPos))
+                        }
                     }
                     catch (e: Exception) {
                         Log.d("REPORT_POPULATION_ERROR", e.localizedMessage)
@@ -375,52 +399,6 @@ class MainActivity : AppCompatActivity(),
         val canvas = Canvas(bitmap)
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
-    }
-
-    private fun navigationHandler (item: MenuItem) {
-        // Handle navigation view item clicks here.
-        Log.d("ITEM_ID", item.itemId.toString())
-        if (item.itemId == this.activityViewId) {
-            if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                drawer_layout.closeDrawer(Gravity.END)
-            } else {
-                drawer_layout.isDrawerOpen(Gravity.END)
-            }
-        } else {
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    val navMain = Intent(this, MainActivity::class.java)
-                    startActivity(navMain)
-
-                    finish()
-                }
-                R.id.nav_my_team -> {
-                    val myTeam = Intent(this, MyTeamActivity::class.java)
-                    startActivity(myTeam)
-                    finish()
-                }
-                R.id.nav_logout -> {
-                    val login = Intent(this, LoginActivity::class.java)
-                    startActivity(login)
-                    finish()
-                }
-                R.id.nav_profile -> {
-                    val profile = Intent(this, MyProfile::class.java)
-                    startActivity(profile)
-                    finish()
-                }
-                else -> {
-                    if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                        drawer_layout.closeDrawer(Gravity.END)
-                    } else {
-                        drawer_layout.isDrawerOpen(Gravity.END)
-                    }
-                }
-
-            }
-        }
-
-        drawer_layout.closeDrawer(GravityCompat.END)
     }
 
     private fun loadMapCircle (point: LatLng) {
@@ -443,8 +421,21 @@ class MainActivity : AppCompatActivity(),
         this.map.addCircle(circleOptions)
     }
 
-    private fun checkPermissions () {
+    private fun checkActiveTeam () {
+        val user = User(JSONObject(App.prefs.userData))
+        if (user.team_is_approved == null || !user.team_is_approved!!) {
+            val title = getString(R.string.send_report)
+            val message = getString(R.string.non_volunteer_waiting_to_be_approved)
+            val dialog = AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
 
+            dialog.show()
+
+            val sendReportBtn = findViewById<Button>(R.id.sendReportBtn)
+
+            sendReportBtn.isEnabled = false
+        }
     }
 
     private fun getHostCoordinates (): LatLng {
@@ -545,7 +536,11 @@ class MainActivity : AppCompatActivity(),
                 done(point)
             }
         } else {
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            // startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            val hostData = App.prefs.hostData
+            val host = Host(hostData)
+            val point = LatLng(host.lat!!, host.long!!)
+            done(point)
         }
     }
 
@@ -798,9 +793,13 @@ class MainActivity : AppCompatActivity(),
         }
         else if (requestCode == CAMERA)
         {
-            val thumbnail = data!!.extras!!.get("data") as Bitmap
-            // imageview!!.setImageBitmap(thumbnail)
-            setImage(thumbnail, btnClicked)
+            if (data != null) {
+                if (data!!.extras != null) {
+                    val thumbnail = data!!.extras!!.get("data") as Bitmap
+                    // imageview!!.setImageBitmap(thumbnail)
+                    setImage(thumbnail, btnClicked)
+                }
+            }
             // saveImage(thumbnail)
             // Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show()
         }
@@ -923,7 +922,6 @@ class MainActivity : AppCompatActivity(),
         if (
             this._location != null &&
             this._mainCatId != null &&
-            this._description != null &&
             // reportDetailsTxtBox.text.toString() != "" &&
             this._long != null &&
             this._lat != null
@@ -1024,6 +1022,7 @@ class MainActivity : AppCompatActivity(),
 
     // actual sending
     fun onSendReportTypeA (view: View) {
+        progressBar.visibility = View.VISIBLE
         if (!_isValid) promptUser()
         else {
             val user = User(JSONObject(App.prefs.userData))
@@ -1065,7 +1064,8 @@ class MainActivity : AppCompatActivity(),
             ReportService.sendReportV2(jsonReport)
                 .subscribeOn(Schedulers.io())
                 .subscribe {
-                    when(it) {
+                    progressBar.visibility = View.GONE
+                    when(it.getBoolean("success")) {
                         true -> {
                             val title = getString(R.string.success)
                             val message = getString(R.string.report_send_report_success)
@@ -1074,9 +1074,10 @@ class MainActivity : AppCompatActivity(),
                                 .setTitle(title)
                                 .setMessage(message)
                                 .setPositiveButton(yes, DialogInterface.OnClickListener { dialog, i ->
-                                    //set what would happen when positive button is clicked
-                                    // finish()
-                                    reload()
+                                    val returnIntent = Intent(this, MainActivity::class.java)
+                                    if (it.has("reportId")) returnIntent.putExtra("REPORT_ID", it.getString("reportId"))
+                                    startActivity(returnIntent)
+                                    finish()
                                 })
                             dialog.show()
                         }

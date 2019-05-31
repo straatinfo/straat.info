@@ -19,6 +19,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning,InnerclassSeparator">
+        <activity android:name=".Controllers.ReportInformationActivity">
+        </activity>
         <activity android:name=".Controllers.TeamFormActivity">
         </activity>
         <activity android:name=".Controllers.TeamMemberRequestActivity">

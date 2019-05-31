@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(),
     GoogleMap.OnMapClickListener,
     GoogleMap.OnMarkerClickListener,
     GoogleMap.OnMarkerDragListener,
+    GoogleMap.OnInfoWindowClickListener,
     GoogleApiClient.ConnectionCallbacks,
     NavigationView.OnNavigationItemSelectedListener {
 
@@ -125,14 +126,16 @@ class MainActivity : AppCompatActivity(),
         progressBar = findViewById(R.id.mainActivityProgressBar)
 
         val user = User(JSONObject(App.prefs.userData))
-        AuthService.userRefresh(user.email!!)
-            .subscribeOn(Schedulers.io())
-            .subscribe{
-                progressBar.visibility = View.VISIBLE
-                this.init()
-                this.checkActiveTeam()
-            }
-            .run{}
+        progressBar.visibility = View.VISIBLE
+        this.init {
+            AuthService.userRefresh(user.email!!)
+                .subscribeOn(Schedulers.io())
+                .subscribe{
+                    progressBar.visibility = View.GONE
+                    this.checkActiveTeam()
+                }
+                .run{}
+        }
 
     }
 
@@ -173,8 +176,22 @@ class MainActivity : AppCompatActivity(),
         return true
     }
 
+    override fun onInfoWindowClick(marker: Marker?) {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.d("INFO_WINDOW", marker.toString())
+        if (marker!!.tag != null) {
+            val report = marker!!.tag as Report
+            val intent = Intent(this, ReportInformationActivity::class.java)
+            intent.putExtra("REPORT_ID", report.id)
+            startActivity(intent)
+        }
+    }
+
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        NavigationService.navigationHandler(this, item, activityViewId, drawer_layout)
+        val user = User(JSONObject(App.prefs.userData))
+        val refreshAlways = user.team_is_approved == null || !user.team_is_approved!!
+        NavigationService.navigationHandler(this, item, activityViewId, drawer_layout, refreshAlways)
         return true
     }
 
@@ -254,7 +271,7 @@ class MainActivity : AppCompatActivity(),
         startActivity(returnIntent)
         finish()
     }
-    private fun init() {
+    private fun init(cb: () -> Unit) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.title = "Straat.Info"
@@ -271,6 +288,7 @@ class MainActivity : AppCompatActivity(),
         nav_view.setNavigationItemSelectedListener(this)
 
         progressBar.visibility = View.GONE
+        cb()
     }
 
     private fun navigationOnClickListener() = View.OnClickListener {
@@ -374,6 +392,7 @@ class MainActivity : AppCompatActivity(),
 
                         val marker = map.addMarker(reportMarker)
                         marker.tag = report
+                        map.setOnInfoWindowClickListener(this)
 
                         // @TODO temporary fix need to be more specific by using id
                         val reportId = intent.getStringExtra("REPORT_ID")

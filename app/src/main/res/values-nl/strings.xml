@@ -238,4 +238,16 @@
     <string name="team_profile_update_failed">Kan teamprofiel niet bijwerken. Probeer het later opnieuw</string>
     <string name="create_new_team_success">Succesvol nieuw team gemaakt</string>
     <string name="create_new_team_failed">Kan geen nieuw team maken. Probeer het opnieuw</string>
+    <string name="report_messages">Berichten</string>
+    <string name="language">nl</string>
+    <string name="report_info_completed">Afgehandeld</string>
+    <string name="report_info_date">Datum</string>
+    <string name="report_info_description">Bericht</string>
+    <string name="report_info_new">Nieuw</string>
+    <string name="report_info_photo">Foto</string>
+    <string name="report_info_report_type">Soort melding</string>
+    <string name="report_info_reported_by">Deze melding gedaan door</string>
+    <string name="report_info_status">Status</string>
+    <string name="report_info_time">Tijd</string>
+    <string name="report_info_change_status_btn_txt">Wijzig Status</string>
 </resources>

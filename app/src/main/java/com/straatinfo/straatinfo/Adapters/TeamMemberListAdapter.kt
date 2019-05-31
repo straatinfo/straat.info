@@ -15,7 +15,7 @@ class TeamMemberListAdapter (val context: Context, val teamRequests: MutableList
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): Holder {
         // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-        val view = LayoutInflater.from(parent?.context).inflate(R.layout.team_member_list_adapter_view, parent, false)
+        val view = LayoutInflater.from(parent?.context).inflate(R.layout.adapter_view_team_member_list, parent, false)
 
         return Holder(view, teamMebershipClick)
     }

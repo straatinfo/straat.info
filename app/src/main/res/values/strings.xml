@@ -272,4 +272,41 @@
     <string name="menu_logout">Logout</string>
     <string name="address">Address</string>
     <string name="profile_contact_details">Contact Details</string>
+    <string name="registration_invalid_username">Forbidden Username! Please change your username.</string>
+    <string name="registration_cannot_use_team_name">Can\'t use this team name</string>
+    <string name="registration_generic_error">An error occured while signing up</string>
+    <string name="non_volunteer_waiting_to_be_approved">Please wait until the team leader accepts your request before
+        making a notification
+    </string>
+    <string name="send_report">Send Report</string>
+    <string name="team_list_view_member_request">View Member Request</string>
+    <string name="team_details_list_of_members">List of members</string>
+    <string name="team_member_request_accept_user_confirmation">Are you sure you want to accept this user?</string>
+    <string name="team_member_request_confirmation_title">Accept Member</string>
+    <string name="team_member_request_success">Successfully accepted user</string>
+    <string name="team_member_request_failed">Failed to accept user. Please try again</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="team_update_profile">Update team profile</string>
+    <string name="team_create_new">Create new team</string>
+    <string name="team_details_update_team_profile">Update team profile</string>
+    <string name="team_profile_update_success">Successfully updated team profile</string>
+    <string name="team_profile_update_failed">Failed to update team profile. Please try again later</string>
+    <string name="create_new_team_success">Successfully created new team</string>
+    <string name="create_new_team_failed">Failed to create new team. Please try again</string>
+    <string name="report_messages">Messages</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="language">en</string>
+    <string name="report_info_date">Date</string>
+    <string name="report_info_time">Time</string>
+    <string name="report_info_status">Status</string>
+    <string name="report_info_report_type">Report Type</string>
+    <string name="report_info_description">Description</string>
+    <string name="report_info_photo">Photos</string>
+    <string name="report_info_reported_by">This report is made by</string>
+    <string name="report_info_new">New</string>
+    <string name="report_info_completed">Completed</string>
+    <string name="report_info_change_status_btn_txt">Change Status</string>
 </resources>

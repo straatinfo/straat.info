@@ -13,10 +13,12 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import com.straatinfo.straatinfo.Adapters.TeamListAdapter
 import com.straatinfo.straatinfo.Models.Team
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.R
+import com.straatinfo.straatinfo.Services.NavigationService
 import com.straatinfo.straatinfo.Services.TeamService
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.*
@@ -42,12 +44,28 @@ class MyTeamActivity : AppCompatActivity(),
         this.loadTeamList {
             adapter = TeamListAdapter(this, teamList) { team ->
                 // do something here
+                val intent = Intent(this, TeamDetailsActivity::class.java)
+                intent.putExtra("TEAM_ID", team.id!!)
+                intent.putExtra("TEAM_NAME", team.name!!)
+                intent.putExtra("TEAM_EMAIL", team.email!!)
+                if (team.profilePic != null) {
+                    intent.putExtra("TEAM_PROFILE_PIC", team.profilePic!!.toString())
+                }
+                startActivity(intent)
             }
 
             teamListRecyclerView.adapter = adapter
             val layoutManager = LinearLayoutManager(this)
             teamListRecyclerView.layoutManager = layoutManager
+
+            if (teamList.count() == 0) {
+                // @TODO if no team seen show an alert dialog
+            } else {
+                // @TODO show add team button
+                teamListAddNewTeamBtn.visibility = View.VISIBLE
+            }
         }
+
     }
 
     override fun onBackPressed() {
@@ -75,8 +93,7 @@ class MyTeamActivity : AppCompatActivity(),
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-
-        this.navigationHandler(item)
+        NavigationService.navigationHandler(this, item, activityViewId, drawer_layout, true)
         return true
     }
 
@@ -110,52 +127,6 @@ class MyTeamActivity : AppCompatActivity(),
         // Toast.makeText(this, "toggle", Toast.LENGTH_LONG).show()
     }
 
-    fun navigationHandler (item: MenuItem) {
-        // Handle navigation view item clicks here.
-        Log.d("ITEM_ID", item.itemId.toString())
-        if (item.itemId == this.activityViewId) {
-            if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                drawer_layout.closeDrawer(Gravity.END)
-            } else {
-                drawer_layout.isDrawerOpen(Gravity.END)
-            }
-        } else {
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    val navMain = Intent(this, MainActivity::class.java)
-                    startActivity(navMain)
-
-                    finish()
-                }
-                R.id.nav_my_team -> {
-                    val myTeam = Intent(this, MyTeamActivity::class.java)
-                    startActivity(myTeam)
-                    finish()
-                }
-                R.id.nav_logout -> {
-                    val login = Intent(this, LoginActivity::class.java)
-                    startActivity(login)
-                    finish()
-                }
-                R.id.nav_profile -> {
-                    val profile = Intent(this, MyProfile::class.java)
-                    startActivity(profile)
-                    finish()
-                }
-                else -> {
-                    if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                        drawer_layout.closeDrawer(Gravity.END)
-                    } else {
-                        drawer_layout.isDrawerOpen(Gravity.END)
-                    }
-                }
-
-            }
-        }
-
-        drawer_layout.closeDrawer(GravityCompat.END)
-    }
-
     private fun teamLoader (teamArray: JSONArray, cb: () -> Unit) {
         teamList = mutableListOf()
         for (i in 0 until teamArray.length()) {
@@ -170,16 +141,14 @@ class MyTeamActivity : AppCompatActivity(),
                 profile = teamJson.getJSONObject("_profilePic")
             }
 
-            var team: Team
-            if (profile != null) {
-                team = Team(id, email, name, profile!!)
-            } else {
-                team = Team(id, email, name)
-            }
+            var team = Team(teamJson)
 
             Log.d("TEAM_LOAD", team.id + " " + team.name + " " + team.email)
 
-            teamList.add(i, team)
+
+            if (team.isApproved != null && team.isApproved!!) {
+                teamList.add(teamList.count(), team)
+            }
 
         }
 
@@ -201,5 +170,11 @@ class MyTeamActivity : AppCompatActivity(),
                this.teamLoader(teams, cb)
            }
            .run {}
+    }
+
+    fun onCreateTeamButtonPress (view: View) {
+        val intent = Intent(this, TeamFormActivity::class.java)
+        intent.putExtra("FORM_TYPE", "CREATE")
+        startActivity(intent)
     }
 }

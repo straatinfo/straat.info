@@ -22,6 +22,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.R
+import com.straatinfo.straatinfo.Services.NavigationService
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.json.JSONObject
@@ -65,7 +66,7 @@ class MyProfile : AppCompatActivity(),
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
-        this.navigationHandler(item)
+        NavigationService.navigationHandler(this, item, activityViewId, drawer_layout, false)
         return true
     }
 
@@ -99,51 +100,6 @@ class MyProfile : AppCompatActivity(),
         // Toast.makeText(this, "toggle", Toast.LENGTH_LONG).show()
     }
 
-    fun navigationHandler (item: MenuItem) {
-        // Handle navigation view item clicks here.
-        Log.d("ITEM_ID", item.itemId.toString())
-        if (item.itemId == this.activityViewId) {
-            if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                drawer_layout.closeDrawer(Gravity.END)
-            } else {
-                drawer_layout.isDrawerOpen(Gravity.END)
-            }
-        } else {
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    val navMain = Intent(this, MainActivity::class.java)
-                    startActivity(navMain)
-
-                    finish()
-                }
-                R.id.nav_my_team -> {
-                    val myTeam = Intent(this, MyTeamActivity::class.java)
-                    startActivity(myTeam)
-                    finish()
-                }
-                R.id.nav_logout -> {
-                    val login = Intent(this, LoginActivity::class.java)
-                    startActivity(login)
-                    finish()
-                }
-                R.id.nav_profile -> {
-                    val profile = Intent(this, MyProfile::class.java)
-                    startActivity(profile)
-                    finish()
-                }
-                else -> {
-                    if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                        drawer_layout.closeDrawer(Gravity.END)
-                    } else {
-                        drawer_layout.isDrawerOpen(Gravity.END)
-                    }
-                }
-
-            }
-        }
-
-        drawer_layout.closeDrawer(GravityCompat.END)
-    }
 
     fun loadUserDetails () {
         val fnameTxt = findViewById<EditText>(R.id.profileFnameTxt)

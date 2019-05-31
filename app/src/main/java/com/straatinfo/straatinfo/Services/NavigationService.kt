@@ -15,16 +15,10 @@ import com.straatinfo.straatinfo.R
 import kotlinx.android.synthetic.main.activity_home.*
 
 object NavigationService {
-    fun navigationHandler (context: Activity, item: MenuItem, activityViewId: Int, drawer_layout: DrawerLayout) {
+    fun navigationHandler (context: Activity, item: MenuItem, activityViewId: Int, drawer_layout: DrawerLayout, refreshAlways: Boolean) {
         // Handle navigation view item clicks here.
         Log.d("ITEM_ID", item.itemId.toString())
-        if (item.itemId == activityViewId) {
-            if (drawer_layout.isDrawerOpen(Gravity.END)) {
-                drawer_layout.closeDrawer(Gravity.END)
-            } else {
-                drawer_layout.isDrawerOpen(Gravity.END)
-            }
-        } else {
+        if (refreshAlways || item.itemId != activityViewId) {
             when (item.itemId) {
                 R.id.nav_home -> {
                     val navMain = Intent(context, MainActivity::class.java)
@@ -55,6 +49,12 @@ object NavigationService {
                     }
                 }
 
+            }
+        } else {
+            if (drawer_layout.isDrawerOpen(Gravity.END)) {
+                drawer_layout.closeDrawer(Gravity.END)
+            } else {
+                drawer_layout.isDrawerOpen(Gravity.END)
             }
         }
 

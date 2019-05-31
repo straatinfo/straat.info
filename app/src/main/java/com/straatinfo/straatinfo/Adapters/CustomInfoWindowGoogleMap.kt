@@ -2,8 +2,8 @@ package com.straatinfo.straatinfo.Adapters
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -17,13 +17,9 @@ import kotlinx.android.synthetic.main.layout_custom_map_marker.view.*
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.R
-import com.squareup.picasso.RequestCreator
-import com.squareup.picasso.Target
+import com.straatinfo.straatinfo.Controllers.ReportInformationActivity
 import com.straatinfo.straatinfo.Utilities.TZ_ZULU
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 
 
 class CustomInfoWindowGoogleMap(val context: Context) : GoogleMap.InfoWindowAdapter{
@@ -41,7 +37,12 @@ class CustomInfoWindowGoogleMap(val context: Context) : GoogleMap.InfoWindowAdap
 
 
         mInfoView.reportDateTxt.text = dateFormat.format(date)
-        mInfoView.mainCatTxt.text = UtilService.shortenedChar(mInfoWindow!!.mainCategoryName!!, 12)
+        mInfoView.view_report_main_cat_txt.text = UtilService.shortenedChar(mInfoWindow!!.mainCategoryName!!, 12)
+        mInfoView.view_report_view_report_txt.setOnClickListener {
+            val intent = Intent(context, ReportInformationActivity::class.java)
+            intent.putExtra("REPORT_ID", mInfoWindow!!.id)
+            context.startActivity(intent)
+        }
         val preview: ImageView = mInfoView.reportPreviewImg
         preview.visibility = View.VISIBLE
         val noPhoto: TextView = mInfoView.windowInfoNoPhotoTxt
@@ -63,20 +64,29 @@ class CustomInfoWindowGoogleMap(val context: Context) : GoogleMap.InfoWindowAdap
 
             noPhoto.visibility = View.INVISIBLE
 
-            return mInfoView
+
 
         } else {
             preview.setImageResource(com.straatinfo.straatinfo.R.drawable.ic_logo)
             preview.visibility = View.INVISIBLE
             noPhoto.visibility = View.VISIBLE
-            return mInfoView
         }
+
+        mInfoView.setOnClickListener {
+            val intent = Intent(context, ReportInformationActivity::class.java)
+            intent.putExtra("REPORT_ID", mInfoWindow.id)
+            context.startActivity(intent)
+        }
+
+
+        return mInfoView
         // mInfoView.reportPreviewImg.setImageBitmap()
 
 
     }
 
     override fun getInfoWindow(p0: Marker?): View? {
+        Log.d("CLICKING_WINDOW", p0.toString())
         return null
     }
 

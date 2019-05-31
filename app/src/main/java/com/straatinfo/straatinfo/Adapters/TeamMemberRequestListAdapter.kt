@@ -2,14 +2,12 @@ package com.straatinfo.straatinfo.Adapters
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import com.straatinfo.straatinfo.Controllers.MyTeamActivity
 import com.straatinfo.straatinfo.Models.TeamMember
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.TeamService
@@ -20,7 +18,7 @@ class TeamMemberRequestListAdapter (val context: Context, val teamRequests: Muta
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): Holder {
         // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-        val view = LayoutInflater.from(parent?.context).inflate(R.layout.team_member_list_adapter_view, parent, false)
+        val view = LayoutInflater.from(parent?.context).inflate(R.layout.adapter_view_team_member_list, parent, false)
 
         return Holder(view, teamMebershipClick)
     }

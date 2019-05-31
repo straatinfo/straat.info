@@ -294,4 +294,19 @@
     <string name="team_profile_update_failed">Failed to update team profile. Please try again later</string>
     <string name="create_new_team_success">Successfully created new team</string>
     <string name="create_new_team_failed">Failed to create new team. Please try again</string>
+    <string name="report_messages">Messages</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="language">en</string>
+    <string name="report_info_date">Date</string>
+    <string name="report_info_time">Time</string>
+    <string name="report_info_status">Status</string>
+    <string name="report_info_report_type">Report Type</string>
+    <string name="report_info_description">Description</string>
+    <string name="report_info_photo">Photos</string>
+    <string name="report_info_reported_by">This report is made by</string>
+    <string name="report_info_new">New</string>
+    <string name="report_info_completed">Completed</string>
+    <string name="report_info_change_status_btn_txt">Change Status</string>
 </resources>

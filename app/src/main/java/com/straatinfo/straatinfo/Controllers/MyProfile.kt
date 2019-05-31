@@ -66,7 +66,7 @@ class MyProfile : AppCompatActivity(),
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
-        NavigationService.navigationHandler(this, item, activityViewId, drawer_layout)
+        NavigationService.navigationHandler(this, item, activityViewId, drawer_layout, false)
         return true
     }
 

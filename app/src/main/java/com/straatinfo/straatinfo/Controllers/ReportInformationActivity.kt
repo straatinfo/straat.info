@@ -67,6 +67,7 @@ class ReportInformationActivity : AppCompatActivity() {
         val reporterNameTxt = findViewById<TextView>(R.id.report_info_reported_by_value)
         val photoFrame = findViewById<FrameLayout>(R.id.report_info_photo_frame)
         val changeStatusBtn = findViewById<Button>(R.id.report_info_change_status_btn)
+        val logo = findViewById<ImageView>(R.id.report_info_logo)
         changeStatusBtn.isEnabled = false
 
         locationTxt.text = report.location
@@ -115,5 +116,40 @@ class ReportInformationActivity : AppCompatActivity() {
         }
 
         reporterNameTxt.text = report.reporterUsername
+
+        if (report.reportTypeCode != null && report.reportTypeCode!!.toLowerCase() == "b") {
+            logo.setImageDrawable(getDrawable(R.drawable.ic_map_pointer_b))
+            this.loadReportTypeBInfo(report)
+        } else {
+            logo.setImageDrawable(getDrawable(R.drawable.ic_map_pointer_a))
+        }
+    }
+
+    fun loadReportTypeBInfo (report: Report) {
+        val peopleInvolvedFrame = findViewById<FrameLayout>(R.id.report_info_people_involved_frame)
+        val isPeopleInvolvedValue = findViewById<TextView>(R.id.report_info_are_people_involved_value)
+        val peopleInvolvedCount = findViewById<TextView>(R.id.report_info_num_people_involved)
+        val peopleInvolvedDesc = findViewById<TextView>(R.id.report_info_people_involved_description)
+        val vehicleInvolvedFrame = findViewById<FrameLayout>(R.id.report_info_vehicle_involved_frame)
+        val isVehicleInvolvedValue = findViewById<TextView>(R.id.report_info_are_vehicle_involved_value)
+        val vehicleInvolvedCount = findViewById<TextView>(R.id.report_info_number_vehicle_involved_value)
+        val vehicleInvovledDesc = findViewById<TextView>(R.id.report_info_vehicle_involved_description_value)
+        if (report.isPeopleInvolved != null && report.isPeopleInvolved!!) {
+            peopleInvolvedFrame.visibility = View.VISIBLE
+            isPeopleInvolvedValue.text = if (report.isPeopleInvolved!!) getString(R.string.yes) else getString(R.string.no)
+            peopleInvolvedCount.text = if (report.peopleInvolvedCount != null) report.peopleInvolvedCount!!.toString() else 0.toString()
+            peopleInvolvedDesc.text = if (report.peopleInvolvedDescription != null) report.peopleInvolvedDescription!! else ""
+        } else {
+            peopleInvolvedFrame.visibility = View.GONE
+        }
+
+        if (report.isVehicleInvolved != null && report.isVehicleInvolved!!) {
+            vehicleInvolvedFrame.visibility = View.VISIBLE
+            isVehicleInvolvedValue.text = if (report.isVehicleInvolved!!) getString(R.string.yes) else getString(R.string.no)
+            vehicleInvolvedCount.text = if (report.vehicleInvolvedCount != null) report.vehicleInvolvedCount!!.toString() else 0.toString()
+            vehicleInvovledDesc.text = if (report.vehicleInvolvedDescription != null) report.vehicleInvolvedDescription!! else ""
+        } else {
+            vehicleInvolvedFrame.visibility = View.GONE
+        }
     }
 }

@@ -41,10 +41,12 @@ class TeamMemberRequestListAdapter (val context: Context, val teamRequests: Muta
         val fullnameTxt = itemView?.findViewById<TextView>(R.id.teamMemberListFullNameTxt)
         val addBtn = itemView?.findViewById<ImageButton>(R.id.teamMemberListAddBtn)
         val chatBtn = itemView?.findViewById<ImageButton>(R.id.teamMemberListChatBtn)
+        val removeBtn = itemView?.findViewById<ImageButton>(R.id.teamMemberListRemoveBtn)
 
         fun bindCategory (teamRequest: TeamMember, context: Context) {
             chatBtn.visibility = View.GONE
             addBtn.visibility = View.VISIBLE
+            removeBtn.visibility = View.VISIBLE
 
             fullnameTxt.text = "${teamRequest.userFname} ${teamRequest.userLname}"
             addBtn.setOnClickListener { view ->
@@ -54,6 +56,20 @@ class TeamMemberRequestListAdapter (val context: Context, val teamRequests: Muta
                     .setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
                         dialog.dismiss()
                         this.acceptMember(teamRequest.userId!!, teamRequest.teamId!!, context)
+                    }
+                    .setNegativeButton(context.getString(R.string.cancel)) { dialog, which ->
+                        dialog.dismiss()
+                    }
+                dialog.show()
+            }
+
+            removeBtn.setOnClickListener { view ->
+                val dialog = AlertDialog.Builder(context)
+                    .setTitle(context.getString(R.string.team_member_request_decline_confirmation_title))
+                    .setMessage(context.getString(R.string.team_member_request_decline_body))
+                    .setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
+                        dialog.dismiss()
+                        this.declineMember(teamRequest.userId!!, teamRequest.teamId!!, context)
                     }
                     .setNegativeButton(context.getString(R.string.cancel)) { dialog, which ->
                         dialog.dismiss()
@@ -84,6 +100,35 @@ class TeamMemberRequestListAdapter (val context: Context, val teamRequests: Muta
                         false -> {
                             dialog.setTitle(context.getString(R.string.error))
                                 .setMessage(context.getString(R.string.team_member_request_failed))
+                                .setPositiveButton(context.getString(R.string.ok)) { dialog, which ->
+                                    dialog.dismiss()
+                                    onAcceptCompletion(false)
+                                }
+                                .show()
+                        }
+                    }
+                }
+                .run {  }
+        }
+
+        fun declineMember (userId: String, teamId: String, context: Context) {
+            TeamService.declineTeamMember(userId, teamId)
+                .subscribeOn(Schedulers.io())
+                .subscribe { success ->
+                    var dialog = AlertDialog.Builder(context)
+                    when (success) {
+                        true -> {
+                            dialog.setTitle(context.getString(R.string.success))
+                                .setMessage(context.getString(R.string.team_member_request_decline_success))
+                                .setPositiveButton(context.getString(R.string.ok)) { dialog, which ->
+                                    dialog.dismiss()
+                                    onAcceptCompletion(true)
+                                }
+                                .show()
+                        }
+                        false -> {
+                            dialog.setTitle(context.getString(R.string.error))
+                                .setMessage(context.getString(R.string.team_member_request_decline_failed))
                                 .setPositiveButton(context.getString(R.string.ok)) { dialog, which ->
                                     dialog.dismiss()
                                     onAcceptCompletion(false)

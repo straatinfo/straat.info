@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".Controllers.MainActivity" app:layout_constraintStart_toStartOf="@+id/sendReportBtn"
-            app:layout_constraintEnd_toStartOf="@+id/sendReportBtn">
+            app:layout_constraintEnd_toStartOf="@+id/sendReportBtn" android:id="@+id/constraintLayout">
 
 
         <fragment
@@ -111,11 +111,10 @@
         <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="280dp" android:id="@+id/sendReportP2Frame" android:visibility="gone"
-                tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:background="@color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/sendReportBtn">
+                app:layout_constraintBottom_toBottomOf="@+id/sendReportBtn" tools:visibility="gone">
             <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -136,18 +135,23 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/reportTypeBBtn"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView3" android:layout_marginEnd="24dp"
+                        app:layout_constraintEnd_toStartOf="@+id/send_report_suspicious_report_info_btn"
+                        android:layout_marginEnd="24dp"
                         style="@style/login_button_style"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintTop_toBottomOf="@+id/sendReportPage2TB"
                         app:layout_constraintBottom_toTopOf="@+id/reportTypeABtn"
-                        android:text="@string/report_suspicious_situation" tools:visibility="gone"/>
+                        android:text="@string/report_suspicious_situation" android:visibility="visible"/>
                 <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp" app:srcCompat="@android:drawable/ic_menu_info_details"
-                        android:id="@+id/imageView3" app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp" app:srcCompat="@drawable/ic_question_mark"
+                        android:id="@+id/send_report_suspicious_report_info_btn"
+                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="24dp"
-                        app:layout_constraintTop_toTopOf="@+id/reportTypeBBtn" android:visibility="gone"/>
+                        app:layout_constraintTop_toTopOf="@+id/reportTypeBBtn" android:visibility="visible"
+                        android:tint="@color/color_blue_dark"
+                        app:layout_constraintBottom_toBottomOf="@+id/reportTypeBBtn"
+                        android:onClick="onCheckReportBInfo"/>
                 <Button
                         android:text="@string/report_public_space"
                         android:layout_width="0dp"
@@ -161,13 +165,13 @@
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"/>
                 <ImageView
                         android:layout_width="40dp"
-                        android:layout_height="40dp" app:srcCompat="@android:drawable/ic_menu_help"
+                        android:layout_height="40dp" app:srcCompat="@drawable/ic_question_mark"
                         android:id="@+id/publicSpaceInfoBtn"
                         app:layout_constraintTop_toTopOf="@+id/reportTypeABtn"
-                        android:background="@drawable/create_report_input_box" android:scaleType="center"
                         app:layout_constraintBottom_toBottomOf="@+id/reportTypeABtn"
                         app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="24dp"
-                        android:onClick="onCheckReportAInfo"/>
+                        android:onClick="onCheckReportAInfo" android:tint="@color/color_blue_dark"
+                        android:scaleType="fitCenter"/>
             </android.support.constraint.ConstraintLayout>
         </FrameLayout>
 
@@ -177,7 +181,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/map" app:layout_constraintStart_toStartOf="@+id/map"
                 android:visibility="gone"
-                android:background="@color/white" tools:visibility="invisible">
+                android:background="@color/white" tools:visibility="gone">
 
             <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
@@ -278,6 +282,168 @@
 
             </android.support.constraint.ConstraintLayout>
 
+        </FrameLayout>
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="450dp" android:id="@+id/send_report_type_b_frame"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone" tools:visibility="visible" android:background="@color/white">
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <android.support.v7.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_blue"
+                        android:theme="?attr/actionBarTheme"
+                        android:minHeight="?attr/actionBarSize" android:id="@+id/send_report_type_b_tb"
+                        app:navigationIcon="?attr/actionModeCloseDrawable" app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                <TextView
+                        android:text="@string/location_col"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:id="@+id/send_report_type_b_location"
+                        app:layout_constraintStart_toStartOf="@+id/send_report_type_b_tb"
+                        app:layout_constraintTop_toBottomOf="@+id/send_report_type_b_tb"
+                        app:layout_constraintEnd_toEndOf="@+id/send_report_type_b_tb" android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"/>
+                <ScrollView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/send_report_type_b_location"
+                        android:layout_marginTop="8dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                                  android:orientation="vertical">
+
+                        <Spinner
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/send_report_type_b_main_cat_spinner"
+                                android:background="@drawable/send_report_spinner_bg"
+                                android:layout_marginBottom="10dp"/>
+
+                        <Switch
+                                android:text="@string/report_emergency_notification"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/send_report_type_b_emergency_notif_switch"
+                                android:background="@drawable/create_report_input_box" android:checked="false"
+                                android:layout_marginBottom="8dp"/>
+                        <Switch
+                                android:text="@string/send_report_type_b_are_there_people_involved"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/send_report_type_b_are_people_involved_switch"
+                                android:background="@drawable/create_report_input_box" android:checked="false"
+                                android:layout_marginBottom="8dp"/>
+
+                        <Spinner
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/send_report_type_b_number_of_people_involved_spinner"
+                                android:background="@drawable/send_report_spinner_bg"
+                                android:layout_marginBottom="10dp" tools:visibility="visible"
+                                android:visibility="gone"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:gravity="start|top"
+                                android:ems="10"
+                                android:id="@+id/send_report_type_b_people_involved_desc_txt_box"
+                                style="@style/report_input_style"
+                                android:maxLines="5"
+                                android:minLines="5"
+                                android:hint="@string/send_report_type_b_person_involved_description"
+                                android:visibility="gone" tools:visibility="visible"/>
+
+                        <Switch
+                                android:text="@string/send_report_type_b_are_vehicle_involved"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/send_report_type_b_are_vehicle_involved_switch"
+                                android:background="@drawable/create_report_input_box" android:checked="false"
+                                android:layout_marginBottom="8dp"/>
+
+                        <Spinner
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/send_report_type_b_number_of_vehicle_involved_spinner"
+                                android:background="@drawable/send_report_spinner_bg"
+                                android:layout_marginBottom="10dp" tools:visibility="visible"
+                                android:visibility="gone"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:gravity="start|top"
+                                android:ems="10"
+                                android:id="@+id/send_report_type_b_vehicle_involved_desc_txt_box"
+                                style="@style/report_input_style"
+                                android:maxLines="5"
+                                android:minLines="5" android:hint="@string/send_report_type_b_vehicle_involved_desc"
+                                android:visibility="gone" tools:visibility="visible"/>
+
+
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:gravity="start|top"
+                                android:ems="10"
+                                android:id="@+id/send_report_type_b_report_details_txt_box"
+                                style="@style/report_input_style"
+                                android:maxLines="5"
+                                android:minLines="5" android:hint="vul hier uw tekst in"/>
+                        <TextView
+                                android:text="Foto's maken of uploaden:"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" android:id="@+id/send_report_type_b_add_photo_txt"
+                                android:layout_marginTop="10dp" android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="10dp" android:layout_marginRight="10dp"/>
+                        <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="250dp">
+                            <ImageButton
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" app:srcCompat="@android:drawable/ic_input_add"
+                                    android:id="@+id/send_report_type_b_photo_1_btn" android:layout_weight="1"
+                                    android:scaleType="centerInside"
+                                    style="@style/upload_photo" android:onClick="showPictureDialog"/>
+                            <ImageButton
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" app:srcCompat="@android:drawable/ic_input_add"
+                                    android:id="@+id/send_report_type_b_photo_2_btn" android:layout_weight="1"
+                                    android:scaleType="centerInside"
+                                    style="@style/upload_photo" android:onClick="showPictureDialog"/>
+                            <ImageButton
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" app:srcCompat="@android:drawable/ic_input_add"
+                                    android:id="@+id/send_report_type_b_photo_3_btn" android:layout_weight="1"
+                                    android:scaleType="centerInside"
+                                    style="@style/upload_photo" android:onClick="showPictureDialog"/>
+                        </LinearLayout>
+                        <Button
+                                android:text="VESTUUR MELDING"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/send_report_type_b_send_report_btn"
+                                style="@style/login_button_style" android:layout_marginTop="10dp"
+                                android:layout_marginBottom="20dp" android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp" android:onClick="onSendReportTypeB"
+                                android:enabled="false"/>
+                    </LinearLayout>
+                    ScrollView
+                </ScrollView>
+            </android.support.constraint.ConstraintLayout>
         </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>

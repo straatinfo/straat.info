@@ -1,7 +1,9 @@
 package com.straatinfo.straatinfo.Models
 
 import android.util.Log
+import com.straatinfo.straatinfo.Controllers.App
 import org.json.JSONObject
+import java.lang.Exception
 
 class User {
     var error: String? = null
@@ -33,6 +35,9 @@ class User {
     var host_id: String? = null
     var isVolunteer: Boolean? = null
     var host_name: String? = null
+    var host_long: Double? = null
+    var host_lat: Double? = null
+    var host: Host? = null
 
     // active design
 //    var colorOne: String? = null
@@ -44,12 +49,35 @@ class User {
 
     var userJsonData: JSONObject? = null
 
+    constructor() {
+        try {
+            var userJsonData = JSONObject(App.prefs.userData)
+            this.fromJson(userJsonData)
+        }
+         catch (e: Exception) {
+             Log.d("USER_ERROR", e.localizedMessage)
+         }
+    }
+
 
     constructor(fetchingError: String?) {
         this.error = fetchingError
     }
 
     constructor(userJsonData: JSONObject) {
+        this.fromJson(userJsonData)
+    }
+
+    fun toJson (): JSONObject {
+        if (this.userJsonData != null) {
+            return this.userJsonData!!
+        } else {
+            return JSONObject() // an empty user data
+        }
+    }
+
+    fun fromJson (userJsonData: JSONObject) {
+
         val userJson = userJsonData.getJSONObject("user")
         this.userJsonData = userJsonData
         this.id = userJson.getString("_id")
@@ -73,10 +101,19 @@ class User {
             this.radius = settingJson.getDouble("radius")
         }
 
-
-        val hostJson = userJson.getJSONObject("_host")
-        this.host_id = hostJson.getString("_id")
-        this.host_name = hostJson.getString("hostName")
+        if (userJson.has("_host")) {
+            val hostJson = userJson.getJSONObject("_host")
+            this.host_id = hostJson.getString("_id")
+            this.host_name = hostJson.getString("hostName")
+            this.host_long = hostJson.getDouble("long")
+            this.host_lat = hostJson.getDouble("lat")
+            try {
+                this.host = Host(hostJson)
+            }
+            catch (e: Exception) {
+                Log.d("UESR", e.localizedMessage)
+            }
+        }
 
         if (userJsonData.has("_activeDesign")) {
             val designJson = userJsonData.getJSONObject("_activeDesign")
@@ -85,13 +122,16 @@ class User {
             val colorTwo = designJson.getString("colorTwo")
             val colorThree = designJson.getString("colorThree")
             val hostId = designJson.getString("_host")
-            val profilePicJson = designJson.getJSONObject("_profilePic")
-            val logoUrl = profilePicJson.getString("secure_url")
-            val designName = designJson.getString("designName")
+            if (designJson.has("_profilePic")) {
+                val profilePicJson = if (designJson.has("_profilePic")) designJson.getJSONObject("_profilePic") else null
+                val logoUrl = profilePicJson?.getString("secure_url")
+                val designName = designJson?.getString("designName")
 
-            val design = Design(designId, hostId, colorOne, colorTwo, colorThree, logoUrl, designName)
+                val design = Design(designId, hostId, colorOne, colorTwo, colorThree, logoUrl, designName!!)
 
-            this.activeDesign = design
+                this.activeDesign = design
+            }
+
         }
 
         if (userJson.has("_activeTeam")) {
@@ -106,15 +146,6 @@ class User {
         if (userJsonData.has("_profilePic")) {
             Log.d("USER_MODEL", "Has photo")
             this.profilePic = userJsonData.getJSONObject("_profilePic")
-        }
-
-    }
-
-    fun toJson (): JSONObject {
-        if (this.userJsonData != null) {
-            return this.userJsonData!!
-        } else {
-            return JSONObject() // an empty user data
         }
     }
 }

@@ -12,7 +12,6 @@ import com.straatinfo.straatinfo.Controllers.MainActivity
 import com.straatinfo.straatinfo.Controllers.MyProfile
 import com.straatinfo.straatinfo.Controllers.MyTeamActivity
 import com.straatinfo.straatinfo.R
-import kotlinx.android.synthetic.main.activity_home.*
 
 object NavigationService {
     fun navigationHandler (context: Activity, item: MenuItem, activityViewId: Int, drawer_layout: DrawerLayout, refreshAlways: Boolean) {

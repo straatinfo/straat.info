@@ -17,7 +17,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
-import com.straatinfo.straatinfo.Models.Media
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.*

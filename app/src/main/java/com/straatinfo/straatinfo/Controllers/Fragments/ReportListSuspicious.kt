@@ -1,14 +1,26 @@
 package com.straatinfo.straatinfo.Controllers.Fragments
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.straatinfo.straatinfo.Adapters.ReportListAdapter
+import com.straatinfo.straatinfo.Controllers.App
+import com.straatinfo.straatinfo.Controllers.ReportInformationActivity
+import com.straatinfo.straatinfo.Models.Report
+import com.straatinfo.straatinfo.Models.User
 
 import com.straatinfo.straatinfo.R
+import com.straatinfo.straatinfo.Services.ReportService
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_report_list_suspicious.*
+import org.json.JSONArray
+import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,6 +41,8 @@ class ReportListSuspicious : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+    var reportList = mutableListOf<Report>()
+    lateinit var adapter: ReportListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +57,18 @@ class ReportListSuspicious : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        // Inflate the layout for this fragment
+        loadPublicReports {
+            adapter = ReportListAdapter(context!!, reportList) { report ->
+                val intent = Intent(context!!, ReportInformationActivity::class.java)
+                intent.putExtra("REPORT_ID", report.id)
+                context!!.startActivity(intent)
+            }
+
+            report_list_suspicious_recycler_view.adapter = adapter
+            val layoutManager = LinearLayoutManager(context!!)
+            report_list_suspicious_recycler_view.layoutManager = layoutManager
+        }
         return inflater.inflate(R.layout.fragment_report_list_suspicious, container, false)
     }
 
@@ -99,5 +125,33 @@ class ReportListSuspicious : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    private fun reportLoader (reportArray: JSONArray, cb: (reportList: MutableList<Report>) -> Unit) {
+        reportList = mutableListOf()
+        for (i in 0 until reportArray.length()) {
+            val reportJson = reportArray[i] as JSONObject
+
+            var report = Report(reportJson)
+
+            reportList.add(reportList.count(), report)
+
+            cb(reportList)
+        }
+    }
+
+    private fun loadPublicReports (cb: (reportList: MutableList<Report>) -> Unit) {
+        val user = User(JSONObject(App.prefs.userData))
+
+        val reporterId = user.id!!
+        val language = context!!.getString(R.string.language)
+        val reportType = "B"
+
+        ReportService.getReportList(reportType, reporterId, language)
+            .subscribeOn(Schedulers.io())
+            .subscribe { reportList ->
+                reportLoader(reportList, cb)
+            }
+            .run {  }
     }
 }

@@ -20,30 +20,38 @@
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning,InnerclassSeparator">
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
-        <activity android:name="com.straatinfo.straatinfo.Controllers.ReportInformationActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.ReportInformationActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamFormActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamFormActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamMemberRequestActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamMemberRequestActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamDetailsActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamDetailsActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name="com.straatinfo.straatinfo.Controllers.MyProfile"
                 android:label="@string/menu_profile"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name="com.straatinfo.straatinfo.Controllers.MyTeamActivity"
                 android:label="@string/menu_home"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.ReportsActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.ReportsActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name="com.straatinfo.straatinfo.Controllers.HomeActivity"
                 android:label="@string/app_bar_label_home"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"
+                android:screenOrientation="portrait">
         </activity>
 
         <meta-data
@@ -54,18 +62,22 @@
                 android:name="com.straatinfo.straatinfo.Controllers.RegistrationCreateTeamActivity"
                 tools:ignore="InnerclassSeparator">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.EnterCodeActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.EnterCodeActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.RegistrationActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.RegistrationActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.InitialActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.InitialActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.LoginActivity">
+        <activity android:name="com.straatinfo.straatinfo.Controllers.LoginActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -81,12 +93,14 @@
 
         <activity
                 android:name="com.straatinfo.straatinfo.Controllers.MapsActivity"
-                android:label="@string/title_activity_maps">
+                android:label="@string/title_activity_maps"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name="com.straatinfo.straatinfo.Controllers.MainActivity"
                 android:label="@string/app_bar_label_home"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"
+                android:screenOrientation="portrait">
         </activity>
     </application>
 

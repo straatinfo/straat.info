@@ -7,11 +7,11 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.straatinfo.straatinfo"
+        applicationId 'com.straatinfo.straatinfo'
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.5"
+        versionCode 8
+        versionName "1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         //
     }

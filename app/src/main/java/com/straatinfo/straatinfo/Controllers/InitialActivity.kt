@@ -45,7 +45,8 @@ class InitialActivity : AppCompatActivity() {
             LOCATION_RECORD_CODE -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Log.d("PERMISSION", "Permission has been denied by user")
-                    this.makeRequest()
+                    // this.makeRequest()
+                    this.continueActivity()
                 } else {
                     Log.d("PERMISSION", "Permission has been granted by user")
                     this.continueActivity()
@@ -79,16 +80,17 @@ class InitialActivity : AppCompatActivity() {
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("Permission to access Internet is required")
-            builder.setTitle(("Internet Permission"))
-            builder.setPositiveButton("OK") { dialog, which ->
-                Log.d("PERMISSION", "clicked")
-                this.makeRequest()
-            }
-
-            val dialog = builder.create()
-            dialog.show()
+//            val builder = AlertDialog.Builder(this)
+//            builder.setMessage("Permission to access Internet is required")
+//            builder.setTitle(("Internet Permission"))
+//            builder.setPositiveButton("OK") { dialog, which ->
+//                Log.d("PERMISSION", "clicked")
+//                this.makeRequest()
+//            }
+//
+//            val dialog = builder.create()
+//            dialog.show()
+            this.makeRequest()
         } else {
             this.makeRequest()
         }

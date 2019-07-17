@@ -272,4 +272,8 @@
     </string>
     <string name="team_member_request_decline_failed">Kan gebruiker niet weigeren. Probeer het later opnieuw</string>
     <string name="error_invalid_postal_code_no_host">Locatie heeft geen geregistreerde host</string>
+    <string name="action_not_allowed">Actie niet toegestaan</string>
+    <string name="error_reporting_outside_netherlands">Je wilde een melding doen buiten Nederland. Op dit moment werkt
+        de app alleen binnen Nederland. De melding wordt gedelete.
+    </string>
 </resources>

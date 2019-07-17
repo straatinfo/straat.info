@@ -365,7 +365,7 @@ object AuthService {
                     } else {
                         val message = if (data.has("data"))  data.getString("data") else data.getString("message")
 
-                        if (message == "Invalid Input" || message == "already taken") {
+                        if (message == "Invalid Input" || message == "already taken" || message == "User Error") {
                             it.onNext(false)
                         } else {
                             it.onNext(true)

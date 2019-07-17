@@ -331,4 +331,8 @@
     <string name="team_member_request_decline_success">Successfully declined user</string>
     <string name="team_member_request_decline_failed">Failed to declined user please try again later</string>
     <string name="error_invalid_postal_code_no_host">Location doesn\'t have a registered host</string>
+    <string name="action_not_allowed">Action not allowed</string>
+    <string name="error_reporting_outside_netherlands">you\'re trying to create a report outside The Netherlands.
+        Currently the app only works within TheNetherlands. This report will be deleted.
+    </string>
 </resources>

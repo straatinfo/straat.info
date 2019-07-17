@@ -48,7 +48,7 @@ const val WINDOW_INFO_REPORT_DATE_FORMAT = "d MMM yyyy"
 const val TZ_ZULU = "yyyy-MM-dd'T'HH:mm:ss"
 
 // G-Map
-const val MAP_ZOOM = 18.00f
+const val MAP_ZOOM = 16.500f
 
 // Host
 const val REQUEST_HOST_WITH_CODE = "$BASE_URL/v3/api/registration/validation/host"

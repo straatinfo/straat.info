@@ -48,11 +48,13 @@ import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
 import com.straatinfo.straatinfo.Utilities.MAP_ZOOM
 import com.straatinfo.straatinfo.Utilities.REPORT_TYPE_A_ID
 import com.straatinfo.straatinfo.Utilities.REPORT_TYPE_B_ID
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_home.drawer_layout
 import kotlinx.android.synthetic.main.activity_home.nav_view
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import java.io.IOException
+import java.util.jar.Manifest
 
 
 class MainActivity : AppCompatActivity(),
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity(),
 
 
     lateinit var locationManager: LocationManager
-    lateinit var progressBar: ProgressBar
+    // lateinit var progressBar: ProgressBar
     var mainCategories = mutableListOf<MainCategory>()
     var mainCatList = mutableListOf<String>()
     var subCategories = mutableListOf<SubCategory>()
@@ -89,6 +91,7 @@ class MainActivity : AppCompatActivity(),
     var btnClicked = 0
 
     // report inputs
+    var _hasSubCatId = false
     var _mainCatId: String? = null
     var _subCatId: String? = null
     var _emergencyNotif: Boolean = false
@@ -110,24 +113,28 @@ class MainActivity : AppCompatActivity(),
     var _vehicleInvolveDesc: String? = null
 
 
+   var locationHost: Host? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        // mapFragment.getMapAsync(this)
         mainCatList = mutableListOf(getString(R.string.report_select_main_category))
         subCatList = mutableListOf(getString(R.string.report_select_sub_category))
 
-        progressBar = findViewById(R.id.mainActivityProgressBar)
+        // progressBar = findViewById(R.id.mainActivityProgressBar)
 
         val user = User(JSONObject(App.prefs.userData))
-        progressBar.visibility = View.VISIBLE
+        this.locationHost = user.host
+        mapFragment.getMapAsync(this)
+        // progressBar.visibility = View.VISIBLE
         this.init {
             AuthService.userRefresh(user.email!!)
                 .subscribeOn(Schedulers.io())
                 .subscribe{
-                    progressBar.visibility = View.GONE
+                    // progressBar.visibility = View.GONE
                     this.checkActiveTeam()
                 }
                 .run{}
@@ -145,7 +152,7 @@ class MainActivity : AppCompatActivity(),
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
-        this.getLocationPoint(googleMap) { success ->
+        this.getLocationPoint(true, googleMap) { success ->
             if (success) {
                // this.loadReports(100.00)
 
@@ -213,14 +220,14 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        // super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         Log.d("NUM_PERMISSIONS", grantResults.count().toString())
         Log.d("NUM_PERMISSIONS", grantResults.toString())
         when (requestCode) {
             LOCATION_RECORD_CODE -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Log.d("PERMISSION", "Permission has been denied by user")
-                    UtilService.makeRequest(this, LOCATION_RECORD_CODE)
+                    // UtilService.makeRequest(this, LOCATION_RECORD_CODE)
                 } else if (grantResults.isEmpty() || (grantResults.count() > 1 && grantResults[1] != PackageManager.PERMISSION_GRANTED)) {
                     Log.d("PERMISSION", "Permission has been denied by user")
                     UtilService.makeRequest(this, LOCATION_RECORD_CODE)
@@ -246,14 +253,35 @@ class MainActivity : AppCompatActivity(),
     override fun onMarkerDragEnd(p0: Marker?) {
         Log.d("MARKER_MOVE", p0.toString())
         UtilService.geocode(p0!!.position.longitude, p0!!.position.latitude)
+            .flatMap { result ->
+                this.evaluateHostLocation(result)
+                Observable.just(result)
+            }
             .subscribeOn(Schedulers.io())
             .subscribe { result ->
-                reportCurrentLoc.text = this.parseGeocodeData(result)
-                sendReportTypeALocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
-                this.setLocation(this.parseGeocodeData(result))
 
-                Log.d("POST_CODE", this.getPostCodeFromGeoCode(result))
-                this.setLongLat(p0!!.position.longitude, p0!!.position.latitude)
+                val countryCode = this.getCountryFromGeoCode(result)
+
+                if (countryCode != "NL") {
+                    val locationError = AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.action_not_allowed))
+                        .setMessage(getString(R.string.error_reporting_outside_netherlands))
+                        .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, i ->
+                            val returnIntent = Intent(this, MainActivity::class.java)
+                            startActivity(returnIntent)
+                            finish()
+                        })
+
+                    locationError.show()
+                } else {
+                    reportCurrentLoc.text = this.parseGeocodeData(result)
+                    sendReportTypeALocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
+                    this.setLocation(this.parseGeocodeData(result))
+
+
+                    this.setLongLat(p0!!.position.longitude, p0!!.position.latitude)
+                }
+
             }
             .run {  }
     }
@@ -261,6 +289,39 @@ class MainActivity : AppCompatActivity(),
 
 
     // private functions
+    private fun evaluateHostLocation (geoCode: JSONObject) {
+        val hostName = this.getHostNameFromGeoCode(geoCode)
+
+        Log.d("POST_CODE_HOST_NAME", this.getHostNameFromGeoCode(geoCode))
+
+        this.getHostByName(hostName) { host ->
+
+            this.getMainCategoryA(host?.id!!) {
+                if (this.locationHost?.id != host?.id) {
+                    this.locationHost = host
+                    this.mainCatSelectedPos = 0
+                    this.subCatPos = 0
+                    subCatSpinner.visibility = View.GONE
+                    this.loadRpAMainCatSpinner()
+                }
+            }
+        }
+    }
+
+    private fun getHostByName (hostName: String, completion: (host: Host?) -> Unit) {
+        HostService.getHostByName(hostName)
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                if (it.has("_id")) {
+                    val host = Host(it)
+                    completion(host)
+                } else {
+                    val user = User()
+                    completion(user.host)
+                }
+            }
+            .run {  }
+    }
     private fun reload() {
         val returnIntent = Intent(this, MainActivity::class.java)
         startActivity(returnIntent)
@@ -282,7 +343,7 @@ class MainActivity : AppCompatActivity(),
         toolbar.setNavigationOnClickListener(navigationOnClickListener())
         nav_view.setNavigationItemSelectedListener(this)
 
-        progressBar.visibility = View.GONE
+        // progressBar.visibility = View.GONE
         cb()
     }
 
@@ -295,8 +356,8 @@ class MainActivity : AppCompatActivity(),
         // Toast.makeText(this, "toggle", Toast.LENGTH_LONG).show()
     }
 
-    private fun getLocationPoint (googleMap: GoogleMap, onSuccess: (Boolean) -> Unit) {
-        getUserCoordinates { point ->
+    private fun getLocationPoint (fromActivity: Boolean, googleMap: GoogleMap, onSuccess: (Boolean) -> Unit) {
+        getUserCoordinates (fromActivity) { point ->
             val user = User()
             val host = user.host
             Log.d("host", host!!.id)
@@ -466,121 +527,165 @@ class MainActivity : AppCompatActivity(),
         return LatLng(lat!!, long!!)
     }
 
-    private fun getHostByName (hostName: String, cb: (Boolean, Host) -> Unit) {
-        HostService.getHostByName(hostName)
-            .subscribeOn(Schedulers.io())
-            .subscribe {
-                when (it.has("_id")) {
-                    true -> {
-                        val host = Host(it)
-                        cb(true, host)
-                    }
-                    false -> cb(false, Host())
-                }
-            }
-            .run {  }
-    }
+//    private fun getHostByName (hostName: String, cb: (Boolean, Host) -> Unit) {
+//        HostService.getHostByName(hostName)
+//            .subscribeOn(Schedulers.io())
+//            .subscribe {
+//                when (it.has("_id")) {
+//                    true -> {
+//                        val host = Host(it)
+//                        cb(true, host)
+//                    }
+//                    false -> cb(false, Host())
+//                }
+//            }
+//            .run {  }
+//    }
 
-    @SuppressLint("MissingPermission")
-    private fun getUserCoordinates (done: (point: LatLng) -> Unit) {
+    // @SuppressLint("MissingPermission")
+    private fun getUserCoordinates (fromActivity: Boolean, done: (point: LatLng) -> Unit) {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        val gpsPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
 
-        if (hasGps || hasNetwork) {
-            if (hasGps) {
-                Log.d("GPS_LOCATION", "hasGPS")
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object: LocationListener {
-                    override fun onLocationChanged(location: Location?) {
-                        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                        Log.d("LOC", location.toString())
-                        if (location != null) {
-                            Log.d("GPS_LOCATION", "${location.latitude.toString()}, ${location.longitude}" )
-                            locationGps = location
+        if (gpsPermission != PackageManager.PERMISSION_GRANTED) {
+            // UtilService.makeRequest(this, LOCATION_RECORD_CODE)
+            val user = User()
+            val host = user.host
+            val point = LatLng(host?.lat!!, host.long!!)
+            done(point)
+        } else {
+            if (hasGps || hasNetwork) {
+                if (hasGps) {
+                    Log.d("GPS_LOCATION", "hasGPS")
+                    try {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object: LocationListener {
+                            override fun onLocationChanged(location: Location?) {
+                                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                Log.d("LOC", location.toString())
+                                if (location != null && fromActivity) {
+                                    Log.d("NETWORK_LOCATION", "${location.latitude.toString()}, ${location.longitude}" )
+                                    locationNetwork = location
+                                    val point = LatLng(location.latitude!!, location.longitude!!)
+                                    done(point)
+                                }
+                            }
+
+                            override fun onProviderEnabled(provider: String?) {
+                                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onProviderDisabled(provider: String?) {
+                                val user = User()
+                                val host = user.host
+                                val point = LatLng(host?.lat!!, host.long!!)
+                                done(point)
+                                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                        })
+
+                        val localGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        if (localGpsLocation != null) {
+                            locationGps = localGpsLocation
                             val point = LatLng(locationGps!!.latitude, locationGps!!.longitude)
-                            // this.loadReportPointer(point)
-                            // done(point)
+                            done(point)
+                        } else {
+                            val user = User()
+                            val host = user.host
+                            val point = LatLng(host?.lat!!, host.long!!)
+                            done(point)
                         }
+                    } catch (e: Exception) {
+                        val user = User()
+                        val host = user.host
+                        val point = LatLng(host?.lat!!, host.long!!)
+                        done(point)
                     }
 
-                    override fun onProviderEnabled(provider: String?) {
-                        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+                if (hasNetwork) {
+                    try {
+                        Log.d("NETWOR_LOCATION", "hasNetwork")
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object: LocationListener {
+                            override fun onLocationChanged(location: Location?) {
+                                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+                                if (location != null && fromActivity) {
+                                    Log.d("NETWORK_LOCATION", "${location.latitude.toString()}, ${location.longitude}" )
+                                    locationNetwork = location
+                                    val point = LatLng(location.latitude!!, location.longitude!!)
+                                    done(point)
+                                }
+                            }
+
+                            override fun onProviderEnabled(provider: String?) {
+                                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onProviderDisabled(provider: String?) {
+                                val user = User()
+                                val host = user.host
+                                val point = LatLng(host?.lat!!, host.long!!)
+                                done(point)
+                                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+                        })
+
+                        val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                        if (localNetworkLocation != null) {
+                            locationNetwork = localNetworkLocation
+                            val point = LatLng(locationNetwork!!.latitude, locationNetwork!!.longitude)
+                            done(point)
+                        } else {
+                            val user = User()
+                            val host = user.host
+                            val point = LatLng(host?.lat!!, host.long!!)
+                            done(point)
+                        }
+                    } catch (e: Exception) {
+                        val user = User()
+                        val host = user.host
+                        val point = LatLng(host?.lat!!, host.long!!)
+                        done(point)
+                    }
+                }
+
+                if (locationGps != null && locationNetwork != null) {
+                    if (locationGps!!.accuracy > locationNetwork!!.accuracy) {
+                        userLocation = locationGps
+                    } else {
+                        userLocation = locationNetwork
                     }
 
-                    override fun onProviderDisabled(provider: String?) {
-                        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                })
-
-                val localGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                if (localGpsLocation != null) {
-                    locationGps = localGpsLocation
-                    val point = LatLng(locationGps!!.latitude, locationGps!!.longitude)
+                    val point = LatLng(userLocation!!.latitude, userLocation!!.longitude)
                     done(point)
                 }
-            }
-
-            if (hasNetwork) {
-                Log.d("NETWOR_LOCATION", "hasNetwork")
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object: LocationListener {
-                    override fun onLocationChanged(location: Location?) {
-                        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
-                        if (location != null) {
-                            Log.d("NETWORK_LOCATION", "${location.latitude.toString()}, ${location.longitude}" )
-                            locationNetwork = location
-                        }
-                    }
-
-                    override fun onProviderEnabled(provider: String?) {
-                        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    override fun onProviderDisabled(provider: String?) {
-                        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-                })
-
-                val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                if (localNetworkLocation != null) {
-                    locationNetwork = localNetworkLocation
-                    val point = LatLng(locationNetwork!!.latitude, locationNetwork!!.longitude)
-                    done(point)
-                }
-            }
-
-            if (locationGps != null && locationNetwork != null) {
-                if (locationGps!!.accuracy > locationNetwork!!.accuracy) {
-                    userLocation = locationGps
-                } else {
-                    userLocation = locationNetwork
-                }
-
-                val point = LatLng(userLocation!!.latitude, userLocation!!.longitude)
+            } else {
+                // startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                val user = User()
+                val host = user.host
+                val point = LatLng(host?.lat!!, host.long!!)
                 done(point)
             }
-        } else {
-            // startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            val host = User().host
-            val point = LatLng(host?.lat!!, host?.long!!)
-            done(point)
         }
     }
 
-    private fun getMainCategoryA (completion: () -> Unit) {
-        val host = User().host
+    private fun getMainCategoryA (hostId: String, completion: () -> Unit) {
         val language = getString(R.string.language)
-        CategoryService.getHostMainCategories(host?.id!!, language)
+        this.mainCategories = mutableListOf()
+        this.mainCatList = mutableListOf(getString(R.string.report_select_main_category))
+        CategoryService.getHostMainCategories(hostId, language)
             .subscribeOn(Schedulers.io())
             .subscribe { mainCategoryList ->
                 Log.d("MAIN_CATEGORY_LIST", mainCategoryList.toString())
@@ -696,7 +801,64 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    private fun getHostNameFromGeoCode (jsonObject: JSONObject): String{
+        try {
+            var hostName = ""
+            val results = jsonObject.getJSONArray("results") as JSONArray
+            val result1 = results[0] as JSONObject
+            val addressComponents = result1.getJSONArray("address_components")
+            for (i in 0 until addressComponents.length()) {
+                var item = addressComponents[i] as JSONObject
+                Log.d("POST_CODE", item.toString())
+                if (item.has("types")) {
+                    var types = item.getJSONArray("types")
+                    var stringify = types.toString()
+                    if (stringify.contains("locality") && item.has("long_name")) {
+                        hostName = item.getString("long_name")
+                    }
+                }
+            }
+
+            Log.d("POST_CODE_HOST_NAME", hostName)
+
+
+            return hostName
+        } catch (e: Exception) {
+            Log.d("POST_CODE_ERROR", e.localizedMessage)
+            return ""
+        }
+    }
+
+    private fun getCountryFromGeoCode (jsonObject: JSONObject): String {
+        try {
+            var countryCode = ""
+            val results = jsonObject.getJSONArray("results") as JSONArray
+            val result1 = results[0] as JSONObject
+            val addressComponents = result1.getJSONArray("address_components")
+            for (i in 0 until addressComponents.length()) {
+                var item = addressComponents[i] as JSONObject
+                Log.d("POST_CODE", item.toString())
+                if (item.has("types")) {
+                    var types = item.getJSONArray("types")
+                    var stringify = types.toString()
+                    if (stringify.contains("country") && item.has("short_name")) {
+                        countryCode = item.getString("short_name")
+                    }
+                }
+            }
+
+            Log.d("POST_CODE_COUNTRY_NAME", countryCode)
+
+
+            return countryCode
+        } catch (e: Exception) {
+            Log.d("POST_CODE_ERROR", e.localizedMessage)
+            return ""
+        }
+    }
+
     fun loadReportPointer (point: LatLng) {
+        this.map.clear()
         var reportMarker = MarkerOptions()
             .position(point)
             .draggable(true)
@@ -741,7 +903,14 @@ class MainActivity : AppCompatActivity(),
 
     // send report type A section
     fun showSendReportTypeA () {
-        this.getMainCategoryA {
+        var host: Host? = null
+        if (locationHost != null) {
+            host = locationHost
+        } else {
+            val user = User()
+            host = user.host
+        }
+        this.getMainCategoryA (host?.id!!) {
             this.loadRpAMainCatSpinner()
         }
         sendReportP2Frame.visibility = View.GONE
@@ -769,6 +938,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun loadRpAMainCatSpinner () {
+        _hasSubCatId = false
         val uaa = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, this.mainCatList)
         this.mainCatSpinner.adapter = uaa
         mainCatSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -781,6 +951,7 @@ class MainActivity : AppCompatActivity(),
                 }
 
                 if (position == 0 && mainCatSelectedPos > 0) {
+                    unSetSubCatId()
                     val mc = mainCategories[mainCatSelectedPos - 1]
                     setMainCatId(mc.id!!)
                     Log.d("MAIN_C", mc.toString())
@@ -795,14 +966,17 @@ class MainActivity : AppCompatActivity(),
                 }
 
                 if (position > 0 && mainCatSelectedPos > 0) {
+                    unSetSubCatId()
                     val mc = mainCategories[mainCatSelectedPos - 1]
                     setMainCatId(mc.id!!)
                     Log.d("MAIN_C", mc.toString())
                     Log.d("SUB_CAT", mc.subCategories.toString())
                     if (mc.subCategories != null && mc.subCategories!!.length() > 0) {
+                        _hasSubCatId = true
                         subCatPos = 0
                         loadRpASubCatSpinner(mc)
                     } else {
+                        _hasSubCatId = false
                         subCatSpinner.visibility = View.GONE
                     }
                 }
@@ -982,7 +1156,7 @@ class MainActivity : AppCompatActivity(),
         pictureDialog.show()
     }
 
-    // send repor a info
+    // send report a info
     fun onCheckReportAInfo (view: View) {
         var title = getString(R.string.report_public_space)
         var message = getString(R.string.report_type_a_info)
@@ -1017,7 +1191,7 @@ class MainActivity : AppCompatActivity(),
 
         UtilService.setLocationPermission(this, LOCATION_RECORD_CODE)
 
-        getUserCoordinates { point ->
+        getUserCoordinates (false) { point ->
             this.map.clear()
             val hostCoordinates = this.getHostCoordinates()
             this.loadMapCircle(hostCoordinates)
@@ -1025,19 +1199,46 @@ class MainActivity : AppCompatActivity(),
             // val pointToUse = hostCoordinates // for testing
             Log.d("POINT_LOADED", pointToUse.toString())
             UtilService.geocode(pointToUse.longitude, pointToUse.latitude)
+                .flatMap { result ->
+                    // add host here
+                    this.evaluateHostLocation(result)
+                    Observable.just(result)
+                }
                 .subscribeOn(Schedulers.io())
                 .subscribe { result ->
-                    Log.d("POINT", this.parseGeocodeData(result))
-                    reportCurrentLoc.text = this.parseGeocodeData(result)
-                    Log.d("POST_CODE", this.getPostCodeFromGeoCode(result))
-                    sendReportTypeALocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
-                    send_report_type_b_location.text = getString(R.string.location_col) + this.parseGeocodeData(result)
-                    this.setLocation(this.parseGeocodeData(result))
-                    this.setLongLat(pointToUse.longitude, pointToUse.latitude)
+                    val countryCode = this.getCountryFromGeoCode(result)
+
+                    if (countryCode != "NL") {
+                        val locationError = AlertDialog.Builder(this)
+                            .setTitle(getString(R.string.action_not_allowed))
+                            .setMessage(getString(R.string.error_reporting_outside_netherlands))
+                            .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, i ->
+                                val returnIntent = Intent(this, MainActivity::class.java)
+                                startActivity(returnIntent)
+                                finish()
+                            })
+                            .setOnDismissListener {
+                                val returnIntent = Intent(this, MainActivity::class.java)
+                                startActivity(returnIntent)
+                                finish()
+                            }
+
+                        locationError.show()
+                    } else {
+                        Log.d("POINT", this.parseGeocodeData(result))
+                        reportCurrentLoc.text = this.parseGeocodeData(result)
+                        Log.d("POST_CODE", this.getPostCodeFromGeoCode(result))
+                        sendReportTypeALocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
+                        send_report_type_b_location.text = getString(R.string.location_col) + this.parseGeocodeData(result)
+                        this.setLocation(this.parseGeocodeData(result))
+
+                    }
+
                 }
                 .run {  }
+            this.setLongLat(pointToUse.longitude, pointToUse.latitude)
             this.loadReportPointer(pointToUse)
-            showSendReportP1()
+            this.showSendReportP1()
         }
 
     }
@@ -1047,15 +1248,19 @@ class MainActivity : AppCompatActivity(),
         if (
             this._location != null &&
             this._mainCatId != null &&
-            // reportDetailsTxtBox.text.toString() != "" &&
+            subCatValid() &&
             this._long != null &&
             this._lat != null
         ) {
+
+            Log.d("SUB_CAT_ID", _hasSubCatId.toString() + " " + _subCatId)
+
             this._isValid = true
         }
     }
     fun setButtonEnablement () {
-        sendReportABtn.isEnabled = this._isValid
+        Log.d("SUB_CAT_ID", _hasSubCatId.toString() + " " + _subCatId)
+        sendReportABtn.isEnabled = this._isValid && subCatValid()
         send_report_type_b_send_report_btn.isEnabled = this._isValid
     }
 
@@ -1181,11 +1386,18 @@ class MainActivity : AppCompatActivity(),
         dialog.show()
     }
 
+    fun subCatValid () : Boolean {
+        if (!_hasSubCatId) return true
+        else {
+            return _subCatId != null
+        }
+    }
+
     // actual sending
     fun onSendReportTypeA (view: View) {
         mainActivityProgressBar.visibility = View.VISIBLE
         sendReportTypeAFrame.visibility = View.GONE
-        if (!_isValid) promptUser()
+        if (!_isValid && subCatValid()) promptUser()
         else {
             val user = User(JSONObject(App.prefs.userData))
 

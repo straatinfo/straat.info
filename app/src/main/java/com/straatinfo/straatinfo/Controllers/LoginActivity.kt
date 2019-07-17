@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.AuthService
 import com.straatinfo.straatinfo.Services.RegexService

@@ -309,4 +309,30 @@
     <string name="report_info_new">New</string>
     <string name="report_info_completed">Completed</string>
     <string name="report_info_change_status_btn_txt">Change Status</string>
+    <string name="report_type_b_info">Here you\'re able to share a situation that might be suspicious with other members
+        of your team. At the moment other members agree with you. that is needed looks suspicious call the police or
+        other relevant organisation. Emergency? First call 112 before continuing to use this app!
+    </string>
+    <string name="send_report_type_b_are_there_people_involved">Are there people involved?</string>
+    <string name="send_report_type_b_are_vehicle_involved">Are vehicle involved?</string>
+    <string name="send_report_type_b_person_involved_description">enter here characteristics of the person (s) involved
+        and, such as height, male / female, hair color, mustache, beard, glasses, clothing, posture, tattoo or other
+        striking details.
+    </string>
+    <string name="send_report_type_b_vehicle_involved_desc">Enter the characteristics of the means of transport
+        involved, such as license plate, color, brand and type number, eye-catching stickers, etc.
+    </string>
+    <string name="send_report_is_urgent_title">Urgent?</string>
+    <string name="send_report_is_urgent_desc">Urgent? First Call 112</string>
+    <string name="report_info_number_people_involved">Number of people involved</string>
+    <string name="report_info_number_vehicle_involved">Number of vehicle involved</string>
+    <string name="team_member_request_decline_confirmation_title">Decline request?</string>
+    <string name="team_member_request_decline_body">Are you sure you want to decline this user?</string>
+    <string name="team_member_request_decline_success">Successfully declined user</string>
+    <string name="team_member_request_decline_failed">Failed to declined user please try again later</string>
+    <string name="error_invalid_postal_code_no_host">Location doesn\'t have a registered host</string>
+    <string name="action_not_allowed">Action not allowed</string>
+    <string name="error_reporting_outside_netherlands">you\'re trying to create a report outside The Netherlands.
+        Currently the app only works within TheNetherlands. This report will be deleted.
+    </string>
 </resources>

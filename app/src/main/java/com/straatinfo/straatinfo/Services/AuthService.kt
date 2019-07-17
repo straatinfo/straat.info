@@ -4,7 +4,6 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
-import com.bumptech.glide.request.RequestListener
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.Utilities.*
@@ -22,8 +21,7 @@ object AuthService {
 
     private fun processUserData (it: ObservableEmitter<Boolean>, userData: JSONObject) {
         Log.d("LOGIN_RESULT", userData.toString())
-        val user = User(userData)
-        App.prefs.userData = user.toJson().toString()
+        App.prefs.userData = userData.toString()
         App.prefs.token = userData.getString("token")
         App.prefs.isLoggedIn = true
         it.onNext(true)
@@ -367,7 +365,7 @@ object AuthService {
                     } else {
                         val message = if (data.has("data"))  data.getString("data") else data.getString("message")
 
-                        if (message == "Invalid Input" || message == "already taken") {
+                        if (message == "Invalid Input" || message == "already taken" || message == "User Error") {
                             it.onNext(false)
                         } else {
                             it.onNext(true)

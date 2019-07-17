@@ -13,7 +13,6 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import com.straatinfo.straatinfo.Adapters.TeamListAdapter
 import com.straatinfo.straatinfo.Models.Team
 import com.straatinfo.straatinfo.Models.User
@@ -21,7 +20,6 @@ import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.NavigationService
 import com.straatinfo.straatinfo.Services.TeamService
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_home.drawer_layout
 import kotlinx.android.synthetic.main.activity_home.nav_view
 import kotlinx.android.synthetic.main.activity_my_team.*

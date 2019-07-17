@@ -1,5 +1,6 @@
 package com.straatinfo.straatinfo.Controllers
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -22,7 +23,6 @@ import com.straatinfo.straatinfo.Services.TeamService
 import com.straatinfo.straatinfo.Services.UtilService
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_registration.*
-import kotlinx.android.synthetic.main.registration_step1.*
 import kotlinx.android.synthetic.main.registration_step3.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -58,6 +58,12 @@ class RegistrationActivity : AppCompatActivity() {
 //            else -> this.loadPage1()
 //        }
         this.registrationNavData.setOnClickListener(View.OnClickListener {
+//            val dialog = AlertDialog.Builder(this)
+//                .setTitle("loading page 1")
+//                .setPositiveButton("OK") { dialog, which ->
+//                    dialog.dismiss()
+//                }
+//            dialog.show()
             this.loadPage1()
 
             // val termsAndCond : Button = this.registration_terms_and_condition
@@ -162,14 +168,14 @@ class RegistrationActivity : AppCompatActivity() {
 
         edtFirstName.setText(this.userInput.fname)
         edtLastName.setText(this.userInput.lname)
-        // edtUsername.setText(this.userInput.usernameInput)
+        edtUsername.setText(this.userInput.usernameInput)
         edtUsernameRandom.setText("_ID:${UtilService.randomStringGenerator(5)}")
-        // edtEmail.setText(this.userInput.email)
+        edtEmail.setText(this.userInput.email)
         edtPostalCode.setText(this.userInput.postalCode)
         edtHouseNumber.setText(this.userInput.houseNumber)
         edtStreetName.setText(this.userInput.streetName)
         edtCity.setText(this.userInput.city)
-        // edtPhone.setText(this.userInput.phoneNumber)
+        edtPhone.setText(this.userInput.phoneNumber)
         edtPassword.setText(this.userInput.password)
 
         if (userInput.email != null && RegexService.testEmail(userInput.email!!)) {
@@ -276,7 +282,12 @@ class RegistrationActivity : AppCompatActivity() {
                             btnNextStep.isEnabled = checkPage1Validity()
                             val title = getString(R.string.error)
                             val message = getString(R.string.registration_invalid_username)
-                            val dialog = UtilService.showDefaultAlert(this, title, message)
+                            val dialog = AlertDialog.Builder(this)
+                                .setMessage(message)
+                                .setTitle(title)
+                                .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                                    dialog.dismiss()
+                                }
                             dialog.show()
                         }
                     }
@@ -313,7 +324,12 @@ class RegistrationActivity : AppCompatActivity() {
                 // Toast.makeText(this, "Invalid Email", Toast.LENGTH_LONG).show()
                 val error = getString(R.string.error)
                 val message = getString(R.string.error_invalid_email)
-                val dialog = UtilService.showDefaultAlert(this, error, message)
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle(error)
+                    .setMessage(message)
+                    .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                        dialog.dismiss()
+                    }
                 dialog.show()
             } else if (!hasFocus) {
                 validateInput("email", email) { valid ->
@@ -324,7 +340,12 @@ class RegistrationActivity : AppCompatActivity() {
                             // Toast.makeText(this, "Invalid Email", Toast.LENGTH_LONG).show()
                             val error = getString(R.string.error)
                             val message = getString(R.string.error_invalid_email)
-                            val dialog = UtilService.showDefaultAlert(this, error, message)
+                            val dialog = AlertDialog.Builder(this)
+                                .setTitle(error)
+                                .setMessage(message)
+                                .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                                    dialog.dismiss()
+                                }
                             dialog.show()
                         }
                         true -> {
@@ -347,7 +368,7 @@ class RegistrationActivity : AppCompatActivity() {
             val postcode = edtPostalCode.text.toString()
             val houseNumber = edtHouseNumber.text.toString()
             if (!hasFocus && postcode != "" &&  houseNumber != "") {
-                this.getPostCode(postcode, houseNumber) { success, streetName, city ->
+                this.getPostCode(postcode, houseNumber) { success, streetName, city, invalidHost ->
                     if (success && streetName != "" && city != "") {
                         edtStreetName.setText(streetName)
                         edtCity.setText(city)
@@ -359,8 +380,13 @@ class RegistrationActivity : AppCompatActivity() {
                     } else {
                         Log.d("POST_CODE_ERROR", "Invalid address")
                         val errorMessage = getString(R.string.error)
-                        val invalidPostcode = getString(R.string.error_invalid_postal_code)
-                        val dialog = UtilService.showDefaultAlert(this, errorMessage, invalidPostcode)
+                        val invalidPostcode = if (invalidHost) getString(R.string.error_invalid_postal_code_no_host) else getString(R.string.error_invalid_postal_code)
+                        val dialog = AlertDialog.Builder(this)
+                            .setTitle(errorMessage)
+                            .setMessage(invalidPostcode)
+                            .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                                dialog.dismiss()
+                            }
 
                         edtStreetName.setText("")
                         edtCity.setText("")
@@ -373,7 +399,12 @@ class RegistrationActivity : AppCompatActivity() {
             } else if (!hasFocus && postcode == "") {
                 val error = getString(R.string.error)
                 val missingPostCodeError = getString(R.string.error_invalid_postal_code)
-                val dialog = UtilService.showDefaultAlert(this, error, missingPostCodeError)
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle(error)
+                    .setMessage(missingPostCodeError)
+                    .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                        dialog.dismiss()
+                    }
                 dialog.show()
             }
             btnNextStep.isEnabled = checkPage1Validity()
@@ -383,10 +414,15 @@ class RegistrationActivity : AppCompatActivity() {
             val postcode = edtPostalCode.text.toString()
             val houseNumber = edtHouseNumber.text.toString()
             val error = getString(R.string.error)
-            val message = getString(R.string.error_invalid_postal_code)
-            val dialog = UtilService.showDefaultAlert(this, error, message)
+            var message = getString(R.string.error_invalid_postal_code)
+            val dialog = AlertDialog.Builder(this)
+                .setTitle(error)
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                    dialog.dismiss()
+                }
             if (!hasFocus && postcode != "" &&  houseNumber != "") {
-                this.getPostCode(postcode, houseNumber) { success, streetName, city ->
+                this.getPostCode(postcode, houseNumber) { success, streetName, city, invalidHost ->
                     if (success && streetName != "" && city != "") {
                         edtStreetName.setText(streetName)
                         edtCity.setText(city)
@@ -402,6 +438,8 @@ class RegistrationActivity : AppCompatActivity() {
                         userInput.city = null
                         userInput.streetName = null
                         // Toast.makeText(this, "ongeldig adres", Toast.LENGTH_LONG).show()
+                        val invalidPostcodeMessage = if (invalidHost) getString(R.string.error_invalid_postal_code_no_host) else getString(R.string.error_invalid_postal_code)
+                        dialog.setMessage(invalidPostcodeMessage)
                         dialog.show()
                     }
                 }
@@ -439,7 +477,12 @@ class RegistrationActivity : AppCompatActivity() {
             if (!hasFocus && phoneNumber.length < 10) {
                 val error = getString(R.string.error)
                 val message = getString(R.string.error_invalid_mobile_number_length)
-                val dialog = UtilService.showDefaultAlert(this, error, message)
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle(error)
+                    .setMessage(message)
+                    .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                        dialog.dismiss()
+                    }
                 userInput.phoneNumber = phoneNumber
                 userInput.saveInput()
                 isPhoneNumberValid = false
@@ -451,7 +494,12 @@ class RegistrationActivity : AppCompatActivity() {
                 isPhoneNumberValid = false
                 val error = getString(R.string.error)
                 val message = getString(R.string.error_invalid_mobile_number)
-                val dialog = UtilService.showDefaultAlert(this, error, message)
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle(error)
+                    .setMessage(message)
+                    .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                        dialog.dismiss()
+                    }
 
                 // Toast.makeText(this, "Invalid Phone number", Toast.LENGTH_LONG).show()
                 dialog.show()
@@ -465,7 +513,12 @@ class RegistrationActivity : AppCompatActivity() {
                             isPhoneNumberValid = false
                             val error = getString(R.string.error)
                             val message = getString(R.string.error_invalid_mobile_number)
-                            val dialog = UtilService.showDefaultAlert(this, error, message)
+                            val dialog = AlertDialog.Builder(this)
+                                .setTitle(error)
+                                .setMessage(message)
+                                .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                                    dialog.dismiss()
+                                }
 
                             // Toast.makeText(this, "Invalid Phone number", Toast.LENGTH_LONG).show()
                             dialog.show()
@@ -489,6 +542,18 @@ class RegistrationActivity : AppCompatActivity() {
 
         edtPassword.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
+//                val password = edtPassword.text.toString()
+//                if (!RegexService.testpassword(password)) {
+//                    val error = getString(R.string.error)
+//                    val message = getString(R.string.error_invalid_password)
+//                    val dialog = AlertDialog.Builder(applicationContext)
+//                        .setTitle(error)
+//                        .setMessage(message)
+//                        .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+//                            dialog.dismiss()
+//                        }
+//                    dialog.show()
+//                }
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -508,7 +573,12 @@ class RegistrationActivity : AppCompatActivity() {
             if (!hasFocus && (password == "" || password.length < 8 || !RegexService.testpassword(password))) {
                 val error = getString(R.string.error)
                 val message = getString(R.string.error_invalid_password)
-                val dialog = UtilService.showDefaultAlert(this, error, message)
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle(error)
+                    .setMessage(message)
+                    .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                        dialog.dismiss()
+                    }
                 dialog.show()
             } else {
                 val password = edtPassword.text.toString()
@@ -517,6 +587,8 @@ class RegistrationActivity : AppCompatActivity() {
                 btnNextStep.isEnabled = checkPage1Validity()
             }
         }
+
+        btnNextStep.isEnabled = checkPage1Validity()
 
     }
 
@@ -558,11 +630,8 @@ class RegistrationActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun callDialog (title: String, message: String) {
-        UtilService.showDefaultAlert(this, title, message)
-    }
 
-    private fun getPostCode(postalCode: String, houseNumber: String, completion: (success: Boolean, streetName: String, city: String) -> Unit) {
+    private fun getPostCode(postalCode: String, houseNumber: String, completion: (success: Boolean, streetName: String, city: String, invalidHost: Boolean) -> Unit) {
         UtilService.postcode(postalCode, houseNumber) { error, postCodeData ->
             if (error == null || error == "") {
                 Log.d("POST_CODE", postCodeData.toString())
@@ -572,9 +641,17 @@ class RegistrationActivity : AppCompatActivity() {
                 val cityData = if (address!!.has("city")) address!!.getJSONObject("city") else JSONObject()
                 val city = if (cityData.has("label")) cityData!!.getString("label") else ""
                 val street = if (address!!.has("street")) address!!.getString("street") else ""
-                completion(true, street, city)
+
+                if (postCodeData!!.has("_host")) {
+                    val data = postCodeData!!.getJSONObject("_host")
+                    val host = Host(data)
+
+                    App.prefs.hostData = host.getJsonObject().toString()
+                }
+                completion(true, street, city, false)
             } else {
-                completion(false, "", "")
+                val isInvalidHost = error.contains("Municipality is not registered")
+                completion(false, "", "", isInvalidHost)
             }
         }
     }
@@ -594,7 +671,7 @@ class RegistrationActivity : AppCompatActivity() {
             && userInput.streetName != null && userInput.streetName != ""
             && userInput.city != null && userInput.city != ""
             && userInput.phoneNumber != null && userInput.phoneNumber != ""
-            && userInput.password != null && userInput.password != "" && userInput.password!!.length >= 8
+            && userInput.password != null && userInput.password != "" && userInput.password!!.length >= 8 && RegexService.testpassword(userInput.password!!)
             && isEmailValid && isPhoneNumberValid && isTorAccepted
         )
 
@@ -679,7 +756,12 @@ class RegistrationActivity : AppCompatActivity() {
         btnNextStep.isEnabled = checkPage1Validity()
         val error = getString(R.string.error)
         val message = getString(R.string.error_tac_not_accepted)
-        val errorDialog = UtilService.showDefaultAlert(this, error, message)
+        val errorDialog = AlertDialog.Builder(this)
+            .setTitle(error)
+            .setMessage(message)
+            .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                dialog.dismiss()
+            }
 
         errorDialog.show()
         this.torDialog.hide()
@@ -741,10 +823,13 @@ class RegistrationActivity : AppCompatActivity() {
                         finish()
                     }
                     else -> {
-                        val builder = android.app.AlertDialog.Builder(this)
+                        val builder = AlertDialog.Builder(this)
                         builder
                             .setTitle(getString(R.string.error))
                             .setMessage(getString(R.string.registration_generic_error))
+                            .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                                dialog.dismiss()
+                            }
 
                         builder.create()
                         builder.show()

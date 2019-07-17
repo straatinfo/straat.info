@@ -38,10 +38,12 @@ class TeamMemberListAdapter (val context: Context, val teamRequests: MutableList
         val fullnameTxt = itemView?.findViewById<TextView>(R.id.teamMemberListFullNameTxt)
         val addBtn = itemView?.findViewById<ImageButton>(R.id.teamMemberListAddBtn)
         val chatBtn = itemView?.findViewById<ImageButton>(R.id.teamMemberListChatBtn)
+        val removeBtn = itemView?.findViewById<ImageButton>(R.id.teamMemberListRemoveBtn)
 
         fun bindCategory (teamRequest: TeamMember, context: Context) {
             chatBtn.visibility = View.VISIBLE
             addBtn.visibility = View.GONE
+            removeBtn.visibility = View.GONE
 
             fullnameTxt.text = "${teamRequest.userFname} ${teamRequest.userLname}"
             chatBtn.setOnClickListener { view ->

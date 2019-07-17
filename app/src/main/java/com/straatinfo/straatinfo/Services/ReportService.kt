@@ -5,7 +5,6 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.straatinfo.straatinfo.Controllers.App
-import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.Utilities.GET_PUBLIC_REPORT_LIST
 import com.straatinfo.straatinfo.Utilities.REPORT_API
 import com.straatinfo.straatinfo.Utilities.REPORT_NEAR

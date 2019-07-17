@@ -45,8 +45,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$PROJECT_DIR$/../straat-app-ios/Straat/View/Assets.xcassets/exit.imageset/exit@3x.png" />
-                                      <entry key="outputName" value="ic_menu_logout" />
+                                      <entry key="imageAsset" value="$PROJECT_DIR$/../straat-app-ios/Straat/View/Assets.xcassets/info.imageset/info.png" />
+                                      <entry key="outputName" value="ic_question_mark" />
                                       <entry key="theme" value="HOLO_DARK" />
                                       <entry key="themeColor" value="ffffff" />
                                     </map>

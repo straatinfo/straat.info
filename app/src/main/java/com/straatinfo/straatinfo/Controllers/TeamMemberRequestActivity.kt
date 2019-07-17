@@ -4,7 +4,6 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import com.straatinfo.straatinfo.Adapters.TeamMemberRequestListAdapter
@@ -13,7 +12,6 @@ import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.TeamService
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_team_member_request.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import org.json.JSONArray
 import org.json.JSONObject
 

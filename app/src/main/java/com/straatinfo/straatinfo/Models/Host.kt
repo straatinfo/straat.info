@@ -44,14 +44,14 @@ class Host {
         this.long = hostJsonObject.getDouble("long")
         this.email = hostJsonObject.getString("email")
         this.hostName = hostJsonObject.getString("hostName")
-        this.username = hostJsonObject.getString("username")
-        this.streetName = hostJsonObject.getString("streetName")
-        this.city = hostJsonObject.getString("city")
-        this.country = hostJsonObject.getString("country")
-        this.postalCode = hostJsonObject.getString("postalCode")
-        this.phoneNumber = hostJsonObject.getString("phoneNumber")
-        this.isVolunteer = hostJsonObject.getBoolean("isVolunteer")
-        this.language = hostJsonObject.getString("language")
+        this.username = if (hostJsonObject.has("username")) hostJsonObject.getString("username") else ""
+        this.streetName = if (hostJsonObject.has("streetName")) hostJsonObject.getString("streetName") else ""
+        this.city = if (hostJsonObject.has("city")) hostJsonObject.getString("city") else ""
+        this.country = if (hostJsonObject.has("country")) hostJsonObject.getString("country") else ""
+        this.postalCode = if (hostJsonObject.has("postalCode")) hostJsonObject.getString("postalCode") else ""
+        this.phoneNumber = if (hostJsonObject.has("phoneNumber")) hostJsonObject.getString("phoneNumber") else ""
+        this.isVolunteer = if (hostJsonObject.has("isVolunteer")) hostJsonObject.getBoolean("isVolunteer") else null
+        this.language = if (hostJsonObject.has("language")) hostJsonObject.getString("language") else ""
     }
 
 

@@ -43,7 +43,7 @@ class EnterCodeActivity : AppCompatActivity() {
 
                     if (AuthService.authResponseError != null) {
                         enterCodeTxtBox.text.clear()
-                        val dialog = UtilService.showDefaultAlert(this, "Error", "Je hebt geen of niet goede code. \nProbeer opnieuw of maa een andere keuze.")
+                        val dialog = UtilService.showDefaultAlert(this, "Error", "Je hebt geen of niet goede code. Probeer opnieuw of maa een andere keuze.")
                         dialog.show()
                     } else {
                         val data = result!!.getJSONObject("data")

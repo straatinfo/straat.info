@@ -6,14 +6,11 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
-import android.support.v4.app.NavUtils
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Toolbar
 import com.straatinfo.straatinfo.Controllers.Fragments.ReportListPublic
 import com.straatinfo.straatinfo.Controllers.Fragments.ReportListSuspicious
 import com.straatinfo.straatinfo.R
-import kotlinx.android.synthetic.main.app_bar_main.*
 
 class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -67,7 +64,7 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
         when (menuItem.itemId) {
             R.id.report_public -> fragment = ReportListPublic()
             R.id.report_suspicious -> fragment = ReportListSuspicious()
-            else -> fragment = ReportListSuspicious()
+            else -> null // fragment = ReportListSuspicious()
         }
 
         if (fragment != null) {

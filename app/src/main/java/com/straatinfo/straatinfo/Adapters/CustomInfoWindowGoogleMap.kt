@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
+import com.squareup.picasso.Callback
 import com.straatinfo.straatinfo.Models.Report
 import com.straatinfo.straatinfo.Services.UtilService
 import com.straatinfo.straatinfo.Utilities.WINDOW_INFO_REPORT_DATE_FORMAT
@@ -20,75 +21,99 @@ import com.squareup.picasso.Picasso
 import com.straatinfo.straatinfo.Controllers.ReportInformationActivity
 import com.straatinfo.straatinfo.Utilities.TZ_ZULU
 import io.reactivex.Single
+import java.lang.Exception
 
 
 class CustomInfoWindowGoogleMap(val context: Context) : GoogleMap.InfoWindowAdapter{
+    var myBitmap: Bitmap? = null
+    var lastMarker: Marker? = null
+    var mInfoView: View? = null
     override fun getInfoContents(p0: Marker?): View {
+        Log.d("LOADING_INFO_CONTENTS", "LOADING_INFO_CONTENTS")
 
-        var mInfoView = (context as Activity).layoutInflater.inflate(com.straatinfo.straatinfo.R.layout.layout_custom_map_marker, null)
-        var mInfoWindow: Report? = p0?.tag as Report?
-
-        val createdAt = mInfoWindow!!.createdAt
-
-        val format = SimpleDateFormat(TZ_ZULU)
-        val dateFormat = SimpleDateFormat(WINDOW_INFO_REPORT_DATE_FORMAT)
-
-        val date = format.parse(createdAt)
-
-
-        mInfoView.reportDateTxt.text = dateFormat.format(date)
-        mInfoView.view_report_main_cat_txt.text = UtilService.shortenedChar(mInfoWindow!!.mainCategoryName!!, 12)
-        mInfoView.view_report_view_report_txt.setOnClickListener {
-            val intent = Intent(context, ReportInformationActivity::class.java)
-            intent.putExtra("REPORT_ID", mInfoWindow!!.id)
-            context.startActivity(intent)
+        if (mInfoView == null) {
+            mInfoView = (context as Activity).layoutInflater.inflate(com.straatinfo.straatinfo.R.layout.layout_custom_map_marker, null)
         }
-        val preview: ImageView = mInfoView.reportPreviewImg
-        preview.visibility = View.VISIBLE
-        val noPhoto: TextView = mInfoView.windowInfoNoPhotoTxt
-        preview.setImageResource(com.straatinfo.straatinfo.R.drawable.ic_logo)
 
-        if (mInfoWindow!!.attachments!!.length() > 0) {
-            val attachment: JSONObject = mInfoWindow!!.attachments!![0] as JSONObject
-            val secureUrl = attachment.getString("secure_url")
+        if (lastMarker == null
+            || lastMarker!!.id != p0!!.id) {
+            lastMarker = p0
 
-//            getBitmapSingle(Picasso.get(), secureUrl)
-//                .subscribeOn(Schedulers.io())
-//                .subscribe({ bitmap ->
-//                    // val drawable = BitmapDrawable(context, bitmap)
-//                    preview.setImageBitmap(bitmap)
-//                }, Throwable::printStackTrace)
-//                .run {  }
+            var report: Report? = p0?.tag as Report?
 
-            Picasso.get().load(secureUrl).into(preview)
+            val createdAt = report!!.createdAt
 
-            noPhoto.visibility = View.INVISIBLE
+            val format = SimpleDateFormat(TZ_ZULU)
+            val dateFormat = SimpleDateFormat(WINDOW_INFO_REPORT_DATE_FORMAT)
+
+            val date = format.parse(createdAt)
 
 
-
-        } else {
-            preview.setImageResource(com.straatinfo.straatinfo.R.drawable.ic_logo)
-            preview.visibility = View.INVISIBLE
+            mInfoView!!.reportDateTxt.text = dateFormat.format(date)
+            mInfoView!!.view_report_main_cat_txt.text = UtilService.shortenedChar(report!!.mainCategoryName!!, 12)
+            mInfoView!!.view_report_view_report_txt.setOnClickListener {
+                val intent = Intent(context, ReportInformationActivity::class.java)
+                intent.putExtra("REPORT_ID", report!!.id)
+                context.startActivity(intent)
+            }
+            val preview: ImageView = mInfoView!!.reportPreviewImg
+            preview.visibility = View.VISIBLE
+            val noPhoto: TextView = mInfoView!!.windowInfoNoPhotoTxt
             noPhoto.visibility = View.VISIBLE
+            preview.setImageResource(com.straatinfo.straatinfo.R.drawable.ic_logo)
+
+            if (report!!.attachments != null && report!!.attachments!!.length() > 0) {
+                // preview.setImageBitmap(myBitmap)
+                val attachment: JSONObject = report!!.attachments!![0] as JSONObject
+                val secureUrl = attachment.getString("secure_url")
+
+
+                Picasso.get().load(secureUrl)
+                    .resize(300, 300)
+                    .centerCrop().noFade()
+                    .placeholder(com.straatinfo.straatinfo.R.drawable.ic_logo)
+                    .into(preview, object: Callback {
+                    override fun onError(e: Exception?) {
+                        //
+                        if (p0 != null && p0.isInfoWindowShown) {
+                            preview.visibility = View.VISIBLE
+                            p0.showInfoWindow()
+                        }
+                    }
+
+                    override fun onSuccess() {
+                        //
+                        if (p0 != null && p0.isInfoWindowShown) {
+                            preview.visibility = View.VISIBLE
+                            p0.showInfoWindow()
+                        }
+                    }
+                })
+
+                noPhoto.visibility = View.INVISIBLE
+
+
+
+            } else {
+                preview.setImageResource(com.straatinfo.straatinfo.R.drawable.ic_logo)
+                preview.visibility = View.INVISIBLE
+                noPhoto.visibility = View.VISIBLE
+            }
+
+            mInfoView!!.setOnClickListener {
+                val intent = Intent(context, ReportInformationActivity::class.java)
+                intent.putExtra("REPORT_ID", report.id)
+                context.startActivity(intent)
+            }
         }
-
-        mInfoView.setOnClickListener {
-            val intent = Intent(context, ReportInformationActivity::class.java)
-            intent.putExtra("REPORT_ID", mInfoWindow.id)
-            context.startActivity(intent)
-        }
-
-
-        return mInfoView
-        // mInfoView.reportPreviewImg.setImageBitmap()
-
-
+        return mInfoView!!
     }
 
     override fun getInfoWindow(p0: Marker?): View? {
-        Log.d("CLICKING_WINDOW", p0.toString())
+
         return null
     }
+
 
     fun getBitmapSingle(picasso: Picasso, url: String): Single<Bitmap> = Single.create {
         try {

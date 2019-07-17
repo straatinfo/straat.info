@@ -250,4 +250,30 @@
     <string name="report_info_status">Status</string>
     <string name="report_info_time">Tijd</string>
     <string name="report_info_change_status_btn_txt">Wijzig Status</string>
+    <string name="report_type_b_info">Hier kunt u een situatie die u verdacht vindt, delen met andere gebruikers in de
+        app. Zodra meer mensen de situatie verdacht vinden, neem dan contact op met de politie of andere relevante
+        instantie (bijv. brandweer). NB bij spoed altijd eerst 112 bellen!
+    </string>
+    <string name="send_report_type_b_are_there_people_involved">Zijn er personen betrokken?</string>
+    <string name="send_report_type_b_are_vehicle_involved">Zijn vervoersmiddelen betrokken?</string>
+    <string name="send_report_type_b_person_involved_description">vul hier kenmerken in van de betrokken personen, zoals
+        lengte, man/vrouw, kleur haar, snor, baard, bril, kleding, postuur, tattoo of overige opvallende details.
+    </string>
+    <string name="send_report_type_b_vehicle_involved_desc">Vul hier kenmerken in van de betrokken vervoersmiddelen,
+        zoals kenteken, kleur, merk en type nummer, opvallende stickkers etc.
+    </string>
+    <string name="send_report_is_urgent_title">Spoed?</string>
+    <string name="send_report_is_urgent_desc">Spoed? Bel eerst 112</string>
+    <string name="report_info_number_people_involved">Aantal betrokken personen</string>
+    <string name="report_info_number_vehicle_involved">Aantal betrokken voertuigen</string>
+    <string name="team_member_request_decline_confirmation_title">Weigeren ledenverzoek?</string>
+    <string name="team_member_request_decline_body">Weet je zeker dat je deze gebruiker wilt weigeren?</string>
+    <string name="team_member_request_decline_success">Gebruiker met succes afgewezen om lid te worden van het team
+    </string>
+    <string name="team_member_request_decline_failed">Kan gebruiker niet weigeren. Probeer het later opnieuw</string>
+    <string name="error_invalid_postal_code_no_host">Locatie heeft geen geregistreerde host</string>
+    <string name="action_not_allowed">Actie niet toegestaan</string>
+    <string name="error_reporting_outside_netherlands">Je wilde een melding doen buiten Nederland. Op dit moment werkt
+        de app alleen binnen Nederland. De melding wordt gedelete.
+    </string>
 </resources>

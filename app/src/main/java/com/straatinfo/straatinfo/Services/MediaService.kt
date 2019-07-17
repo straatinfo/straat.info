@@ -2,17 +2,13 @@ package com.straatinfo.straatinfo.Services
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.android.volley.VolleyError
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Utilities.PUBLIC_UPLOAD
 import io.reactivex.Observable
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import uk.me.hardill.volley.multipart.MultipartRequest
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
-import java.lang.NullPointerException
 
 object MediaService {
     val TAG = "MEDIA_SERVICE"

@@ -15,7 +15,6 @@ import org.json.JSONObject
 import uk.me.hardill.volley.multipart.MultipartRequest
 import java.io.ByteArrayOutputStream
 import java.lang.NullPointerException
-import java.lang.reflect.Method
 
 object TeamService {
     val TAG = "TEAM_SERVICE"
@@ -293,6 +292,33 @@ object TeamService {
             }
 
             App.prefs.requestQueue.add(acceptTeamMemberRequest)
+        }
+    }
+
+    fun declineTeamMember (userId: String, teamId: String): Observable<Boolean> {
+        val url = "$TEAM_DECLINE_MEMBER$userId/$teamId"
+
+        return Observable.create {
+            val declineTeamMemberRequest = object: JsonObjectRequest(Method.GET, url, null, Response.Listener { success ->
+                it.onNext(true)
+            }, Response.ErrorListener { error ->
+                it.onNext(false)
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(declineTeamMemberRequest)
         }
     }
 }

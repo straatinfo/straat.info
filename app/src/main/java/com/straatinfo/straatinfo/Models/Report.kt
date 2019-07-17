@@ -1,12 +1,14 @@
 package com.straatinfo.straatinfo.Models
 
 import android.content.Context
+import android.graphics.Bitmap
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Utilities.TZ_ZULU
 import com.straatinfo.straatinfo.Utilities.WINDOW_INFO_REPORT_DATE_FORMAT
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
+
 
 class Report {
     var id: String? = null
@@ -35,6 +37,17 @@ class Report {
     var reportJson: JSONObject? = null
     var attachments: JSONArray? = null
     var conversations: JSONObject? = null
+
+    var photoPreview: Bitmap? = null
+
+
+    // repor type b specific fields
+    var isPeopleInvolved: Boolean? = null
+    var peopleInvolvedCount: Int? = null
+    var peopleInvolvedDescription: String? = null
+    var isVehicleInvolved: Boolean? = null
+    var vehicleInvolvedCount: Int? = null
+    var vehicleInvolvedDescription: String? = null
 
     constructor(reportJson: JSONObject) {
         this.reportJson = reportJson
@@ -84,6 +97,16 @@ class Report {
 //        this.reporterId = reporter.getString("_id")
 //        this.reporterEmail = reporter.getString("email")
 //        this.reporterUsername = reporter.getString("username")
+
+        if (this.reportTypeCode != null && this.reportTypeCode!!.toLowerCase() == "b") {
+            this.isPeopleInvolved = if (reportJson.has("isPeopleInvolved")) reportJson.getBoolean("isPeopleInvolved") else null
+            this.peopleInvolvedCount = if (reportJson.has("peopleInvolvedCount")) reportJson.getInt("peopleInvolvedCount") else null
+            this.peopleInvolvedDescription = if (reportJson.has("peopleInvolvedDescription")) reportJson.getString("peopleInvolvedDescription") else null
+
+            this.isVehicleInvolved = if (reportJson.has("isVehicleInvolved")) reportJson.getBoolean("isVehicleInvolved") else null
+            this.vehicleInvolvedCount = if (reportJson.has("vehicleInvolvedCount")) reportJson.getInt("vehicleInvolvedCount") else null
+            this.vehicleInvolvedDescription = if (reportJson.has("vehicleInvolvedDescription")) reportJson.getString("vehicleInvolvedDescription") else null
+        }
     }
 
     fun getDate (): String {

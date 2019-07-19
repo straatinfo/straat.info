@@ -23,7 +23,7 @@ object ReportService {
     fun getNearReport (userId: String, long: Double, lat: Double, radius: Double, reportId: String?) : Observable<JSONArray> {
         reportError = null
         return Observable.create { it ->
-            var url = REPORT_NEAR + "/" + long.toString() + "/" + lat.toString() + "/" + radius.toString() + "/?" + "language=nl" + "&" + "_reporter=$userId"
+            var url = REPORT_NEAR + "/" + long + "/" + lat + "/" + radius + "/?" + "language=nl" + "&" + "_reporter=$userId"
             if (reportId != null && reportId != "") url += "&reportId=$reportId"
 
             val getReportRequest = object: JsonObjectRequest(Method.GET, url, null, Response.Listener { response ->

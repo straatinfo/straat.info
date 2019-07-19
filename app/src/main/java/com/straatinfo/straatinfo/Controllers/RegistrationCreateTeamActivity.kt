@@ -21,6 +21,7 @@ import com.straatinfo.straatinfo.Models.Registration
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.AuthService
 import com.straatinfo.straatinfo.Services.MediaService
+import com.straatinfo.straatinfo.Services.RegexService
 import com.straatinfo.straatinfo.Services.UtilService
 import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
 import io.reactivex.schedulers.Schedulers
@@ -81,7 +82,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                button.isEnabled = teamEmail.text.toString() != "" && teamName.text.toString() != ""
+                button.isEnabled = RegexService.testEmail(teamEmail.text.toString()) && teamEmail.text.toString() != "" && teamName.text.toString() != ""
             }
         })
 
@@ -102,7 +103,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                             button.isEnabled = false
                         }
                         true -> {
-                            button.isEnabled = true
+                            button.isEnabled = RegexService.testEmail(teamEmail.text.toString()) && teamEmail.text.toString() != "" && teamName.text.toString() != ""
                         }
                     }
                 }
@@ -117,12 +118,19 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                button.isEnabled = teamEmail.text.toString() != "" && teamName.text.toString() != ""
+                button.isEnabled = RegexService.testEmail(teamEmail.text.toString()) && teamEmail.text.toString() != "" && teamName.text.toString() != ""
             }
         })
 
         teamEmail.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus && teamEmail.text.toString() == "") {
+            if (!hasFocus && (teamEmail.text.toString() == "" || !RegexService.testEmail(teamEmail.text.toString()))) {
+                val title = getString(R.string.error)
+                val message = getString(R.string.error_invalid_email)
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle(title)
+                    .setMessage(message)
+
+                dialog.show()
                 button.isEnabled = false
             } else if (teamEmail.text.toString() != "") {
                 button.isEnabled = true
@@ -235,7 +243,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
         val teamName = teamNameTxt.text.toString()
         val teamEmail = teamEmailAddressTxt.text.toString()
 
-        if (teamEmail != "" && teamName != "") {
+        if (teamEmail != "" && teamName != "" && RegexService.testEmail(teamEmail)) {
             userInput.teamName = teamName
             userInput.teamEmail = teamEmail
             userInput.password = App.prefs.registrationPassword

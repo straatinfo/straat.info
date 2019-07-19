@@ -25,16 +25,6 @@
                         <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/team_email_address"/>
-                        <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                style="@style/login_edit_text_style"
-                                android:inputType="textEmailAddress"
-                                android:hint="@string/enter_team_email_address" android:id="@+id/teamEmailAddressTxt"/>
-                        <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
                                 android:text="@string/team_name"/>
                         <EditText
                                 android:layout_width="match_parent"
@@ -42,6 +32,17 @@
                                 style="@style/login_edit_text_style"
                                 android:layout_marginBottom="@dimen/reg_margin_bottom"
                                 android:hint="@string/enter_team_name" android:id="@+id/teamNameTxt"/>
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/team_email_address"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/login_edit_text_style"
+                                android:inputType="textEmailAddress"
+                                android:hint="@string/enter_team_email_address" android:id="@+id/teamEmailAddressTxt"
+                                android:layout_alignParentStart="true"/>
                         <Button
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

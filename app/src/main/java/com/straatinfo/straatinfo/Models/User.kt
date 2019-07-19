@@ -115,7 +115,8 @@ class User {
             }
         }
 
-        if (userJsonData.has("_activeDesign")) {
+        if (userJsonData.has("_activeDesign") && userJsonData.getString("_activeDesign") != "null") {
+            Log.d("_activeDesign", userJsonData.getJSONObject("_activeDesign").toString())
             val designJson = userJsonData.getJSONObject("_activeDesign")
             val designId = designJson.getString("_id")
             val colorOne = designJson.getString("colorOne")

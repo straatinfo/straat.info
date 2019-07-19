@@ -113,9 +113,16 @@ class MainActivity : AppCompatActivity(),
     var _vehicleInvolveDesc: String? = null
 
 
-   var locationHost: Host? = null
+    var locationHost: Host? = null
+
+    var  isCameraIsFocused = 0
+
+    var myMarker: Marker? = null
+
+    var markerHasDragged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        this.isCameraIsFocused = 0
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -152,8 +159,10 @@ class MainActivity : AppCompatActivity(),
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
-        this.getLocationPoint(true, googleMap) { success ->
+        Log.d("MAP_GETTING_READY", "MAP_GETTING_READY")
+        this.getLocationPoint(!markerHasDragged, googleMap) { success ->
             if (success) {
+                Log.d("MAP_GETTING_READY", "SUCCESS")
                // this.loadReports(100.00)
 
             }
@@ -226,8 +235,9 @@ class MainActivity : AppCompatActivity(),
         when (requestCode) {
             LOCATION_RECORD_CODE -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION", "Permission has been denied by user")
+                    // Log.d("PERMISSION", "Permission has been denied by user")
                     // UtilService.makeRequest(this, LOCATION_RECORD_CODE)
+
                 } else if (grantResults.isEmpty() || (grantResults.count() > 1 && grantResults[1] != PackageManager.PERMISSION_GRANTED)) {
                     Log.d("PERMISSION", "Permission has been denied by user")
                     UtilService.makeRequest(this, LOCATION_RECORD_CODE)
@@ -236,6 +246,10 @@ class MainActivity : AppCompatActivity(),
                     UtilService.makeRequest(this, LOCATION_RECORD_CODE)
                 } else {
                     Log.d("PERMISSION", "Permission has been granted by user")
+                    this.map.isMyLocationEnabled = true
+                    this.map.uiSettings.isMyLocationButtonEnabled = true
+                    this.map.uiSettings.isMapToolbarEnabled = true
+                    this.map.uiSettings.isCompassEnabled = false
                 }
             }
         }
@@ -251,6 +265,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onMarkerDragEnd(p0: Marker?) {
+        this.markerHasDragged = true
         Log.d("MARKER_MOVE", p0.toString())
         UtilService.geocode(p0!!.position.longitude, p0!!.position.latitude)
             .flatMap { result ->
@@ -357,7 +372,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun getLocationPoint (fromActivity: Boolean, googleMap: GoogleMap, onSuccess: (Boolean) -> Unit) {
-        getUserCoordinates (fromActivity) { point ->
+        getUserCoordinates (fromActivity && !markerHasDragged) { point ->
             val user = User()
             val host = user.host
             Log.d("host", host!!.id)
@@ -371,32 +386,47 @@ class MainActivity : AppCompatActivity(),
             val hostPoint = LatLng(lat!!, long!!)
             // postion = MarkerOptions().position(point).title("Marker in Sydney")
             // m = map.addMarker(postion)
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, MAP_ZOOM))
+            Log.d("IS_CAM_FOCUSED", isCameraIsFocused.toString())
+            val gpsPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+
+            if (isCameraIsFocused < 2) {
+                Log.d("FOCUSING_CAM", "YES")
+                this.loadReports(10000.00)
+                val circleOptions = CircleOptions()
+                // Specifying the center of the circle
+                circleOptions.center(hostPoint)
+
+                // Radius of the circle
+                circleOptions.radius(200.toDouble())
+
+                // Border color of the circle
+                circleOptions.strokeColor(0x30ff0000)
+
+                // Fill color of the circle
+                circleOptions.fillColor(0x30ff0000)
+
+                // Border width of the circle
+                circleOptions.strokeWidth(2F)
+
+                map.addCircle(circleOptions)
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, MAP_ZOOM))
+                isCameraIsFocused += 1
+            }
 
             map.getUiSettings().setZoomControlsEnabled(true)
             map.setOnMarkerClickListener(this)
 
-            val circleOptions = CircleOptions()
-            // Specifying the center of the circle
-            circleOptions.center(hostPoint)
-
-            // Radius of the circle
-            circleOptions.radius(200.toDouble())
-
-            // Border color of the circle
-            circleOptions.strokeColor(0x30ff0000)
-
-            // Fill color of the circle
-            circleOptions.fillColor(0x30ff0000)
-
-            // Border width of the circle
-            circleOptions.strokeWidth(2F)
-
-            map.addCircle(circleOptions)
-
-            this.loadReports(10000.00)
-
             this.loadReportPointer(point)
+
+            if (gpsPermission == PackageManager.PERMISSION_GRANTED) {
+
+                map.isMyLocationEnabled = true
+                map.uiSettings.isMyLocationButtonEnabled = true
+                map.uiSettings.isMapToolbarEnabled = true
+                map.uiSettings.isCompassEnabled = false
+            } else {
+                UtilService.makeRequest(this, LOCATION_RECORD_CODE)
+            }
             onSuccess(true)
         }
     }
@@ -405,6 +435,7 @@ class MainActivity : AppCompatActivity(),
         val host = User().host
         val long = host?.long
         val lat = host?.lat
+        Log.d("USER_LOCATION", "$long, $lat")
         Log.d("USER_DATA", App.prefs.userData)
         val user = User(JSONObject(App.prefs.userData))
         val userId = user.id
@@ -497,6 +528,26 @@ class MainActivity : AppCompatActivity(),
         this.map.addCircle(circleOptions)
     }
 
+    private fun loadMapCircleWithMap (mMap: GoogleMap, point: LatLng) {
+        val circleOptions = CircleOptions()
+        // Specifying the center of the circle
+        circleOptions.center(point)
+
+        // Radius of the circle
+        circleOptions.radius(200.toDouble())
+
+        // Border color of the circle
+        circleOptions.strokeColor(0x30ff0000)
+
+        // Fill color of the circle
+        circleOptions.fillColor(0x30ff0000)
+
+        // Border width of the circle
+        circleOptions.strokeWidth(2F)
+
+        mMap.addCircle(circleOptions)
+    }
+
     private fun checkActiveTeam () {
         val user = User(JSONObject(App.prefs.userData))
         if (user.team_is_approved == null || !user.team_is_approved!!) {
@@ -565,7 +616,7 @@ class MainActivity : AppCompatActivity(),
                             override fun onLocationChanged(location: Location?) {
                                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                                 Log.d("LOC", location.toString())
-                                if (location != null && fromActivity) {
+                                if (location != null && fromActivity && !markerHasDragged) {
                                     Log.d("NETWORK_LOCATION", "${location.latitude.toString()}, ${location.longitude}" )
                                     locationNetwork = location
                                     val point = LatLng(location.latitude!!, location.longitude!!)
@@ -617,7 +668,7 @@ class MainActivity : AppCompatActivity(),
                             override fun onLocationChanged(location: Location?) {
                                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-                                if (location != null && fromActivity) {
+                                if (location != null && fromActivity && markerHasDragged) {
                                     Log.d("NETWORK_LOCATION", "${location.latitude.toString()}, ${location.longitude}" )
                                     locationNetwork = location
                                     val point = LatLng(location.latitude!!, location.longitude!!)
@@ -673,9 +724,11 @@ class MainActivity : AppCompatActivity(),
                 }
             } else {
                 // startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                Log.d("NO_GPS", "NO_GPS")
                 val user = User()
                 val host = user.host
-                val point = LatLng(host?.lat!!, host.long!!)
+                val point = LatLng(host?.lat!!, host?.long!!)
+                Log.d("NO_GPS_LOCATION", "${host?.lat!!}, ${host?.long!!}")
                 done(point)
             }
         }
@@ -858,15 +911,25 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun loadReportPointer (point: LatLng) {
-        this.map.clear()
-        var reportMarker = MarkerOptions()
-            .position(point)
-            .draggable(true)
-            .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_d))
+        // this.map.clear()
 
 
-        this.map.addMarker(reportMarker)
-        this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, MAP_ZOOM))
+        val user = User()
+        val host = user.host
+        val hostPoint = LatLng(host?.lat!!, host.long!!)
+        // this.loadMapCircleWithMap(this.map, hostPoint)
+
+        if (this.myMarker == null) {
+            var reportMarker = MarkerOptions()
+                .position(point)
+                .draggable(false)
+                .icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_d))
+
+            this.myMarker = this.map.addMarker(reportMarker)
+        } else {
+            this.myMarker?.position = point
+        }
+        // this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, MAP_ZOOM))
         this.map.setOnMarkerDragListener(this)
     }
 
@@ -1206,6 +1269,7 @@ class MainActivity : AppCompatActivity(),
                 }
                 .subscribeOn(Schedulers.io())
                 .subscribe { result ->
+
                     val countryCode = this.getCountryFromGeoCode(result)
 
                     if (countryCode != "NL") {
@@ -1237,7 +1301,9 @@ class MainActivity : AppCompatActivity(),
                 }
                 .run {  }
             this.setLongLat(pointToUse.longitude, pointToUse.latitude)
+            myMarker = null
             this.loadReportPointer(pointToUse)
+            if (myMarker != null) myMarker?.isDraggable = true
             this.showSendReportP1()
         }
 

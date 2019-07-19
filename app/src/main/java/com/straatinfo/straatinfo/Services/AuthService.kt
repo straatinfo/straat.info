@@ -22,6 +22,7 @@ object AuthService {
     private fun processUserData (it: ObservableEmitter<Boolean>, userData: JSONObject) {
         Log.d("LOGIN_RESULT", userData.toString())
         App.prefs.userData = userData.toString()
+        Log.d("TOKEN", userData.getString("token"))
         App.prefs.token = userData.getString("token")
         App.prefs.isLoggedIn = true
         it.onNext(true)

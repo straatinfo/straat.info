@@ -11,7 +11,7 @@ class Design {
     var logoUrl: String? = null
     var designName: String? = null
 
-    constructor (id: String, hostId: String, colorOne: String, colorTwo: String, colorThree: String, logoUrl: String?, designName: String) {
+    constructor (id: String?, hostId: String?, colorOne: String?, colorTwo: String?, colorThree: String?, logoUrl: String?, designName: String?) {
         this.id = id
         this.hostId = hostId
         this.colorOne = colorOne

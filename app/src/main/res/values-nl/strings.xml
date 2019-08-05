@@ -276,4 +276,8 @@
     <string name="error_reporting_outside_netherlands">Je wilde een melding doen buiten Nederland. Op dit moment werkt
         de app alleen binnen Nederland. De melding wordt gedelete.
     </string>
+    <string name="reports_tab_title_public">Melding</string>
+    <string name="reports_tab_title_suspicious">Verdacht</string>
+    <string name="reports_tab_title_government">Overheid</string>
+    <string name="reports_tab_title_team">Team</string>
 </resources>

@@ -284,7 +284,7 @@ object AuthService {
                     Log.d("HOST_CODE", e.localizedMessage)
                 }
                 val jsonError = JSONObject()
-                jsonError.put("error", authResponseError)
+                // jsonError.put("error", authResponseError)
                 it.onNext(jsonError)
             }){
                 override fun getBodyContentType(): String {

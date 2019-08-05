@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
-            android:name="com.straatinfo.straatinfo.Controllers.App"
+            android:name=".Controllers.App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
@@ -19,39 +19,51 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning,InnerclassSeparator">
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
-        <activity android:name="com.straatinfo.straatinfo.Controllers.ReportInformationActivity"
+        <activity android:name=".Controllers.ReportMessages"
                   android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamFormActivity"
-                  android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamMemberRequestActivity"
-                  android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.TeamDetailsActivity"
-                  android:screenOrientation="portrait">
+
+        <uses-library
+                android:name="org.apache.http.legacy"
+                android:required="false"/>
+
+        <activity
+                android:name=".Controllers.ReportInformationActivity"
+                android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name="com.straatinfo.straatinfo.Controllers.MyProfile"
+                android:name=".Controllers.TeamFormActivity"
+                android:screenOrientation="portrait">
+        </activity>
+        <activity
+                android:name=".Controllers.TeamMemberRequestActivity"
+                android:screenOrientation="portrait">
+        </activity>
+        <activity
+                android:name=".Controllers.TeamDetailsActivity"
+                android:screenOrientation="portrait">
+        </activity>
+        <activity
+                android:name=".Controllers.MyProfile"
                 android:label="@string/menu_profile"
-                android:theme="@style/AppTheme.NoActionBar"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.straatinfo.straatinfo.Controllers.MyTeamActivity"
+                android:name=".Controllers.MyTeamActivity"
                 android:label="@string/menu_home"
-                android:theme="@style/AppTheme.NoActionBar"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.ReportsActivity"
-                  android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name="com.straatinfo.straatinfo.Controllers.HomeActivity"
-                android:label="@string/app_bar_label_home"
-                android:theme="@style/AppTheme.NoActionBar"
+                android:name=".Controllers.ReportsActivity"
                 android:screenOrientation="portrait">
+        </activity>
+        <activity
+                android:name=".Controllers.HomeActivity"
+                android:label="@string/app_bar_label_home"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <meta-data
@@ -59,25 +71,29 @@
                 android:value="@string/google_maps_key"/>
 
         <activity
-                android:name="com.straatinfo.straatinfo.Controllers.RegistrationCreateTeamActivity"
+                android:name=".Controllers.RegistrationCreateTeamActivity"
                 tools:ignore="InnerclassSeparator">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.EnterCodeActivity"
-                  android:screenOrientation="portrait">
+        <activity
+                android:name=".Controllers.EnterCodeActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.RegistrationActivity"
-                  android:screenOrientation="portrait">
+        <activity
+                android:name=".Controllers.RegistrationActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.InitialActivity"
-                  android:screenOrientation="portrait">
+        <activity
+                android:name=".Controllers.InitialActivity"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.straatinfo.straatinfo.Controllers.LoginActivity"
-                  android:screenOrientation="portrait">
+        <activity
+                android:name=".Controllers.LoginActivity"
+                android:screenOrientation="portrait">
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -92,15 +108,15 @@
                 android:value="@string/google_maps_key"/>
 
         <activity
-                android:name="com.straatinfo.straatinfo.Controllers.MapsActivity"
+                android:name=".Controllers.MapsActivity"
                 android:label="@string/title_activity_maps"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name="com.straatinfo.straatinfo.Controllers.MainActivity"
+                android:name=".Controllers.MainActivity"
                 android:label="@string/app_bar_label_home"
-                android:theme="@style/AppTheme.NoActionBar"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

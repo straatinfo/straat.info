@@ -6,11 +6,17 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.view.MenuItemCompat
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import com.straatinfo.straatinfo.Controllers.Fragments.ReportListPublic
 import com.straatinfo.straatinfo.Controllers.Fragments.ReportListSuspicious
+import com.straatinfo.straatinfo.Controllers.Fragments.TeamChat
 import com.straatinfo.straatinfo.R
+import io.socket.emitter.Emitter
+import kotlinx.android.synthetic.main.activity_initial.view.*
 
 class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -19,9 +25,19 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
         setContentView(R.layout.activity_reports)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_map)
+
         Log.d("SELECTED_ACTIVITY", "Reports activity")
 
         setupBottomNavigationView()
+
+        val socket = App.socket
+
+        if (socket != null) {
+            socket!!
+                .on("new-message", onSendMessage)
+                .on("send-message-v2", onSendMessage)
+        }
 
     }
 
@@ -64,6 +80,7 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
         when (menuItem.itemId) {
             R.id.report_public -> fragment = ReportListPublic()
             R.id.report_suspicious -> fragment = ReportListSuspicious()
+            R.id.report_chat -> fragment = TeamChat()
             else -> null // fragment = ReportListSuspicious()
         }
 
@@ -73,6 +90,12 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
             ft.commit()
         }
 
+    }
+
+    private val onSendMessage = Emitter.Listener { args ->
+        Log.d("RECEIVING_REPORT_LIST", args.toString())
+//        ReportListPublic().loadPublicReports {  }
+//        ReportListSuspicious().loadPublicReports {  }
     }
 
 

@@ -45,8 +45,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$PROJECT_DIR$/../straat-app-ios/Straat/View/Assets.xcassets/info.imageset/info.png" />
-                                      <entry key="outputName" value="ic_question_mark" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/public icon.png" />
+                                      <entry key="outputName" value="ic_reports_public" />
                                       <entry key="theme" value="HOLO_DARK" />
                                       <entry key="themeColor" value="ffffff" />
                                     </map>

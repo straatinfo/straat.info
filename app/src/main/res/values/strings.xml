@@ -335,4 +335,8 @@
     <string name="error_reporting_outside_netherlands">you\'re trying to create a report outside The Netherlands.
         Currently the app only works within TheNetherlands. This report will be deleted.
     </string>
+    <string name="reports_tab_title_public">Public</string>
+    <string name="reports_tab_title_suspicious">Suspicious</string>
+    <string name="reports_tab_title_government">Government</string>
+    <string name="reports_tab_title_team">Team</string>
 </resources>

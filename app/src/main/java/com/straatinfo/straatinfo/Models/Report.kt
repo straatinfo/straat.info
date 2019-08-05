@@ -33,10 +33,12 @@ class Report {
     var location: String? = null
     var title: String? = null
     var generatedReportId: String? = null
+    var isUrgent: Boolean? = null
 
     var reportJson: JSONObject? = null
     var attachments: JSONArray? = null
-    var conversations: JSONObject? = null
+    var conversation: JSONObject? = null
+    var unreadMessageCount: Int? = 0
 
     var photoPreview: Bitmap? = null
 
@@ -61,6 +63,7 @@ class Report {
         this.createdAt = reportJson.getString("createdAt")
         this.updatedAt = reportJson.getString("updatedAt")
         this.status = if (reportJson.has("status")) reportJson.getString("status") else null
+        this.isUrgent = if (reportJson.has("isUrgent")) reportJson.getBoolean("isUrgent") else null
 
         val reportType = reportJson.getJSONObject("_reportType")
 
@@ -82,7 +85,11 @@ class Report {
         }
 
         this.attachments = if (reportJson.has("attachments")) reportJson.getJSONArray("attachments") else null
-        this.conversations = if (reportJson.has("_conversation")) reportJson.getJSONObject("_conversation") else null
+        if (reportJson.has("_conversation")) {
+            val convoJson = reportJson.getJSONObject("_conversation")
+            this.unreadMessageCount = if (convoJson.has("unreadMessageCount")) convoJson.getInt("unreadMessageCount") else 0
+        }
+        this.conversation = if (reportJson.has("_conversation")) reportJson.getJSONObject("_conversation") else null
 
         if (reportJson.has("_reporter")) {
             val reporter = reportJson.getJSONObject("_reporter")
@@ -133,6 +140,19 @@ class Report {
 
     fun reporterFullname (): String {
         return "${this.reporterFirstname} ${this.reporterLastname}"
+    }
+
+    fun getMessagesCount (): Int {
+        return if (this.conversation != null && this.conversation!!.has("messages")) {
+            val messages = conversation!!.getJSONArray("messages")
+            messages.length()
+        } else {
+            0
+        }
+    }
+
+    fun getUnreadMessagesCount (): Int {
+        return if (this.unreadMessageCount != null) this.unreadMessageCount!! else 0
     }
 }
 

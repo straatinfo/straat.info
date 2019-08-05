@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,6 +13,7 @@ import com.straatinfo.straatinfo.Adapters.TeamMemberListAdapter
 import com.straatinfo.straatinfo.Models.TeamMember
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.R
+import com.straatinfo.straatinfo.Services.MessageService
 import com.straatinfo.straatinfo.Services.TeamService
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_team_details.*
@@ -36,12 +38,34 @@ class TeamDetailsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun createConvo (chatee: String?, cb: (Boolean, String?) -> Unit) {
+        val user = User()
+        val userId = user.id
+
+        if (userId != null && chatee != null) {
+            MessageService.createPrivateConversation(userId, chatee)
+                .subscribeOn(Schedulers.io())
+                .subscribe { convo ->
+                    if (convo.has("_id")) cb(true, convo.getString("_id"))
+                    else cb(false, null)
+                }
+                .run {  }
+        } else {
+            cb(false, null)
+        }
+    }
+
     fun loadAdapter () {
         var teamId = intent.getStringExtra("TEAM_ID")
         this.loadTeamInfo(teamId) { teamMembers ->
-            adapter = TeamMemberListAdapter(this, teamMembers) { teamMember ->
+            adapter = TeamMemberListAdapter(this, teamMembers, ({ teamMember: TeamMember ->
 
-            }
+            }), ({ teamMember ->
+                Log.d("TEAM_CHAT", teamMember.userId)
+                this.createConvo(teamMember.userId) { success, convoId ->
+                    if (success && convoId != null) this.loadConversation(convoId!!)
+                }
+            }))
 
             teamDetailsListOfMembersRecyclerView.adapter = adapter
             val layoutManager = LinearLayoutManager(this)
@@ -118,5 +142,11 @@ class TeamDetailsActivity : AppCompatActivity() {
         }
 
         cb(teamMembers)
+    }
+
+    fun loadConversation (convoId: String) {
+        val intent = Intent(this, ReportMessages::class.java)
+        intent.putExtra("CONVERSATION_ID", convoId)
+        this.startActivity(intent)
     }
 }

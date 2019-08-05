@@ -6,18 +6,21 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.straatinfo.straatinfo.Adapters.ReportListAdapter
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Controllers.ReportInformationActivity
+import com.straatinfo.straatinfo.Controllers.ReportMessages
 import com.straatinfo.straatinfo.Models.Report
 import com.straatinfo.straatinfo.Models.User
 
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.ReportService
 import io.reactivex.schedulers.Schedulers
+import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_report_list_suspicious.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -59,16 +62,29 @@ class ReportListSuspicious : Fragment() {
         // Inflate the layout for this fragment
         // Inflate the layout for this fragment
         loadPublicReports {
-            adapter = ReportListAdapter(context!!, reportList) { report ->
-                val intent = Intent(context!!, ReportInformationActivity::class.java)
-                intent.putExtra("REPORT_ID", report.id)
-                context!!.startActivity(intent)
+            adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
+                val intent = Intent(context!!, ReportMessages::class.java)
+                intent.putExtra("CHAT_TITLE", report.mainCategoryName)
+                if (report.conversation != null && report.conversation!!.has("_id")) {
+                    val conversationId = report.conversation!!.getString("_id")
+                    intent.putExtra("CONVERSATION_ID", conversationId)
+                    context!!.startActivity(intent)
+                }
+                Log.d("REPORT_MESSAGE", report.id)
             }
 
             report_list_suspicious_recycler_view.adapter = adapter
             val layoutManager = LinearLayoutManager(context!!)
             report_list_suspicious_recycler_view.layoutManager = layoutManager
         }
+
+//        val socket = App.socket
+//        if (socket != null) {
+//            socket!!
+//                .on("new-message", onSendMessage)
+//                .on("send-message-v2", onSendMessage)
+//        }
+
         return inflater.inflate(R.layout.fragment_report_list_suspicious, container, false)
     }
 
@@ -78,6 +94,12 @@ class ReportListSuspicious : Fragment() {
     }
 
     override fun onAttach(context: Context) {
+//        val socket = App.socket
+//        if (socket != null) {
+//            socket!!
+//                .on("new-message", onSendMessage)
+//                .on("send-message-v2", onSendMessage)
+//        }
         super.onAttach(context)
 //        if (context is OnFragmentInteractionListener) {
 //            listener = context
@@ -87,8 +109,52 @@ class ReportListSuspicious : Fragment() {
     }
 
     override fun onDetach() {
+//        Log.d("REPORT_B", "detaching on detach")
+//        val socket = App.socket
+//        if (socket != null) {
+//            socket!!
+//                .on("new-message"){ Log.d("REPORT_B", "detaching")}
+//                .on("send-message-v2"){ Log.d("REPORT_B", "detaching")}
+//        }
         super.onDetach()
         listener = null
+    }
+
+    override fun onDestroy() {
+        Log.d("REPORT_A", "detaching on destroy")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("REPORT_A", "detaching on destroy view")
+        super.onDestroyView()
+    }
+
+    override fun onResume() {
+        Log.d("REPORT_A", "attaching on detach resume")
+        loadPublicReports {
+            adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
+                val intent = Intent(context!!, ReportMessages::class.java)
+                intent.putExtra("CHAT_TITLE", report.mainCategoryName)
+                if (report.conversation != null && report.conversation!!.has("_id")) {
+                    val conversationId = report.conversation!!.getString("_id")
+                    intent.putExtra("CONVERSATION_ID", conversationId)
+                    context!!.startActivity(intent)
+                }
+                Log.d("REPORT_MESSAGE", report.id)
+            }
+
+            report_list_suspicious_recycler_view.adapter = adapter
+            val layoutManager = LinearLayoutManager(context!!)
+            report_list_suspicious_recycler_view.layoutManager = layoutManager
+        }
+        super.onResume()
+    }
+
+    private fun onReportClick (report: Report) {
+        val intent = Intent(context!!, ReportInformationActivity::class.java)
+        intent.putExtra("REPORT_ID", report.id)
+        context!!.startActivity(intent)
     }
 
     /**
@@ -140,7 +206,7 @@ class ReportListSuspicious : Fragment() {
         }
     }
 
-    private fun loadPublicReports (cb: (reportList: MutableList<Report>) -> Unit) {
+    fun loadPublicReports (cb: (reportList: MutableList<Report>) -> Unit) {
         val user = User(JSONObject(App.prefs.userData))
 
         val reporterId = user.id!!
@@ -153,5 +219,25 @@ class ReportListSuspicious : Fragment() {
                 reportLoader(reportList, cb)
             }
             .run {  }
+    }
+
+    private val onSendMessage = Emitter.Listener { args ->
+        Log.d("RECEIVING_REPORT_LIST", args.toString())
+        this.loadPublicReports {
+            adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
+                val intent = Intent(context!!, ReportMessages::class.java)
+                intent.putExtra("CHAT_TITLE", report.mainCategoryName)
+                if (report.conversation != null && report.conversation!!.has("_id")) {
+                    val conversationId = report.conversation!!.getString("_id")
+                    intent.putExtra("CONVERSATION_ID", conversationId)
+                    context!!.startActivity(intent)
+                }
+                Log.d("REPORT_MESSAGE", report.id)
+            }
+
+            report_list_suspicious_recycler_view.adapter = adapter
+            val layoutManager = LinearLayoutManager(context!!)
+            report_list_suspicious_recycler_view.layoutManager = layoutManager
+        }
     }
 }

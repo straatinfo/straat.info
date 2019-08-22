@@ -134,6 +134,10 @@ class MainActivity : AppCompatActivity(),
         // progressBar = findViewById(R.id.mainActivityProgressBar)
 
         val user = User(JSONObject(App.prefs.userData))
+        var socket = App.socket
+        if (socket == null) {
+            App.socket = App.connectToSocket(user)
+        }
         this.locationHost = user.host
         mapFragment.getMapAsync(this)
         // progressBar.visibility = View.VISIBLE

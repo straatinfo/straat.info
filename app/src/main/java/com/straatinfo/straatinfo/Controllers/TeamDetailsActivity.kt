@@ -145,7 +145,7 @@ class TeamDetailsActivity : AppCompatActivity() {
     }
 
     fun loadConversation (convoId: String) {
-        val intent = Intent(this, ReportMessages::class.java)
+        val intent = Intent(this, ReportMessagesActivity::class.java)
         intent.putExtra("CONVERSATION_ID", convoId)
         this.startActivity(intent)
     }

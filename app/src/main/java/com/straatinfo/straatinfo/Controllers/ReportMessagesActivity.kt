@@ -1,6 +1,7 @@
 package com.straatinfo.straatinfo.Controllers
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -26,7 +27,7 @@ import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_report_messages.*
 import org.json.JSONObject
 
-class ReportMessages : AppCompatActivity() {
+class ReportMessagesActivity : AppCompatActivity() {
 
     lateinit var adapter: MessageAdapter
     var socket: Socket? = null
@@ -49,6 +50,10 @@ class ReportMessages : AppCompatActivity() {
             supportActionBar?.title = chatTitle
         }
         if (conversationId != null) {
+            MessageService.readUnreadMessages(conversationId, User().id!!)
+                .subscribeOn(Schedulers.io())
+                .subscribe {  }
+                .run {  }
             this.loadMessages(conversationId) { messages ->
                 adapter = MessageAdapter(this, messages) { message ->
 
@@ -68,6 +73,12 @@ class ReportMessages : AppCompatActivity() {
             socket!!
                 .on("new-message", onSendMessage)
                 .on("send-message-v2", onGetMyMessage)
+        } else {
+            val dialog = AlertDialog.Builder(this)
+                .setTitle(getString(R.string.error))
+                .setMessage("Cannot connect to socket, please check network")
+
+            dialog.show()
         }
 
 
@@ -134,7 +145,7 @@ class ReportMessages : AppCompatActivity() {
         runOnUiThread {
             Log.d("MESSAGE", args.joinToString())
             addMessageTxtBox.text.clear()
-            this.dismissKeyboard()
+            // this.dismissKeyboard()
 
             val conversationId = intent.getStringExtra("CONVERSATION_ID")
             if (conversationId != null) {
@@ -152,6 +163,11 @@ class ReportMessages : AppCompatActivity() {
                     reportMessagesRecyclerView.layoutManager = layoutManager
                 }
             }
+
+            MessageService.readUnreadMessages(conversationId, User().id!!)
+                .subscribeOn(Schedulers.io())
+                .subscribe {  }
+                .run {  }
         }
     }
 
@@ -173,13 +189,19 @@ class ReportMessages : AppCompatActivity() {
     }
 
 
-    private fun emitSendMessage (userId: String, conversationId: String, text: String) {
+    private fun emitSendMessage (userId: String, conversationId: String, reportId: String?, teamId: String?, type: String, text: String) {
+
         if (socket != null) {
             val data = JSONObject()
             data.put("user", userId)
             data.put("_id", userId)
             data.put("_conversation", conversationId)
             data.put("text", text)
+            if (reportId != null) data.put("_report", reportId)
+            if (teamId != null) data.put("_team", teamId)
+            data.put("type", type)
+
+            Log.d("DATA_VALUE", data.toString())
 
             socket!!.emit("send-message-v2", data)
         }
@@ -189,10 +211,26 @@ class ReportMessages : AppCompatActivity() {
         val text = addMessageTxtBox.text.toString()
         val user = User()
         val conversationId = intent.getStringExtra("CONVERSATION_ID")
+        val reportId = intent.getStringExtra("REPORT_ID")
+        val teamId = intent.getStringExtra("TEAM_ID")
+        val type = intent.getStringExtra("TYPE")
 
-        if (user.id != null && conversationId != null && text != "") {
-            this.emitSendMessage(user.id!!, conversationId, text)
+        if (user.id != null && conversationId != null && text != "" && type != null) {
+//            val alert = AlertDialog.Builder(this)
+//                .setMessage("Sending message")
+//                .setTitle("Info")
+//            alert.show()
+            this.emitSendMessage(user.id!!, conversationId, reportId, teamId, type, text)
         }
+
+//        if (text == "") {
+//            val alert = AlertDialog.Builder(this)
+//                .setMessage("Please complete the form")
+//                .setTitle("Error")
+//            alert.show()
+//        }
+
+//        this.emitSendMessage(user.id!!, conversationId, reportId, teamId, "REPORT", text)
     }
 
     fun Activity.dismissKeyboard () {

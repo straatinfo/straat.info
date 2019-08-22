@@ -4,8 +4,8 @@ package com.straatinfo.straatinfo.Utilities
 const val LOCATION_RECORD_CODE = 1
 
 
-const val BASE_URL = "https://straatinfo-backend-v2.herokuapp.com" // testing server
-// const val BASE_URL = "https://straatinfo-backend-v2-prod.herokuapp.com" // production server
+// const val BASE_URL = "https://straatinfo-backend-v2.herokuapp.com" // testing server
+const val BASE_URL = "https://straatinfo-backend-v2-prod.herokuapp.com" // production server
 
 const val LOGIN_URL = "$BASE_URL/v3/api/auth/login"
 const val SIGNUP_V2 = "$BASE_URL/v1/api/registration/signupV3"
@@ -56,6 +56,8 @@ const val REQUEST_HOST_BY_NAME = "$BASE_URL/v3/api/hosts/searchByName/" // param
 // Messages
 const val MESSAGES = "$BASE_URL/v2/api/message"
 const val CONVERSATION_V2 = "$BASE_URL/v2/api/conversation"
+const val UNREAD_MESSAGE = "$BASE_URL/v3/api/message/unread" // params: conversationId, userId
+const val GET_ALL_UNREAD_MESSAGES_COUNT = "$BASE_URL/v3/api/message/unread/all/count" // params: userId
 
 // Socket
 const val SOCKET = "$BASE_URL/socket.io/"

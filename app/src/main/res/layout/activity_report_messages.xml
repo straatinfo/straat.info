@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Controllers.ReportMessages">
+        tools:context=".Controllers.ReportMessagesActivity">
 
     <android.support.v7.widget.RecyclerView
             android:layout_width="0dp"
@@ -43,10 +43,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/send_message_btn" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@+id/addMessageTxtBox"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/addMessageTxtBox" tools:text="Send"
                     android:onClick="sendMessage" android:layout_marginEnd="4dp"
-                    android:longClickable="false" android:text="Send"/>
+                    android:longClickable="false" android:text="Send" style="@style/registration_button_style"
+                    android:layout_marginBottom="8dp" android:layout_marginTop="4dp"/>
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>

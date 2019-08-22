@@ -11,16 +11,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.straatinfo.straatinfo.Adapters.TeamChatListAdapter
-import com.straatinfo.straatinfo.Adapters.TeamListAdapter
-import com.straatinfo.straatinfo.Controllers.ReportMessages
-import com.straatinfo.straatinfo.Controllers.TeamDetailsActivity
+import com.straatinfo.straatinfo.Controllers.App
+import com.straatinfo.straatinfo.Controllers.ReportMessagesActivity
 import com.straatinfo.straatinfo.Models.Team
 import com.straatinfo.straatinfo.Models.User
 
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.TeamService
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_my_team.*
+import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_team_chat.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -63,11 +62,13 @@ class TeamChat : Fragment() {
         this.getTeamList { teams ->
             Log.d("TEAM_LIST", teams.toString())
             adapter = TeamChatListAdapter(context!!, teams) { team ->
-                val intent = Intent(context!!, ReportMessages::class.java)
+                val intent = Intent(context!!, ReportMessagesActivity::class.java)
                 intent.putExtra("CHAT_TITLE", team.name + " - Team chat")
-                if (team.conversationId != null) {
+                if (team.id != null && team.conversationId != null) {
                     val conversationId = team.conversationId!!
                     intent.putExtra("CONVERSATION_ID", conversationId)
+                    intent.putExtra("TYPE", "TEAM")
+                    intent.putExtra("TEAM_ID", team.id!!)
                     context!!.startActivity(intent)
                 }
             }
@@ -76,6 +77,15 @@ class TeamChat : Fragment() {
             val layoutManager = LinearLayoutManager(context)
             team_chat_list_recyler_view.layoutManager = layoutManager
         }
+
+        val socket = App.socket
+        Log.d("SOCKET_DETAILS", socket.toString())
+        if (socket != null) {
+            socket!!
+                .on("new-message", onSendMessage)
+                .on("send-message-v2", onSendMessage)
+        }
+
         return inflater.inflate(R.layout.fragment_team_chat, container, false)
     }
 
@@ -91,6 +101,14 @@ class TeamChat : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        this.getTeamList { teams ->
+            Log.d("TEAM_LIST", teams.toString())
+            this.loadAdapter(teams)
+        }
     }
 
     /**
@@ -177,5 +195,35 @@ class TeamChat : Fragment() {
 
         }
         return teamList
+    }
+
+    private val onSendMessage = Emitter.Listener { args ->
+        Log.d("RECEIVING_REPORT_LIST", args.toString())
+        this.getTeamList { teams ->
+            Log.d("TEAM_LIST", teams.toString())
+            this.loadAdapter(teams)
+        }
+    }
+
+    private fun loadAdapter (teams: MutableList<Team>) {
+        try {
+            adapter = TeamChatListAdapter(context!!, teams) { team ->
+                val intent = Intent(context!!, ReportMessagesActivity::class.java)
+                intent.putExtra("CHAT_TITLE", team.name + " - Team chat")
+                if (team.id != null && team.conversationId != null) {
+                    val conversationId = team.conversationId!!
+                    intent.putExtra("CONVERSATION_ID", conversationId)
+                    intent.putExtra("TYPE", "TEAM")
+                    intent.putExtra("TEAM_ID", team.id!!)
+                    context!!.startActivity(intent)
+                }
+            }
+
+            team_chat_list_recyler_view.adapter = adapter
+            val layoutManager = LinearLayoutManager(context)
+            team_chat_list_recyler_view.layoutManager = layoutManager
+        } catch (e: Exception) {
+
+        }
     }
 }

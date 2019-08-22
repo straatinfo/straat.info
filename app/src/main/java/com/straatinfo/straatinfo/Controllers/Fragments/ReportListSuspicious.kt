@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import com.straatinfo.straatinfo.Adapters.ReportListAdapter
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Controllers.ReportInformationActivity
-import com.straatinfo.straatinfo.Controllers.ReportMessages
+import com.straatinfo.straatinfo.Controllers.ReportMessagesActivity
 import com.straatinfo.straatinfo.Models.Report
 import com.straatinfo.straatinfo.Models.User
 
@@ -24,6 +24,7 @@ import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_report_list_suspicious.*
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.Exception
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,28 +63,34 @@ class ReportListSuspicious : Fragment() {
         // Inflate the layout for this fragment
         // Inflate the layout for this fragment
         loadPublicReports {
-            adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
-                val intent = Intent(context!!, ReportMessages::class.java)
-                intent.putExtra("CHAT_TITLE", report.mainCategoryName)
-                if (report.conversation != null && report.conversation!!.has("_id")) {
-                    val conversationId = report.conversation!!.getString("_id")
-                    intent.putExtra("CONVERSATION_ID", conversationId)
-                    context!!.startActivity(intent)
+            try {
+                adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
+                    val intent = Intent(context!!, ReportMessagesActivity::class.java)
+                    intent.putExtra("CHAT_TITLE", report.mainCategoryName)
+                    if (report.conversation != null && report.conversation!!.has("_id")) {
+                        val conversationId = report.conversation!!.getString("_id")
+                        intent.putExtra("CONVERSATION_ID", conversationId)
+                        intent.putExtra("REPORT_ID", report.id)
+                        intent.putExtra("TYPE", "REPORT")
+                        context!!.startActivity(intent)
+                    }
+                    Log.d("REPORT_MESSAGE", report.id)
                 }
-                Log.d("REPORT_MESSAGE", report.id)
-            }
 
-            report_list_suspicious_recycler_view.adapter = adapter
-            val layoutManager = LinearLayoutManager(context!!)
-            report_list_suspicious_recycler_view.layoutManager = layoutManager
+                report_list_suspicious_recycler_view.adapter = adapter
+                val layoutManager = LinearLayoutManager(context!!)
+                report_list_suspicious_recycler_view.layoutManager = layoutManager
+            } catch (e: Exception) {
+
+            }
         }
 
-//        val socket = App.socket
-//        if (socket != null) {
-//            socket!!
-//                .on("new-message", onSendMessage)
-//                .on("send-message-v2", onSendMessage)
-//        }
+        val socket = App.socket
+        if (socket != null) {
+            socket!!
+                .on("new-message", onSendMessage)
+                .on("send-message-v2", onSendMessage)
+        }
 
         return inflater.inflate(R.layout.fragment_report_list_suspicious, container, false)
     }
@@ -133,20 +140,26 @@ class ReportListSuspicious : Fragment() {
     override fun onResume() {
         Log.d("REPORT_A", "attaching on detach resume")
         loadPublicReports {
-            adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
-                val intent = Intent(context!!, ReportMessages::class.java)
-                intent.putExtra("CHAT_TITLE", report.mainCategoryName)
-                if (report.conversation != null && report.conversation!!.has("_id")) {
-                    val conversationId = report.conversation!!.getString("_id")
-                    intent.putExtra("CONVERSATION_ID", conversationId)
-                    context!!.startActivity(intent)
+            try {
+                adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
+                    val intent = Intent(context!!, ReportMessagesActivity::class.java)
+                    intent.putExtra("CHAT_TITLE", report.mainCategoryName)
+                    if (report.conversation != null && report.conversation!!.has("_id")) {
+                        val conversationId = report.conversation!!.getString("_id")
+                        intent.putExtra("CONVERSATION_ID", conversationId)
+                        intent.putExtra("REPORT_ID", report.id)
+                        intent.putExtra("TYPE", "REPORT")
+                        context!!.startActivity(intent)
+                    }
+                    Log.d("REPORT_MESSAGE", report.id)
                 }
-                Log.d("REPORT_MESSAGE", report.id)
-            }
 
-            report_list_suspicious_recycler_view.adapter = adapter
-            val layoutManager = LinearLayoutManager(context!!)
-            report_list_suspicious_recycler_view.layoutManager = layoutManager
+                report_list_suspicious_recycler_view.adapter = adapter
+                val layoutManager = LinearLayoutManager(context!!)
+                report_list_suspicious_recycler_view.layoutManager = layoutManager
+            } catch (e: Exception) {
+
+            }
         }
         super.onResume()
     }
@@ -195,41 +208,47 @@ class ReportListSuspicious : Fragment() {
 
     private fun reportLoader (reportArray: JSONArray, cb: (reportList: MutableList<Report>) -> Unit) {
         reportList = mutableListOf()
+        var unreadMessage = 0
         for (i in 0 until reportArray.length()) {
             val reportJson = reportArray[i] as JSONObject
 
             var report = Report(reportJson)
-
+            unreadMessage += report.getUnreadMessagesCount()
             reportList.add(reportList.count(), report)
-
-            cb(reportList)
         }
+        Log.d("UNREAD_SUS_MSG", unreadMessage.toString())
+        App.prefs.unreadSuspiciousReportMessage = unreadMessage
+        cb(reportList)
     }
 
     fun loadPublicReports (cb: (reportList: MutableList<Report>) -> Unit) {
-        val user = User(JSONObject(App.prefs.userData))
+        if (context != null) {
+            val user = User(JSONObject(App.prefs.userData))
 
-        val reporterId = user.id!!
-        val language = context!!.getString(R.string.language)
-        val reportType = "B"
+            val reporterId = user.id!!
+            val language = context!!.getString(R.string.language)
+            val reportType = "B"
 
-        ReportService.getReportList(reportType, reporterId, language)
-            .subscribeOn(Schedulers.io())
-            .subscribe { reportList ->
-                reportLoader(reportList, cb)
-            }
-            .run {  }
+            ReportService.getReportList(reportType, reporterId, language)
+                .subscribeOn(Schedulers.io())
+                .subscribe { reportList ->
+                    reportLoader(reportList, cb)
+                }
+                .run {  }
+        }
     }
 
     private val onSendMessage = Emitter.Listener { args ->
         Log.d("RECEIVING_REPORT_LIST", args.toString())
         this.loadPublicReports {
             adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
-                val intent = Intent(context!!, ReportMessages::class.java)
+                val intent = Intent(context!!, ReportMessagesActivity::class.java)
                 intent.putExtra("CHAT_TITLE", report.mainCategoryName)
                 if (report.conversation != null && report.conversation!!.has("_id")) {
                     val conversationId = report.conversation!!.getString("_id")
                     intent.putExtra("CONVERSATION_ID", conversationId)
+                    intent.putExtra("REPORT_ID", report.id)
+                    intent.putExtra("TYPE", "REPORT")
                     context!!.startActivity(intent)
                 }
                 Log.d("REPORT_MESSAGE", report.id)

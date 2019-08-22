@@ -4,6 +4,7 @@
     <item
             android:id="@+id/report_public"
             android:icon="@drawable/ic_reports_public"
+            app:actionViewClass="android.support.design.widget.BottomNavigationView"
             android:title="@string/reports_tab_title_public"/>
 
     <item

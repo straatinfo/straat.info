@@ -19,7 +19,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning,InnerclassSeparator">
-        <activity android:name=".Controllers.ReportMessages"
+        <activity android:name=".Controllers.ReportMessagesActivity"
                   android:screenOrientation="portrait">
         </activity>
 

@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import com.straatinfo.straatinfo.Adapters.ReportListAdapter
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Controllers.ReportInformationActivity
-import com.straatinfo.straatinfo.Controllers.ReportMessages
+import com.straatinfo.straatinfo.Controllers.ReportMessagesActivity
 import com.straatinfo.straatinfo.Models.Report
 import com.straatinfo.straatinfo.Models.User
 
@@ -24,6 +24,7 @@ import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_report_list_public.*
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.Exception
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,6 +53,12 @@ class ReportListPublic : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+        }
+        val socket = App.socket
+        if (socket != null) {
+            socket!!
+                .on("new-message", onSendMessage)
+                .on("send-message-v2", onSendMessage)
         }
     }
 
@@ -98,12 +105,6 @@ class ReportListPublic : Fragment() {
 
     override fun onAttach(context: Context) {
         Log.d("REPORT_A", "attaching on detach")
-//        val socket = App.socket
-//        if (socket != null) {
-//            socket!!
-//                .on("new-message", onSendMessage)
-//                .on("send-message-v2", onSendMessage)
-//        }
         super.onAttach(context)
 //        if (context is OnFragmentInteractionListener) {
 //            listener = context
@@ -178,30 +179,36 @@ class ReportListPublic : Fragment() {
 
     private fun reportLoader (reportArray: JSONArray, cb: (reportList: MutableList<Report>) -> Unit) {
         reportList = mutableListOf()
+        var unreadMessage = 0
         for (i in 0 until reportArray.length()) {
             val reportJson = reportArray[i] as JSONObject
 
             var report = Report(reportJson)
 
-            reportList.add(reportList.count(), report)
+            unreadMessage += report.getUnreadMessagesCount()
 
-            cb(reportList)
+            reportList.add(reportList.count(), report)
         }
+        Log.d("UNREAD_MESSAGE_COUNT", unreadMessage.toString())
+        App.prefs.unreadPublicReportMessage = unreadMessage
+        cb(reportList)
     }
 
     fun loadPublicReports (cb: (reportList: MutableList<Report>) -> Unit) {
-        val user = User(JSONObject(App.prefs.userData))
+        if (context != null) {
+            val user = User(JSONObject(App.prefs.userData))
 
-        val reporterId = user.id!!
-        val language = context!!.getString(R.string.language)
-        val reportType = "A"
+            val reporterId = user.id!!
+            val language = context!!.getString(R.string.language)
+            val reportType = "A"
 
-        ReportService.getReportList(reportType, reporterId, language)
-            .subscribeOn(Schedulers.io())
-            .subscribe { reportList ->
-                reportLoader(reportList, cb)
-            }
-            .run {  }
+            ReportService.getReportList(reportType, reporterId, language)
+                .subscribeOn(Schedulers.io())
+                .subscribe { reportList ->
+                    reportLoader(reportList, cb)
+                }
+                .run {  }
+        }
     }
 
 
@@ -213,20 +220,26 @@ class ReportListPublic : Fragment() {
     }
 
     private fun loadAdapter () {
-        adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
-            val intent = Intent(context!!, ReportMessages::class.java)
-            intent.putExtra("REPORT_ID", report.id)
-            intent.putExtra("CHAT_TITLE", report.mainCategoryName)
-            if (report.conversation != null && report.conversation!!.has("_id")) {
-                val conversationId = report.conversation!!.getString("_id")
-                intent.putExtra("CONVERSATION_ID", conversationId)
-                context!!.startActivity(intent)
+        try {
+            adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
+                val intent = Intent(context!!, ReportMessagesActivity::class.java)
+                intent.putExtra("REPORT_ID", report.id)
+                intent.putExtra("CHAT_TITLE", report.mainCategoryName)
+                if (report.conversation != null && report.conversation!!.has("_id")) {
+                    val conversationId = report.conversation!!.getString("_id")
+                    intent.putExtra("CONVERSATION_ID", conversationId)
+                    intent.putExtra("REPORT_ID", report.id)
+                    intent.putExtra("TYPE", "REPORT")
+                    context!!.startActivity(intent)
+                }
+
             }
 
-        }
+            report_list_public_recycler_view.adapter = adapter
+            val layoutManager = LinearLayoutManager(context!!)
+            report_list_public_recycler_view.layoutManager = layoutManager
+        } catch (e: Exception) {
 
-        report_list_public_recycler_view.adapter = adapter
-        val layoutManager = LinearLayoutManager(context!!)
-        report_list_public_recycler_view.layoutManager = layoutManager
+        }
     }
 }

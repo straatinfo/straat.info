@@ -4,8 +4,7 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.straatinfo.straatinfo.Controllers.App
-import com.straatinfo.straatinfo.Utilities.CONVERSATION_V2
-import com.straatinfo.straatinfo.Utilities.MESSAGES
+import com.straatinfo.straatinfo.Utilities.*
 import io.reactivex.Observable
 import org.json.JSONArray
 import org.json.JSONObject
@@ -86,6 +85,58 @@ object MessageService {
             }
 
             App.prefs.requestQueue.add(createConvoRequest)
+        }
+    }
+
+    fun readUnreadMessages (conversationId: String, userId: String): Observable<Boolean> {
+        val url = "$UNREAD_MESSAGE/$conversationId/$userId"
+
+        return Observable.create {
+            val readUnreadMessagesRequest = object: JsonObjectRequest(Method.DELETE, url, null, Response.Listener { response ->
+                it.onNext(true)
+            }, Response.ErrorListener { error ->
+                it.onNext(false)
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(readUnreadMessagesRequest)
+        }
+    }
+
+    fun getUnreadMessagesGroupByReports (userId: String): Observable<JSONObject> {
+        val url = "$GET_ALL_UNREAD_MESSAGES_COUNT/$userId"
+
+        return Observable.create {
+            val getUnreadMessageCountReq = object: JsonObjectRequest(Method.GET, url, null, Response.Listener { response ->
+                if (response.has("a") && response.has("b")) it.onNext(response) else it.onNext(JSONObject())
+            }, Response.ErrorListener { error ->
+                it.onNext(JSONObject())
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(getUnreadMessageCountReq)
         }
     }
 

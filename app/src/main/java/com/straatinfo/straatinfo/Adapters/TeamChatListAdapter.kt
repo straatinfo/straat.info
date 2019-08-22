@@ -35,9 +35,11 @@ class TeamChatListAdapter (val context: Context, val teams: MutableList<Team>, v
         val teamName = itemView?.findViewById<TextView>(R.id.team_chat_name)
         val teamEmail = itemView?.findViewById<TextView>(R.id.team_chat_email)
         val teamImg = itemView?.findViewById<ImageView>(R.id.team_chat_img)
+        val unreadMessage = itemView?.findViewById<TextView>(R.id.team_chat_report_txt)
         fun bindCategory(team: Team, context: Context) {
             teamName?.text = team.name
             teamEmail?.text = team.email
+            unreadMessage?.text = team.unreadMessageCount.toString()
             if (team.profilePic != null) {
                 val secureUrl = team.profilePic!!.getString("secure_url")
                 Picasso.get().load(secureUrl).into(teamImg)

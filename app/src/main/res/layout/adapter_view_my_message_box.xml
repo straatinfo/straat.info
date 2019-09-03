@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content">
+    <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:background="@drawable/chat_my_message_box_shape" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="100dp">
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"
+                    tools:text="This is my sample message. this is also a very very long message"
+                    android:textAlignment="viewStart" android:layout_marginStart="32dp"
+                    app:layout_constraintStart_toStartOf="parent" android:textColor="@android:color/black"
+                    android:id="@+id/myMessageTxtBox"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/myDateTimeTextBox" app:layout_constraintEnd_toEndOf="@+id/myMessageTxtBox"
+                    android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/myMessageTxtBox" tools:text="20 March, 9:00"
+                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"
+                    android:textColor="#646464" android:textSize="14sp"/>
+        </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>

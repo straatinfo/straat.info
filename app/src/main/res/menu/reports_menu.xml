@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
             android:id="@+id/report_public"
             android:icon="@drawable/ic_reports_public"
-            android:title="Public"
-    />
+            app:actionViewClass="android.support.design.widget.BottomNavigationView"
+            android:title="@string/reports_tab_title_public"/>
 
     <item
             android:id="@+id/report_suspicious"
             android:icon="@drawable/ic_reports_suspicious"
-            android:title="Suspicious"
+            android:title="@string/reports_tab_title_suspicious"
     />
 
     <item
-            android:id="@+id/report_messages"
-            android:icon="@drawable/ic_reports_messages"
-            android:title="Messages"
+            android:id="@+id/report_government"
+            android:icon="@drawable/ic_reports_government"
+            android:title="@string/reports_tab_title_government"
     />
 
     <item
             android:id="@+id/report_chat"
             android:icon="@drawable/ic_reports_chat"
-            android:title="Chat"
+            android:title="@string/reports_tab_title_team"
     />
 </menu>

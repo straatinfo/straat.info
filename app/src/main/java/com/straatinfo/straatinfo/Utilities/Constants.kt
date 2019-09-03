@@ -52,3 +52,17 @@ const val MAP_ZOOM = 16.500f
 // Host
 const val REQUEST_HOST_WITH_CODE = "$BASE_URL/v3/api/registration/validation/host"
 const val REQUEST_HOST_BY_NAME = "$BASE_URL/v3/api/hosts/searchByName/" // params: hostName
+
+// Messages
+const val MESSAGES = "$BASE_URL/v2/api/message"
+const val CONVERSATION_V2 = "$BASE_URL/v2/api/conversation"
+const val UNREAD_MESSAGE = "$BASE_URL/v3/api/message/unread" // params: conversationId, userId
+const val GET_ALL_UNREAD_MESSAGES_COUNT = "$BASE_URL/v3/api/message/unread/all/count" // params: userId
+
+// Socket
+const val SOCKET = "$BASE_URL/socket.io/"
+
+
+// BROADCASTS
+
+const val BROADCAST_REPORT_DATA_CHANGE = "BROADCAST_REPORT_DATA_CHANGE"

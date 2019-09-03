@@ -67,4 +67,17 @@
         <item name="android:background">@drawable/upload_photo_box</item>
         <item name="android:layout_margin">5dp</item>
     </style>
+    <style name="bottomMenuSelectionsNumber">
+        <item name="android:text">1</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_width">5dp</item>
+        <item name="android:layout_height">5dp</item>
+        <item name="android:layout_gravity">right|top</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:background">@drawable/bottom_menu_badge_bg</item>
+    </style>
 </resources>

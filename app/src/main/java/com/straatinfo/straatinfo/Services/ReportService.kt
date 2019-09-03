@@ -220,4 +220,68 @@ object ReportService {
             App.prefs.requestQueue.add(reportDetailsRequest)
         }
     }
+
+    fun updateReportStatus (reportId: String, status: String): Observable<Boolean> {
+        val url = "$REPORT_API/$reportId"
+        val report = JSONObject()
+        report.put("status", status)
+        val requestBody = report.toString()
+        reportError = null
+        return Observable.create {
+            val updateReportStatusRequest = object: JsonObjectRequest(Method.PUT, url, null, Response.Listener { response ->
+                it.onNext(true)
+            }, Response.ErrorListener { error ->
+                it.onNext(false)
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getBody(): ByteArray {
+                    return requestBody.toByteArray()
+                }
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(updateReportStatusRequest)
+        }
+    }
+
+    fun updateReportInfo (reportId: String, report: JSONObject): Observable<Boolean> {
+        val url = "$REPORT_API/$reportId"
+        val requestBody = report.toString()
+        reportError = null
+        return Observable.create {
+            val updateReportStatusRequest = object: JsonObjectRequest(Method.PUT, url, null, Response.Listener { response ->
+                it.onNext(true)
+            }, Response.ErrorListener { error ->
+                it.onNext(false)
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getBody(): ByteArray {
+                    return requestBody.toByteArray()
+                }
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(updateReportStatusRequest)
+        }
+    }
 }

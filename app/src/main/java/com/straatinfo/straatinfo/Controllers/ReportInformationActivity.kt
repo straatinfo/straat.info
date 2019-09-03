@@ -1,7 +1,10 @@
 package com.straatinfo.straatinfo.Controllers
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.app.AlertDialog
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -10,14 +13,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import com.straatinfo.straatinfo.Models.Report
+import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.ReportService
+import com.straatinfo.straatinfo.Utilities.BROADCAST_REPORT_DATA_CHANGE
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONObject
 
 class ReportInformationActivity : AppCompatActivity() {
 
+    var updated = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        updated = false
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report_information)
 
@@ -33,6 +41,11 @@ class ReportInformationActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val source = intent.getStringExtra("PREVIIOUS_LOCATION")
+        if (source != null && source!! == "MAIN" && this.updated) {
+            val reportDataChange = Intent(BROADCAST_REPORT_DATA_CHANGE)
+            LocalBroadcastManager.getInstance(this).sendBroadcast(reportDataChange)
+        }
         finish()
         return super.onOptionsItemSelected(item)
     }
@@ -54,6 +67,7 @@ class ReportInformationActivity : AppCompatActivity() {
     }
 
     private fun loadReportInfo (report: Report) {
+        val user = User()
         val locationTxt = findViewById<TextView>(R.id.report_info_location_txt)
         val dateTxt = findViewById<TextView>(R.id.report_info_date_value)
         val timeTxt = findViewById<TextView>(R.id.report_info_time_value)
@@ -68,7 +82,9 @@ class ReportInformationActivity : AppCompatActivity() {
         val photoFrame = findViewById<FrameLayout>(R.id.report_info_photo_frame)
         val changeStatusBtn = findViewById<Button>(R.id.report_info_change_status_btn)
         val logo = findViewById<ImageView>(R.id.report_info_logo)
-        changeStatusBtn.isEnabled = false
+        val statusIndicator = findViewById<ImageView>(R.id.status_indicator_img)
+        changeStatusBtn.isEnabled = user.id != null &&  report.reporterId != null && report.status != null
+                && (report.status!!.toLowerCase() == "new" || report.status!!.toLowerCase() == "inprogress")
 
         locationTxt.text = report.location
         dateTxt.text = report.getDate()
@@ -118,11 +134,88 @@ class ReportInformationActivity : AppCompatActivity() {
         reporterNameTxt.text = report.reporterUsername
 
         if (report.reportTypeCode != null && report.reportTypeCode!!.toLowerCase() == "b") {
-            logo.setImageDrawable(getDrawable(R.drawable.ic_map_pointer_b))
             this.loadReportTypeBInfo(report)
-        } else {
-            logo.setImageDrawable(getDrawable(R.drawable.ic_map_pointer_a))
         }
+
+        if (report.status != null && report.status!!.toLowerCase() == "expired") {
+            logo.setImageDrawable(getDrawable(R.drawable.ic_map_pointer_e))
+            statusIndicator.setImageDrawable(getDrawable(R.drawable.ic_status_expired))
+        } else if (report.status != null && report.status!!.toLowerCase() == "done") {
+            logo.setImageDrawable(getDrawable(R.drawable.ic_map_pointer_a))
+            statusIndicator.setImageDrawable(getDrawable(R.drawable.ic_status_done))
+        } else if (report.status != null && report.status!!.toLowerCase() == "new") {
+            logo.setImageDrawable(getDrawable(R.drawable.ic_map_pointer_c))
+            statusIndicator.setImageDrawable(getDrawable(R.drawable.ic_status_new))
+        } else {
+            logo.setImageDrawable(getDrawable(R.drawable.ic_map_pointer_b))
+            statusIndicator.setImageDrawable(getDrawable(R.drawable.ic_status_inprogress))
+        }
+
+        if (report.reportTypeCode != null && report.reportTypeCode!!.toLowerCase() == "b") {
+            val isPublicLbl = findViewById<TextView>(R.id.report_info_is_public_lbl)
+            val isPublicText = findViewById<TextView>(R.id.report_info_is_public_txt)
+            val isPublicChangeBtn = findViewById<Button>(R.id.report_info_change_is_public_btn)
+            isPublicChangeBtn.visibility = View.VISIBLE
+            isPublicLbl.visibility = View.VISIBLE
+            isPublicText.visibility = View.VISIBLE
+
+            isPublicText.text = if (report.isPublic != null && report.isPublic!!) getString(R.string.yes) else getString(R.string.no)
+
+            isPublicChangeBtn.isEnabled = report.reporterId != null && user.id != null && report.reporterId == user.id && (report.isPublic == null || !report.isPublic!!)
+        }
+    }
+
+    private fun showUpdateReportResponseDialog (success: Boolean) {
+        val alertDialog = AlertDialog.Builder(this)
+        if (success) {
+            alertDialog.setTitle(getString(R.string.success))
+                .setMessage(getString(R.string.report_info_you_changed_report_status))
+        } else {
+            alertDialog.setTitle(getString(R.string.error))
+                .setMessage(getString(R.string.error_error_occured))
+        }
+        alertDialog
+            .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                dialog.dismiss()
+
+            }
+            .setOnDismissListener {
+                val reportId = intent.getStringExtra("REPORT_ID")
+                if (reportId != null) {
+                    this.getReportInfo(reportId) { report ->
+                        loadReportInfo(report)
+                    }
+                }
+            }
+
+        alertDialog.show()
+    }
+
+    private fun showUpdateReportPublicityResponseDialog (success: Boolean) {
+        val alertDialog = AlertDialog.Builder(this)
+        if (success) {
+            alertDialog.setTitle(getString(R.string.success))
+                .setMessage(getString(R.string.report_info_made_report_public))
+        } else {
+            alertDialog.setTitle(getString(R.string.error))
+                .setMessage(getString(R.string.error_error_occured))
+        }
+
+        alertDialog
+            .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                dialog.dismiss()
+
+            }
+            .setOnDismissListener {
+                val reportId = intent.getStringExtra("REPORT_ID")
+                if (reportId != null) {
+                    this.getReportInfo(reportId) { report ->
+                        loadReportInfo(report)
+                    }
+                }
+            }
+
+        alertDialog.show()
     }
 
     fun loadReportTypeBInfo (report: Report) {
@@ -151,5 +244,61 @@ class ReportInformationActivity : AppCompatActivity() {
         } else {
             vehicleInvolvedFrame.visibility = View.GONE
         }
+    }
+
+    private fun updateStatus () {
+        val reportId = intent.getStringExtra("REPORT_ID")
+        if (reportId != null) {
+            ReportService.updateReportStatus(reportId, "DONE")
+                .subscribeOn(Schedulers.io())
+                .subscribe {
+                    this.updated = it
+                    this.showUpdateReportResponseDialog(it)
+                }
+                .run {  }
+        }
+    }
+
+    private fun updateReportPublicity () {
+        val reportId = intent.getStringExtra("REPORT_ID")
+        if (reportId != null) {
+            var data = JSONObject()
+            data.put("isPublic", true)
+            ReportService.updateReportInfo(reportId, data)
+                .subscribeOn(Schedulers.io())
+                .subscribe {
+                    this.updated = it
+                    this.showUpdateReportPublicityResponseDialog(it)
+                }
+                .run {  }
+        }
+    }
+
+    fun updateStatusDialog (view: View) {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setMessage(getString(R.string.report_info_change_status_info))
+        alertDialog.setPositiveButton(getString(R.string.yes)) { dialog, which ->
+            dialog.dismiss()
+            this.updateStatus()
+        }
+        alertDialog.setNegativeButton(getString(R.string.no)) { dialog, which ->
+            dialog.dismiss()
+        }
+
+        alertDialog.show()
+    }
+
+    fun updateReportPublicityDialog (view: View) {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setMessage(getString(R.string.report_info_make_report_public))
+        alertDialog.setPositiveButton(getString(R.string.yes)) { dialog, which ->
+            dialog.dismiss()
+            this.updateReportPublicity()
+        }
+        alertDialog.setNegativeButton(getString(R.string.no)) { dialog, which ->
+            dialog.dismiss()
+        }
+
+        alertDialog.show()
     }
 }

@@ -249,7 +249,7 @@
     <string name="report_info_reported_by">Deze melding gedaan door</string>
     <string name="report_info_status">Status</string>
     <string name="report_info_time">Tijd</string>
-    <string name="report_info_change_status_btn_txt">Wijzig Status</string>
+    <string name="report_info_change_status_btn_txt">Wijzig status</string>
     <string name="report_type_b_info">Hier kunt u een situatie die u verdacht vindt, delen met andere gebruikers in de
         app. Zodra meer mensen de situatie verdacht vinden, neem dan contact op met de politie of andere relevante
         instantie (bijv. brandweer). NB bij spoed altijd eerst 112 bellen!
@@ -275,5 +275,23 @@
     <string name="action_not_allowed">Actie niet toegestaan</string>
     <string name="error_reporting_outside_netherlands">Je wilde een melding doen buiten Nederland. Op dit moment werkt
         de app alleen binnen Nederland. De melding wordt gedelete.
+    </string>
+    <string name="reports_tab_title_public">Melding</string>
+    <string name="reports_tab_title_suspicious">Verdacht</string>
+    <string name="reports_tab_title_government">Overheid</string>
+    <string name="reports_tab_title_team">Team</string>
+    <string name="report_info_expired">Verlopen</string>
+    <string name="report_info_in_progress">Bezig</string>
+    <string name="report_info_is_report_finished">Is deze melding afgehandeld?</string>
+    <string name="report_info_you_changed_report_status">Je hebt de status van de melding gewijzigd</string>
+    <string name="report_status_new">Nieuw</string>
+    <string name="report_status_in_progress">In behandeling</string>
+    <string name="report_status_done">Afgerond</string>
+    <string name="report_status_expired">Verlopen</string>
+    <string name="report_info_make_report_public">Wil je deze melding voor iedereen openbaar maken?</string>
+    <string name="report_info_made_report_public">Je hebt de melding openbaar gemaakt.</string>
+    <string name="report_info_is_public_lbl">Openbaar</string>
+    <string name="change">Wijzig</string>
+    <string name="report_info_change_status_info">Wil je de status van deze melding veranderen naar \"afgerond\"?
     </string>
 </resources>

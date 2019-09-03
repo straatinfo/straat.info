@@ -47,6 +47,14 @@ class SharedPrefs (context: Context) {
         get() = prefs.getString("PASS", "")
         set(value) = prefs.edit().putString("PASS", value).apply()
 
+    var unreadPublicReportMessage: Int
+        get() = prefs.getInt("UNREAD_PUBLIC_REPORT_MESSAGE", 0)
+        set(value) = prefs.edit().putInt("UNREAD_PUBLIC_REPORT_MESSAGE", value).apply()
+
+    var unreadSuspiciousReportMessage: Int
+        get() = prefs.getInt("UNREAD_PUBLIC_SUSPICIOUS_MESSAGE", 0)
+        set(value) = prefs.edit().putInt("UNREAD_PUBLIC_SUSPICIOUS_MESSAGE", value).apply()
+
     val requestQueue: RequestQueue = Volley.newRequestQueue(context)
 
     val context: Context = context

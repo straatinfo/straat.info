@@ -1,25 +1,30 @@
 package com.straatinfo.straatinfo.Controllers.Fragments
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.straatinfo.straatinfo.Adapters.ReportListAdapter
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Controllers.ReportInformationActivity
+import com.straatinfo.straatinfo.Controllers.ReportMessagesActivity
 import com.straatinfo.straatinfo.Models.Report
 import com.straatinfo.straatinfo.Models.User
 
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.ReportService
 import io.reactivex.schedulers.Schedulers
+import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_report_list_public.*
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.Exception
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,6 +54,12 @@ class ReportListPublic : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        val socket = App.socket
+        if (socket != null) {
+            socket!!
+                .on("new-message", onSendMessage)
+                .on("send-message-v2", onSendMessage)
+        }
     }
 
     override fun onCreateView(
@@ -57,16 +68,9 @@ class ReportListPublic : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         loadPublicReports {
-            adapter = ReportListAdapter(context!!, reportList) { report ->
-                val intent = Intent(context!!, ReportInformationActivity::class.java)
-                intent.putExtra("REPORT_ID", report.id)
-                context!!.startActivity(intent)
-            }
-
-            report_list_public_recycler_view.adapter = adapter
-            val layoutManager = LinearLayoutManager(context!!)
-            report_list_public_recycler_view.layoutManager = layoutManager
+            this.loadAdapter()
         }
+
         return inflater.inflate(R.layout.fragment_report_list_public, container, false)
     }
 
@@ -75,18 +79,67 @@ class ReportListPublic : Fragment() {
         listener?.onFragmentInteraction(uri)
     }
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d("REPORT_A", "attaching on detach")
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun setInitialSavedState(state: SavedState?) {
+        Log.d("REPORT_A", "attaching on detach return")
+        super.setInitialSavedState(state)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        Log.d("REPORT_A", "attaching on detach activity created")
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onResume() {
+        Log.d("REPORT_A", "attaching on detach resume")
+        loadPublicReports {
+            this.loadAdapter()
+        }
+        super.onResume()
+    }
+
+
+    override fun onAttach(context: Context) {
+        Log.d("REPORT_A", "attaching on detach")
+        super.onAttach(context)
 //        if (context is OnFragmentInteractionListener) {
 //            listener = context
 //        } else {
 //            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
 //        }
-//    }
+    }
 
     override fun onDetach() {
+        Log.d("REPORT_A", "detaching on detach")
+//        val socket = App.socket
+//        if (socket != null) {
+//            socket!!
+//                .on("new-message"){ Log.d("REPORT_A", "detaching")}
+//                .on("send-message-v2"){ Log.d("REPORT_A", "detaching")}
+//        }
         super.onDetach()
         listener = null
+    }
+
+    override fun onDestroy() {
+        Log.d("REPORT_A", "detaching on destroy")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("REPORT_A", "detaching on destroy view")
+        super.onDestroyView()
+    }
+
+    private fun onReportClick (report: Report) {
+        val intent = Intent(context!!, ReportInformationActivity::class.java)
+        intent.putExtra("PREVIIOUS_LOCATION", "REPORT_A")
+        intent.putExtra("REPORT_ID", report.id)
+        context!!.startActivity(intent)
     }
 
     /**
@@ -127,29 +180,67 @@ class ReportListPublic : Fragment() {
 
     private fun reportLoader (reportArray: JSONArray, cb: (reportList: MutableList<Report>) -> Unit) {
         reportList = mutableListOf()
+        var unreadMessage = 0
         for (i in 0 until reportArray.length()) {
             val reportJson = reportArray[i] as JSONObject
 
             var report = Report(reportJson)
 
-            reportList.add(reportList.count(), report)
+            unreadMessage += report.getUnreadMessagesCount()
 
-            cb(reportList)
+            reportList.add(reportList.count(), report)
+        }
+        Log.d("UNREAD_MESSAGE_COUNT", unreadMessage.toString())
+        App.prefs.unreadPublicReportMessage = unreadMessage
+        cb(reportList)
+    }
+
+    fun loadPublicReports (cb: (reportList: MutableList<Report>) -> Unit) {
+        if (context != null) {
+            val user = User(JSONObject(App.prefs.userData))
+
+            val reporterId = user.id!!
+            val language = context!!.getString(R.string.language)
+            val reportType = "A"
+
+            ReportService.getReportList(reportType, reporterId, language)
+                .subscribeOn(Schedulers.io())
+                .subscribe { reportList ->
+                    reportLoader(reportList, cb)
+                }
+                .run {  }
         }
     }
 
-    private fun loadPublicReports (cb: (reportList: MutableList<Report>) -> Unit) {
-        val user = User(JSONObject(App.prefs.userData))
 
-        val reporterId = user.id!!
-        val language = context!!.getString(R.string.language)
-        val reportType = "A"
+    private val onSendMessage = Emitter.Listener { args ->
+        Log.d("RECEIVING_REPORT_LIST", args.toString())
+        this.loadPublicReports {
+            this.loadAdapter()
+        }
+    }
 
-        ReportService.getReportList(reportType, reporterId, language)
-            .subscribeOn(Schedulers.io())
-            .subscribe { reportList ->
-                reportLoader(reportList, cb)
+    private fun loadAdapter () {
+        try {
+            adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
+                val intent = Intent(context!!, ReportMessagesActivity::class.java)
+                intent.putExtra("REPORT_ID", report.id)
+                intent.putExtra("CHAT_TITLE", report.mainCategoryName)
+                if (report.conversation != null && report.conversation!!.has("_id")) {
+                    val conversationId = report.conversation!!.getString("_id")
+                    intent.putExtra("CONVERSATION_ID", conversationId)
+                    intent.putExtra("REPORT_ID", report.id)
+                    intent.putExtra("TYPE", "REPORT")
+                    context!!.startActivity(intent)
+                }
+
             }
-            .run {  }
+
+            report_list_public_recycler_view.adapter = adapter
+            val layoutManager = LinearLayoutManager(context!!)
+            report_list_public_recycler_view.layoutManager = layoutManager
+        } catch (e: Exception) {
+
+        }
     }
 }

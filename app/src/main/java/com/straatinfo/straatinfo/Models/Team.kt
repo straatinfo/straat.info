@@ -9,6 +9,9 @@ class Team {
     var profilePic: JSONObject? = null
     var isVolunteer: Boolean? = null
     var isApproved: Boolean? = null
+    var conversationJson: JSONObject? = null
+    var conversationId: String? = null
+    var unreadMessageCount: Int = 0
 
 
     constructor(id: String, email: String, name: String) {
@@ -31,6 +34,14 @@ class Team {
         if (teamJson.has("_profilePic")) this.profilePic = teamJson.getJSONObject("_profilePic")
         if (teamJson.has("isVolunteer")) this.isVolunteer = teamJson.getBoolean("isVolunteer")
         if (teamJson.has("isApproved")) this.isApproved = teamJson.getBoolean("isApproved")
+        if (teamJson.has("_conversation")) this.conversationJson = teamJson.getJSONObject("_conversation")
+        if (conversationJson != null && conversationJson!!.has("_id")) {
+            this.conversationId = conversationJson!!.getString("_id")
+
+            if (conversationJson!!.has("unreadMessageCount")) {
+                this.unreadMessageCount = conversationJson!!.getInt("unreadMessageCount")
+            }
+        }
     }
 
     fun toJson () : JSONObject {

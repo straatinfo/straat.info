@@ -10,14 +10,14 @@ import android.widget.TextView
 import com.straatinfo.straatinfo.Models.TeamMember
 import com.straatinfo.straatinfo.R
 
-class TeamMemberListAdapter (val context: Context, val teamRequests: MutableList<TeamMember>, val teamMebershipClick: (TeamMember) -> Unit): RecyclerView.Adapter<TeamMemberListAdapter.Holder> () {
+class TeamMemberListAdapter (val context: Context, val teamRequests: MutableList<TeamMember>, val teamMebershipClick: (TeamMember) -> Unit, val teamChatClick: (TeamMember) -> Unit): RecyclerView.Adapter<TeamMemberListAdapter.Holder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): Holder {
         // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
         val view = LayoutInflater.from(parent?.context).inflate(R.layout.adapter_view_team_member_list, parent, false)
 
-        return Holder(view, teamMebershipClick)
+        return Holder(view, teamMebershipClick, teamChatClick)
     }
 
     override fun getItemId(position: Int): Long {
@@ -34,7 +34,7 @@ class TeamMemberListAdapter (val context: Context, val teamRequests: MutableList
 
 
 
-    inner class Holder (itemView: View, val itemClick: (TeamMember) -> Unit): RecyclerView.ViewHolder(itemView) {
+    inner class Holder (itemView: View, val itemClick: (TeamMember) -> Unit, val chatClick: (TeamMember) -> Unit): RecyclerView.ViewHolder(itemView) {
         val fullnameTxt = itemView?.findViewById<TextView>(R.id.teamMemberListFullNameTxt)
         val addBtn = itemView?.findViewById<ImageButton>(R.id.teamMemberListAddBtn)
         val chatBtn = itemView?.findViewById<ImageButton>(R.id.teamMemberListChatBtn)
@@ -47,7 +47,7 @@ class TeamMemberListAdapter (val context: Context, val teamRequests: MutableList
 
             fullnameTxt.text = "${teamRequest.userFname} ${teamRequest.userLname}"
             chatBtn.setOnClickListener { view ->
-
+                chatClick(teamRequest)
             }
 
             itemView.setOnClickListener {

@@ -383,7 +383,6 @@ class MainActivity : AppCompatActivity(),
 
     private fun getLocationPoint (fromActivity: Boolean, googleMap: GoogleMap, onSuccess: (Boolean) -> Unit) {
         getUserCoordinates (fromActivity && !markerHasDragged) { point ->
-            Log.d("MARKER_HAS_DRAGGED", this.markerHasDragged.toString())
             val user = User()
             val host = user.host
             Log.d("host", host!!.id)
@@ -406,7 +405,6 @@ class MainActivity : AppCompatActivity(),
                 val circleOptions = CircleOptions()
                 // Specifying the center of the circle
                 circleOptions.center(hostPoint)
-
                 // Radius of the circle
                 circleOptions.radius(200.toDouble())
 
@@ -434,7 +432,6 @@ class MainActivity : AppCompatActivity(),
             // this.loadReportPointer(point)
 
             if (gpsPermission == PackageManager.PERMISSION_GRANTED) {
-
                 map.isMyLocationEnabled = true
                 map.uiSettings.isMyLocationButtonEnabled = true
                 map.uiSettings.isMapToolbarEnabled = true
@@ -928,7 +925,6 @@ class MainActivity : AppCompatActivity(),
 
     fun loadReportPointer (point: LatLng) {
         // this.map.clear()
-
 
         val user = User()
         val host = user.host

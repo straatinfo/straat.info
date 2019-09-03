@@ -137,6 +137,7 @@ class ReportListPublic : Fragment() {
 
     private fun onReportClick (report: Report) {
         val intent = Intent(context!!, ReportInformationActivity::class.java)
+        intent.putExtra("PREVIIOUS_LOCATION", "REPORT_A")
         intent.putExtra("REPORT_ID", report.id)
         context!!.startActivity(intent)
     }

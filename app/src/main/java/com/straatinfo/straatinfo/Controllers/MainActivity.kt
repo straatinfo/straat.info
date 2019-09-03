@@ -2,9 +2,7 @@ package com.straatinfo.straatinfo.Controllers
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -29,6 +27,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.provider.MediaStore
 import android.support.design.widget.NavigationView
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -44,10 +43,7 @@ import android.view.View
 import android.widget.*
 import com.straatinfo.straatinfo.Models.*
 import com.straatinfo.straatinfo.Services.*
-import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
-import com.straatinfo.straatinfo.Utilities.MAP_ZOOM
-import com.straatinfo.straatinfo.Utilities.REPORT_TYPE_A_ID
-import com.straatinfo.straatinfo.Utilities.REPORT_TYPE_B_ID
+import com.straatinfo.straatinfo.Utilities.*
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_home.drawer_layout
 import kotlinx.android.synthetic.main.activity_home.nav_view
@@ -151,6 +147,15 @@ class MainActivity : AppCompatActivity(),
                 .run{}
         }
 
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.reportDataChangeReceiver, IntentFilter(BROADCAST_REPORT_DATA_CHANGE))
+
+    }
+
+    private val reportDataChangeReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            reload()
+        }
     }
 
     /**
@@ -167,7 +172,7 @@ class MainActivity : AppCompatActivity(),
         this.getLocationPoint(!markerHasDragged, googleMap) { success ->
             if (success) {
                 Log.d("MAP_GETTING_READY", "SUCCESS")
-               // this.loadReports(100.00)
+                // this.loadReports(100.00)
 
             }
         }
@@ -195,6 +200,7 @@ class MainActivity : AppCompatActivity(),
         if (marker!!.tag != null) {
             val report = marker!!.tag as Report
             val intent = Intent(this, ReportInformationActivity::class.java)
+            intent.putExtra("PREVIIOUS_LOCATION", "MAIN")
             intent.putExtra("REPORT_ID", report.id)
             startActivity(intent)
         }
@@ -377,6 +383,7 @@ class MainActivity : AppCompatActivity(),
 
     private fun getLocationPoint (fromActivity: Boolean, googleMap: GoogleMap, onSuccess: (Boolean) -> Unit) {
         getUserCoordinates (fromActivity && !markerHasDragged) { point ->
+            Log.d("MARKER_HAS_DRAGGED", this.markerHasDragged.toString())
             val user = User()
             val host = user.host
             Log.d("host", host!!.id)
@@ -414,13 +421,17 @@ class MainActivity : AppCompatActivity(),
 
                 map.addCircle(circleOptions)
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, MAP_ZOOM))
+                Log.d("CAMERA FOCUS", isCameraIsFocused.toString())
                 isCameraIsFocused += 1
+                Log.d("CAMERA FOCUS", isCameraIsFocused.toString())
+
+                this.loadReportPointer(point)
             }
 
             map.getUiSettings().setZoomControlsEnabled(true)
             map.setOnMarkerClickListener(this)
 
-            this.loadReportPointer(point)
+            // this.loadReportPointer(point)
 
             if (gpsPermission == PackageManager.PERMISSION_GRANTED) {
 
@@ -467,13 +478,14 @@ class MainActivity : AppCompatActivity(),
                             .snippet(report.title)
 
 
-
-                        if (report.reportTypeCode != null && report.reportTypeCode!!.toLowerCase() == "b") {
-                            reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_b))
-                        } else if (report.reportTypeCode != null && report.reportTypeCode!!.toLowerCase() == "c") {
+                        if (report.status != null && report.status!!.toLowerCase() == "expired") {
+                            reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_e))
+                        } else if (report.status != null && report.status!!.toLowerCase() == "done") {
+                            reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_a))
+                        } else if (report.status != null && report.status!!.toLowerCase() == "new") {
                             reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_c))
                         } else {
-                            reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_a))
+                            reportMarker.icon(bitmapDescriptorFromVector(this, R.drawable.ic_map_pointer_b))
                         }
 
 

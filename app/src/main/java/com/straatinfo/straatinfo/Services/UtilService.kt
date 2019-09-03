@@ -90,16 +90,17 @@ object UtilService {
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-            val builder = AlertDialog.Builder(activity)
-            builder.setMessage("Permission to access Internet is required")
-            builder.setTitle(("Internet Permission"))
-            builder.setPositiveButton("OK") { dialog, which ->
-                Log.d("PERMISSION", "clicked")
-                this.makeRequest(activity, LOCATION_RECORD_CODE)
-            }
-
-            val dialog = builder.create()
-            dialog.show()
+//            val builder = AlertDialog.Builder(activity)
+//            builder.setMessage("Permission to access Internet is required")
+//            builder.setTitle(("Internet Permission"))
+//            builder.setPositiveButton("OK") { dialog, which ->
+//                Log.d("PERMISSION", "clicked")
+//                this.makeRequest(activity, LOCATION_RECORD_CODE)
+//            }
+//
+//            val dialog = builder.create()
+//            dialog.show()
+            this.makeRequest(activity, LOCATION_RECORD_CODE)
         } else {
             this.makeRequest(activity, LOCATION_RECORD_CODE)
         }

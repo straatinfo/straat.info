@@ -166,6 +166,7 @@ class ReportListSuspicious : Fragment() {
 
     private fun onReportClick (report: Report) {
         val intent = Intent(context!!, ReportInformationActivity::class.java)
+        intent.putExtra("PREVIIOUS_LOCATION", "REPORT_B")
         intent.putExtra("REPORT_ID", report.id)
         context!!.startActivity(intent)
     }

@@ -61,3 +61,8 @@ const val GET_ALL_UNREAD_MESSAGES_COUNT = "$BASE_URL/v3/api/message/unread/all/c
 
 // Socket
 const val SOCKET = "$BASE_URL/socket.io/"
+
+
+// BROADCASTS
+
+const val BROADCAST_REPORT_DATA_CHANGE = "BROADCAST_REPORT_DATA_CHANGE"

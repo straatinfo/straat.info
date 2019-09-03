@@ -34,6 +34,7 @@ class Report {
     var title: String? = null
     var generatedReportId: String? = null
     var isUrgent: Boolean? = null
+    var isPublic: Boolean? = null
 
     var reportJson: JSONObject? = null
     var attachments: JSONArray? = null
@@ -64,6 +65,7 @@ class Report {
         this.updatedAt = reportJson.getString("updatedAt")
         this.status = if (reportJson.has("status")) reportJson.getString("status") else null
         this.isUrgent = if (reportJson.has("isUrgent")) reportJson.getBoolean("isUrgent") else null
+        this.isPublic = if (reportJson.has("isPublic")) reportJson.getBoolean("isPublic") else null
 
         val reportType = reportJson.getJSONObject("_reportType")
 
@@ -132,9 +134,11 @@ class Report {
 
     fun getStatus (context: Context): String {
         when (this.status) {
-            "NEW" -> return context.getString(R.string.report_info_new)
-            "COMPLETED" -> return context.getString(R.string.report_info_completed)
-            else -> return context.getString(R.string.report_info_new)
+            "NEW" -> return context.getString(R.string.report_status_new)
+            "DONE" -> return context.getString(R.string.report_status_done)
+            "EXPIRED" -> return context.getString(R.string.report_status_expired)
+            "INPROGRESS" -> return context.getString(R.string.report_status_in_progress)
+            else -> return context.getString(R.string.report_status_in_progress)
         }
     }
 

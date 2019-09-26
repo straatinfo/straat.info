@@ -4,14 +4,16 @@ package com.straatinfo.straatinfo.Utilities
 const val LOCATION_RECORD_CODE = 1
 
 
-// const val BASE_URL = "https://straatinfo-backend-v2.herokuapp.com" // testing server
-const val BASE_URL = "https://straatinfo-backend-v2-prod.herokuapp.com" // production server
+const val BASE_URL = "https://straatinfo-backend-v2.herokuapp.com" // testing server
+// const val BASE_URL = "https://straatinfo-backend-v2-prod.herokuapp.com" // production server
 
+// authentication
 const val LOGIN_URL = "$BASE_URL/v3/api/auth/login"
 const val SIGNUP_V2 = "$BASE_URL/v1/api/registration/signupV3"
 const val SIGNUP_V3 =  "$BASE_URL/v3/api/registration/signupV3"
 const val REFRESH_AUTH = "$BASE_URL/v3/api/auth/refresh"
 const val REGISTRATIN_VALIDATION = "$BASE_URL/v1/api/registration/validation"
+const val FIREBASE_TOKEN_UPDATE = "$BASE_URL/v3/api/auth/firebase"
 
 
 const val POST_CODE_API = "$BASE_URL/api/v1/utility/postcode"
@@ -55,6 +57,7 @@ const val REQUEST_HOST_BY_NAME = "$BASE_URL/v3/api/hosts/searchByName/" // param
 
 // Messages
 const val MESSAGES = "$BASE_URL/v2/api/message"
+const val SEND_MESSAGE = "$BASE_URL/v3/api/message/send"
 const val CONVERSATION_V2 = "$BASE_URL/v2/api/conversation"
 const val UNREAD_MESSAGE = "$BASE_URL/v3/api/message/unread" // params: conversationId, userId
 const val GET_ALL_UNREAD_MESSAGES_COUNT = "$BASE_URL/v3/api/message/unread/all/count" // params: userId
@@ -66,3 +69,4 @@ const val SOCKET = "$BASE_URL/socket.io/"
 // BROADCASTS
 
 const val BROADCAST_REPORT_DATA_CHANGE = "BROADCAST_REPORT_DATA_CHANGE"
+const val BROADCAST_NEW_MESSAGE_RECEIVED = "BROADCAST_NEW_MESSAGE_RECEIVED"

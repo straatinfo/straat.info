@@ -1,10 +1,13 @@
 package com.straatinfo.straatinfo.Controllers.Fragments
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +22,7 @@ import com.straatinfo.straatinfo.Models.User
 
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.ReportService
+import com.straatinfo.straatinfo.Utilities.BROADCAST_NEW_MESSAGE_RECEIVED
 import io.reactivex.schedulers.Schedulers
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_report_list_public.*
@@ -60,6 +64,7 @@ class ReportListPublic : Fragment() {
                 .on("new-message", onSendMessage)
                 .on("send-message-v2", onSendMessage)
         }
+
     }
 
     override fun onCreateView(
@@ -70,6 +75,10 @@ class ReportListPublic : Fragment() {
         loadPublicReports {
             this.loadAdapter()
         }
+
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(this.newMessageDataReceiver, IntentFilter(
+            BROADCAST_NEW_MESSAGE_RECEIVED
+        ))
 
         return inflater.inflate(R.layout.fragment_report_list_public, container, false)
     }
@@ -217,6 +226,18 @@ class ReportListPublic : Fragment() {
         Log.d("RECEIVING_REPORT_LIST", args.toString())
         this.loadPublicReports {
             this.loadAdapter()
+        }
+    }
+
+    private fun reloadAdapter () {
+        this.loadPublicReports {
+            this.loadAdapter()
+        }
+    }
+
+    private val newMessageDataReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            reloadAdapter()
         }
     }
 

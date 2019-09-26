@@ -90,7 +90,7 @@ object MessageService {
 
     fun readUnreadMessages (conversationId: String, userId: String): Observable<Boolean> {
         val url = "$UNREAD_MESSAGE/$conversationId/$userId"
-
+        Log.d("DELETING_UNREAD_MESSAGE", url)
         return Observable.create {
             val readUnreadMessagesRequest = object: JsonObjectRequest(Method.DELETE, url, null, Response.Listener { response ->
                 it.onNext(true)
@@ -137,6 +137,37 @@ object MessageService {
             }
 
             App.prefs.requestQueue.add(getUnreadMessageCountReq)
+        }
+    }
+
+    fun sendMessage (messageDetails: JSONObject): Observable<Boolean> {
+        val url = "$SEND_MESSAGE"
+
+        return Observable.create {
+            val requestBody = messageDetails.toString()
+            val sendMessageRequest = object: JsonObjectRequest(Method.POST, url, null, Response.Listener { response ->
+                it.onNext(true)
+            }, Response.ErrorListener { error ->
+                it.onNext(false)
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+
+                override fun getBody(): ByteArray {
+                    return requestBody.toByteArray()
+                }
+            }
+
+            App.prefs.requestQueue.add(sendMessageRequest)
         }
     }
 

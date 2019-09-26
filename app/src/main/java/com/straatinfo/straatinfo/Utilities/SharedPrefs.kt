@@ -57,5 +57,9 @@ class SharedPrefs (context: Context) {
 
     val requestQueue: RequestQueue = Volley.newRequestQueue(context)
 
+    var firebaseToken: String
+        get() = prefs.getString("FIRE_BASE_TOKEN", "")
+        set(value) = prefs.edit().putString("FIRE_BASE_TOKEN", value).apply()
+
     val context: Context = context
 }

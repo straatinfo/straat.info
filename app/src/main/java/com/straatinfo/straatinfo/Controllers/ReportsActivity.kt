@@ -1,7 +1,9 @@
 package com.straatinfo.straatinfo.Controllers
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -16,9 +18,11 @@ import com.straatinfo.straatinfo.Controllers.Fragments.TeamChat
 import com.straatinfo.straatinfo.R
 import io.socket.emitter.Emitter
 import android.support.design.internal.BottomNavigationItemView
+import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.Services.MessageService
+import com.straatinfo.straatinfo.Utilities.BROADCAST_NEW_MESSAGE_RECEIVED
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONObject
 
@@ -42,6 +46,9 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
         }
 
         setupBottomNavigationView()
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.newMessageDataReceiver, IntentFilter(
+            BROADCAST_NEW_MESSAGE_RECEIVED))
     }
 
     override fun onResume() {
@@ -168,6 +175,22 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
             }
         }
         // this.load()
+    }
+
+    private fun reloadBadges () {
+        var bottomNavigation: BottomNavigationView? = findViewById(R.id.reports_bottom_navigation)
+        this.getUnreadCount { a, b, c, team->
+            this.showBadge(this, bottomNavigation!!, R.id.report_public, a)
+            this.showBadge(this, bottomNavigation!!, R.id.report_suspicious, b)
+            this.showBadge(this, bottomNavigation!!, R.id.report_chat, team)
+        }
+
+    }
+
+    private val newMessageDataReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+           reloadBadges()
+        }
     }
 
     private fun getUnreadCount (cb: (Int, Int, Int, Int) -> Unit) { // a, b, c

@@ -1,10 +1,13 @@
 package com.straatinfo.straatinfo.Controllers.Fragments
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +21,7 @@ import com.straatinfo.straatinfo.Models.User
 
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.TeamService
+import com.straatinfo.straatinfo.Utilities.BROADCAST_NEW_MESSAGE_RECEIVED
 import io.reactivex.schedulers.Schedulers
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.fragment_team_chat.*
@@ -61,21 +65,7 @@ class TeamChat : Fragment() {
         // Inflate the layout for this fragment
         this.getTeamList { teams ->
             Log.d("TEAM_LIST", teams.toString())
-            adapter = TeamChatListAdapter(context!!, teams) { team ->
-                val intent = Intent(context!!, ReportMessagesActivity::class.java)
-                intent.putExtra("CHAT_TITLE", team.name + " - Team chat")
-                if (team.id != null && team.conversationId != null) {
-                    val conversationId = team.conversationId!!
-                    intent.putExtra("CONVERSATION_ID", conversationId)
-                    intent.putExtra("TYPE", "TEAM")
-                    intent.putExtra("TEAM_ID", team.id!!)
-                    context!!.startActivity(intent)
-                }
-            }
-
-            team_chat_list_recyler_view.adapter = adapter
-            val layoutManager = LinearLayoutManager(context)
-            team_chat_list_recyler_view.layoutManager = layoutManager
+            this.loadAdapter(teams)
         }
 
         val socket = App.socket
@@ -85,6 +75,10 @@ class TeamChat : Fragment() {
                 .on("new-message", onSendMessage)
                 .on("send-message-v2", onSendMessage)
         }
+
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(this.newMessageDataReceiver, IntentFilter(
+            BROADCAST_NEW_MESSAGE_RECEIVED
+        ))
 
         return inflater.inflate(R.layout.fragment_team_chat, container, false)
     }
@@ -202,6 +196,19 @@ class TeamChat : Fragment() {
         this.getTeamList { teams ->
             Log.d("TEAM_LIST", teams.toString())
             this.loadAdapter(teams)
+        }
+    }
+
+    private fun reloadAdapter () {
+        this.getTeamList { teams ->
+            Log.d("TEAM_LIST", teams.toString())
+            this.loadAdapter(teams)
+        }
+    }
+
+    private val newMessageDataReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            reloadAdapter()
         }
     }
 

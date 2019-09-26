@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.google.firebase.iid.FirebaseInstanceId
 import com.straatinfo.straatinfo.Models.Host
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.AuthService
@@ -19,8 +20,15 @@ class EnterCodeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_enter_code)
 
+        App.prefs.isLoggedIn = false
         App.prefs.registrationData = ""
         App.prefs.registrationPassword = ""
+        // App.prefs.firebaseToken = ""
+        App.prefs.token = ""
+
+        Thread(Runnable {
+            FirebaseInstanceId.getInstance().deleteInstanceId()
+        })
     }
 
     fun onSendCodeClick (view: View) {

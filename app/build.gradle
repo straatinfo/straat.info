@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -10,8 +11,8 @@ android {
         applicationId 'com.straatinfo.straatinfo'
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 14
-        versionName "2.3"
+        versionCode 15
+        versionName "2.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         //
     }
@@ -21,7 +22,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix ".debug"
+            // applicationIdSuffix ".debug"
             debuggable true
         }
     }

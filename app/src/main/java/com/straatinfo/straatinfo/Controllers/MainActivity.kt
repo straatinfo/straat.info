@@ -26,21 +26,23 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.provider.MediaStore
+import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.straatinfo.straatinfo.Adapters.CustomInfoWindowGoogleMap
 import kotlinx.android.synthetic.main.app_bar_main.*
-import android.view.View
 import android.widget.*
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
 import com.straatinfo.straatinfo.Models.*
 import com.straatinfo.straatinfo.Services.*
 import com.straatinfo.straatinfo.Utilities.*
@@ -117,10 +119,15 @@ class MainActivity : AppCompatActivity(),
 
     var markerHasDragged = false
 
+    var menuNavigation: Menu? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         this.isCameraIsFocused = 0
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // initialize FCM
+        FirebaseMessaging.getInstance().isAutoInitEnabled = true
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         // mapFragment.getMapAsync(this)
@@ -146,6 +153,30 @@ class MainActivity : AppCompatActivity(),
                 }
                 .run{}
         }
+
+        // this approach should be changed in the future to support multiple user + device
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                String token = instanceIdResult.getToken();
+//                // send it to server
+//            }
+//        });
+
+
+
+        val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        if (App.prefs.firebaseToken != "") {
+            if (user.id != null && user.email != null) {
+                AuthService.firebaseTokenUpdate(App.prefs.firebaseToken, user.id!!, user.email!!, deviceId)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        Log.d("FCM", App.prefs.firebaseToken)
+                    }
+                    .run {}
+            }
+        }
+
 
 
         LocalBroadcastManager.getInstance(this).registerReceiver(this.reportDataChangeReceiver, IntentFilter(BROADCAST_REPORT_DATA_CHANGE))
@@ -222,6 +253,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
+        this.menuNavigation = menu
         return true
     }
 
@@ -924,6 +956,17 @@ class MainActivity : AppCompatActivity(),
             Log.d("POST_CODE_ERROR", e.localizedMessage)
             return ""
         }
+    }
+
+    private fun showBadge () {
+        this@MainActivity.runOnUiThread(java.lang.Runnable {
+            if (this.menuNavigation != null) {
+                // val item = this.menuNavigation?.findItem(R.menu.main)
+                // val actionView = MenuItemCompat.getActionView(item)
+                // val itemCount = actionView.findViewById<>()
+                Log.d("BADGE", menuNavigation.toString())
+            }
+        })
     }
 
     fun loadReportPointer (point: LatLng) {

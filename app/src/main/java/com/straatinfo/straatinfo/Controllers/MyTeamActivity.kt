@@ -74,6 +74,12 @@ class MyTeamActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
+        val actionView = menu.findItem(R.id.action_reports).actionView
+
+        actionView.setOnClickListener {
+            val intent = Intent(this, ReportsActivity::class.java)
+            startActivity(intent)
+        }
         return true
     }
 

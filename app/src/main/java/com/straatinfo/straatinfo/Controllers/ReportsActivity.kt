@@ -20,6 +20,7 @@ import io.socket.emitter.Emitter
 import android.support.design.internal.BottomNavigationItemView
 import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
+import com.straatinfo.straatinfo.Controllers.Fragments.ReportListGovernment
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.Services.MessageService
 import com.straatinfo.straatinfo.Utilities.BROADCAST_NEW_MESSAGE_RECEIVED
@@ -134,6 +135,7 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
         when (menuItem.itemId) {
             R.id.report_public -> fragment = ReportListPublic()
             R.id.report_suspicious -> fragment = ReportListSuspicious()
+            R.id.report_government -> fragment = ReportListGovernment()
             R.id.report_chat -> fragment = TeamChat()
             else -> null // fragment = ReportListSuspicious()
         }
@@ -189,6 +191,7 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
 
     private val newMessageDataReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("NEW_MESSAGE", "NEW_MESSAGE_RECEIVED")
            reloadBadges()
         }
     }

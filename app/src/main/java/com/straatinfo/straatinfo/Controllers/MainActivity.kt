@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity(),
     var markerHasDragged = false
 
     var menuNavigation: Menu? = null
+    var textViewCount: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         this.isCameraIsFocused = 0
@@ -149,6 +150,9 @@ class MainActivity : AppCompatActivity(),
                 .subscribeOn(Schedulers.io())
                 .subscribe{
                     // progressBar.visibility = View.GONE
+                    this.getUnreadCount { count ->
+                        showBadge(count)
+                    }
                     this.checkActiveTeam()
                 }
                 .run{}
@@ -172,6 +176,7 @@ class MainActivity : AppCompatActivity(),
                     .subscribeOn(Schedulers.io())
                     .subscribe {
                         Log.d("FCM", App.prefs.firebaseToken)
+
                     }
                     .run {}
             }
@@ -180,12 +185,43 @@ class MainActivity : AppCompatActivity(),
 
 
         LocalBroadcastManager.getInstance(this).registerReceiver(this.reportDataChangeReceiver, IntentFilter(BROADCAST_REPORT_DATA_CHANGE))
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.newMessageDataReceiver, IntentFilter(
+            BROADCAST_NEW_MESSAGE_RECEIVED)
+        )
 
     }
 
     private val reportDataChangeReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             reload()
+        }
+    }
+
+    private val newMessageDataReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("NEW_MESSAGE", "NEW_MESSAGE_RECEIVED")
+            getUnreadCount { count ->
+                showBadge(count)
+            }
+        }
+    }
+
+    private fun getUnreadCount (cb: (Int) -> Unit) {
+        val userId = User().id
+        if (userId != null) {
+            MessageService.getUnreadMessagesGroupByReports(userId)
+                .subscribeOn(Schedulers.io())
+                .subscribe { response ->
+                    val a = if (response.has("a")) response.getInt("a") else 0
+                    val b = if (response.has("b")) response.getInt("b") else 0
+                    val c = if (response.has("c")) response.getInt("c") else 0
+                    val team = if (response.has("team")) response.getInt("team") else 0
+
+                    cb(a + b + c + team)
+                }
+                .run {  }
+        } else {
+            cb(0)
         }
     }
 
@@ -254,6 +290,16 @@ class MainActivity : AppCompatActivity(),
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         this.menuNavigation = menu
+        val actionView = menu.findItem(R.id.action_reports).actionView
+
+        actionView.setOnClickListener {
+            val intent = Intent(this, ReportsActivity::class.java)
+            startActivity(intent)
+        }
+
+        textViewCount = actionView.findViewById(R.id.menu_notif_badge)
+        textViewCount?.visibility = View.INVISIBLE
+
         return true
     }
 
@@ -341,6 +387,13 @@ class MainActivity : AppCompatActivity(),
 
             }
             .run {  }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        this.getUnreadCount { count ->
+            showBadge(count)
+        }
     }
 
 
@@ -958,13 +1011,23 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private fun showBadge () {
+    private fun showBadge (count: Int) {
         this@MainActivity.runOnUiThread(java.lang.Runnable {
-            if (this.menuNavigation != null) {
+            if (this.textViewCount != null) {
                 // val item = this.menuNavigation?.findItem(R.menu.main)
                 // val actionView = MenuItemCompat.getActionView(item)
                 // val itemCount = actionView.findViewById<>()
                 Log.d("BADGE", menuNavigation.toString())
+                if (count < 1) {
+                    textViewCount?.visibility = View.INVISIBLE
+                } else {
+                    textViewCount?.visibility = View.VISIBLE
+                }
+                if (count > 9) {
+                    textViewCount?.text = "9+"
+                } else {
+                    textViewCount?.text = "$count"
+                }
             }
         })
     }

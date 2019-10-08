@@ -25,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         App.prefs.isLoggedIn = false
         App.prefs.registrationData = ""
         App.prefs.registrationPassword = ""
-        App.prefs.firebaseToken = ""
+        // App.prefs.firebaseToken = ""
         App.prefs.token = ""
 
         Thread(Runnable {

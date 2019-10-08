@@ -54,6 +54,10 @@
                 android:label="@string/menu_home"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name=".MyTeamActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
                 android:name=".Controllers.ReportsActivity"

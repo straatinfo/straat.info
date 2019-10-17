@@ -30,7 +30,8 @@ object UtilService {
 
     fun postcode (postCode: String, houseNumber: String, completion: (error: String?, userData: JSONObject?) -> Unit) {
         utilResponseError = null
-        var url = "$POST_CODE_API/?postcode=${postCode}"
+        var trimmedPostCode = postCode.replace(" ", "")
+        var url = "$POST_CODE_API/?postcode=${trimmedPostCode}"
         if (houseNumber != null && houseNumber != "") {
             url += "&number=$houseNumber"
         }

@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(),
     var mainCatList = mutableListOf<String>()
     var subCategories = mutableListOf<SubCategory>()
     var subCatList = mutableListOf<String>()
+    var hostId: String? = null
     private var hasGps = false
     private var hasNetwork = false
     private var locationGps: Location? = null
@@ -121,6 +122,8 @@ class MainActivity : AppCompatActivity(),
 
     var menuNavigation: Menu? = null
     var textViewCount: TextView? = null
+    var teamBadgeCount: TextView? = null
+    var menuBadgeTxt: BadgeDrawerArrowDrawable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         this.isCameraIsFocused = 0
@@ -154,6 +157,9 @@ class MainActivity : AppCompatActivity(),
                         showBadge(count)
                     }
                     this.checkActiveTeam()
+                    this.getTeamRequestCount {
+
+                    }
                 }
                 .run{}
         }
@@ -188,6 +194,7 @@ class MainActivity : AppCompatActivity(),
         LocalBroadcastManager.getInstance(this).registerReceiver(this.newMessageDataReceiver, IntentFilter(
             BROADCAST_NEW_MESSAGE_RECEIVED)
         )
+
 
     }
 
@@ -406,6 +413,10 @@ class MainActivity : AppCompatActivity(),
 
         this.getHostByName(hostName) { host ->
 
+            if (host != null) {
+                this.hostId = host?.id
+            }
+
             this.getMainCategoryA(host?.id!!) {
                 if (this.locationHost?.id != host?.id) {
                     this.locationHost = host
@@ -447,12 +458,18 @@ class MainActivity : AppCompatActivity(),
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
+
+        menuBadgeTxt = BadgeDrawerArrowDrawable(getSupportActionBar()?.getThemedContext())
+        toggle.drawerArrowDrawable = menuBadgeTxt as BadgeDrawerArrowDrawable
+
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener())
         nav_view.setNavigationItemSelectedListener(this)
 
+        val actionView = nav_view.menu.findItem(R.id.nav_my_team).actionView // MenuItemCompat.getActionView(nav_view.menu.findItem(R.id.nav_my_team))
+        teamBadgeCount = actionView?.findViewById(R.id.menu_notif_badge)
         // progressBar.visibility = View.GONE
         cb()
     }
@@ -876,23 +893,32 @@ class MainActivity : AppCompatActivity(),
     private fun getMainCategoryB (completion: () -> Unit) {
         val language = getString(R.string.language)
         val code = "B"
+
         CategoryService.getGeneralMainCategories(code, language)
             .subscribeOn(Schedulers.io())
             .subscribe { mainCategoryList ->
-                Log.d("MAIN_CATEGORY_LIST", mainCategoryList.toString())
+
+
 
                 var overige: MainCategory? = null
                 var count = 0
 
+                this.mainCatList = mutableListOf(getString(R.string.report_select_main_category))
+                this.mainCategories = mutableListOf()
+
+
+                Log.d("MAIN_CATEGORY_LIST_B", this.mainCategories.count().toString())
+
                 for (i in 0 until mainCategoryList.length()) {
                     val mc = MainCategory(mainCategoryList[i] as JSONObject)
-                    if (mc.name!!.toLowerCase() == "others" || mc.name!!.toLowerCase() == "overige") {
-                        overige = mc
-                    } else {
-                        Log.d("LOADIN_MC", mc.subCategories.toString())
-                        this.mainCategories.add(count, mc)
-                        this.mainCatList.add(count + 1, mc.name!!)
-                        count++
+                    if (mc.reportTypeCode == "B") {
+                        if (mc.name!!.toLowerCase() == "others" || mc.name!!.toLowerCase() == "overige") {
+                            overige = mc
+                        } else {
+                            this.mainCategories.add(count, mc)
+                            this.mainCatList.add(count + 1, mc.name!!)
+                            count++
+                        }
                     }
                 }
 
@@ -1030,6 +1056,45 @@ class MainActivity : AppCompatActivity(),
                 }
             }
         })
+    }
+
+    private fun showMenuBadges (menuBadgeCount: Int, teamBadgeCount: Int) {
+        this@MainActivity.runOnUiThread {
+            if (this.teamBadgeCount != null) {
+                if (teamBadgeCount > 0) {
+                    val teamBadgeText = if (teamBadgeCount > 9) "9+" else teamBadgeCount.toString()
+                    this.teamBadgeCount?.visibility = View.VISIBLE
+                    this.teamBadgeCount?.text = teamBadgeText
+                }
+            }
+        }
+    }
+
+    private fun showDrawableMenuBadges (count: Int) {
+        this@MainActivity.runOnUiThread {
+            if (this.menuBadgeTxt != null) {
+                if (count > 0) {
+                    val text = if (count > 9) "9+" else "$count"
+                    this.menuBadgeTxt?.setText(text)
+                    this.menuBadgeTxt?.setEnabled(true)
+                } else {
+                    this.menuBadgeTxt?.setEnabled(false)
+                }
+            }
+        }
+    }
+
+    private fun getTeamRequestCount (completion: () -> Unit) {
+        val user = User()
+        TeamService.getTeamRequestCount(user.id!!)
+            .subscribeOn(Schedulers.io())
+            .subscribe { count ->
+                Log.d("GET_TEAM_REQUEST_COUNT", "$count")
+                this.showMenuBadges(0, count)
+                this.showDrawableMenuBadges(count)
+                completion()
+            }
+            .run {  }
     }
 
     fun loadReportPointer (point: LatLng) {
@@ -1596,7 +1661,13 @@ class MainActivity : AppCompatActivity(),
             jsonReport.put("lat", this._lat)
             jsonReport.put("long", this._long)
             jsonReport.put("_reporter", user.id)
-            jsonReport.put("_host", user.host_id)
+            // fix-me
+            if (this.hostId != null) {
+                jsonReport.put("_host", hostId)
+            } else {
+                jsonReport.put("_host", user.host_id)
+            }
+
             jsonReport.put("_mainCategory", this._mainCatId)
             jsonReport.put("_reportType", REPORT_TYPE_A_ID)
 
@@ -1658,7 +1729,6 @@ class MainActivity : AppCompatActivity(),
 
 
     // REPORT TYPE B Section
-    // send report a info
     fun onCheckReportBInfo (view: View) {
         var title = getString(R.string.report_suspicious_situation)
         var message = getString(R.string.report_type_b_info)

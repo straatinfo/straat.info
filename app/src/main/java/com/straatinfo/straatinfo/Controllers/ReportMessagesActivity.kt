@@ -284,6 +284,7 @@ class ReportMessagesActivity : AppCompatActivity() {
         val reportId = intent.getStringExtra("REPORT_ID")
         val teamId = intent.getStringExtra("TEAM_ID")
         val type = intent.getStringExtra("TYPE")
+        Log.d("CONVERSATION_DETAILS", "CONVERSATION_ID: $conversationId, REPORT_ID: $reportId, TEAM_ID: $teamId, TYPE: $type")
         sendMessageBtn.isEnabled = false
 
         if (user.id != null && conversationId != null && text != "" && type != null) {

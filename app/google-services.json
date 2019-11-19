@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "613945844149",
+    "firebase_url": "https://straat-info-1113.firebaseio.com",
+    "project_id": "straat-info-1113",
+    "storage_bucket": "straat-info-1113.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613945844149:android:fba599dba3a09c8d51f9fc",
+        "android_client_info": {
+          "package_name": "com.straatinfo.straatinfo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613945844149-hot56fhrpp5b79d82fr06inu5rbmnu87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCKUYnV7MBzOi7sczhm1AUL5EnAT9I13Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613945844149-hot56fhrpp5b79d82fr06inu5rbmnu87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

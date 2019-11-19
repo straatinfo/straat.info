@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import com.google.firebase.iid.FirebaseInstanceId
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.AuthService
 import com.straatinfo.straatinfo.Services.RegexService
@@ -24,6 +25,12 @@ class LoginActivity : AppCompatActivity() {
         App.prefs.isLoggedIn = false
         App.prefs.registrationData = ""
         App.prefs.registrationPassword = ""
+        // App.prefs.firebaseToken = ""
+        App.prefs.token = ""
+
+        Thread(Runnable {
+            FirebaseInstanceId.getInstance().deleteInstanceId()
+        })
 
         loadFormSettings()
 

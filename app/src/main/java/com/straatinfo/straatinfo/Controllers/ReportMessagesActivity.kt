@@ -2,10 +2,13 @@ package com.straatinfo.straatinfo.Controllers
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,11 +18,14 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
 import com.straatinfo.straatinfo.Adapters.MessageAdapter
 import com.straatinfo.straatinfo.Models.Message
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.R
 import com.straatinfo.straatinfo.Services.MessageService
+import com.straatinfo.straatinfo.Utilities.BROADCAST_NEW_MESSAGE_RECEIVED
 import io.reactivex.schedulers.Schedulers
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
@@ -31,6 +37,7 @@ class ReportMessagesActivity : AppCompatActivity() {
 
     lateinit var adapter: MessageAdapter
     var socket: Socket? = null
+    var convoId: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +53,7 @@ class ReportMessagesActivity : AppCompatActivity() {
 
         val conversationId = intent.getStringExtra("CONVERSATION_ID")
         val chatTitle = intent.getStringExtra("CHAT_TITLE")
+        this.convoId = conversationId
         if (chatTitle != null) {
             supportActionBar?.title = chatTitle
         }
@@ -70,16 +78,23 @@ class ReportMessagesActivity : AppCompatActivity() {
         }
 
         if (socket != null) {
-            socket!!
-                .on("new-message", onSendMessage)
-                .on("send-message-v2", onGetMyMessage)
+//            socket!!
+//                .on("new-message", onSendMessage)
+//                .on("send-message-v2", onGetMyMessage)
         } else {
-            val dialog = AlertDialog.Builder(this)
-                .setTitle(getString(R.string.error))
-                .setMessage("Cannot connect to socket, please check network")
 
-            dialog.show()
+            val user = User()
+            App.socket = App.connectToSocket(user)
+//            val dialog = AlertDialog.Builder(this)
+//                .setTitle(getString(R.string.error))
+//                .setMessage("Cannot connect to socket, please check network")
+//
+//            dialog.show()
+            finish()
         }
+
+
+
 
 
         val sendMessageBtn = findViewById<Button>(R.id.send_message_btn)
@@ -100,6 +115,9 @@ class ReportMessagesActivity : AppCompatActivity() {
 
         })
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.newMessageDataReceiver, IntentFilter(
+            BROADCAST_NEW_MESSAGE_RECEIVED))
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -111,6 +129,7 @@ class ReportMessagesActivity : AppCompatActivity() {
 //        }
 //        val mainActivity = Intent(this, MainActivity::class.java)
 //        startActivity(mainActivity)
+        this.convoId = null
         finish()
         return super.onOptionsItemSelected(item)
     }
@@ -122,6 +141,7 @@ class ReportMessagesActivity : AppCompatActivity() {
             Log.d("MESSAGE", args.joinToString())
 
             val conversationId = intent.getStringExtra("CONVERSATION_ID")
+            this.convoId = conversationId
             if (conversationId != null) {
                 this.loadMessages(conversationId) { messages ->
                     adapter = MessageAdapter(this, messages) { message ->
@@ -164,10 +184,10 @@ class ReportMessagesActivity : AppCompatActivity() {
                 }
             }
 
-            MessageService.readUnreadMessages(conversationId, User().id!!)
-                .subscribeOn(Schedulers.io())
-                .subscribe {  }
-                .run {  }
+//            MessageService.readUnreadMessages(conversationId, User().id!!)
+//                .subscribeOn(Schedulers.io())
+//                .subscribe {  }
+//                .run {  }
         }
     }
 
@@ -207,20 +227,87 @@ class ReportMessagesActivity : AppCompatActivity() {
         }
     }
 
+    private fun broadcastMessage (userId: String, conversationId: String, reportId: String?, teamId: String?, text: String, type: String, cb: (Boolean) -> Unit) {
+        var messageDetails = JSONObject()
+        messageDetails.put("user", userId)
+        messageDetails.put("_conversation", conversationId)
+        messageDetails.put("_report", reportId)
+        messageDetails.put("text", text)
+        messageDetails.put("type", type)
+        messageDetails.put("_team", teamId)
+        MessageService.sendMessage(messageDetails)
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                cb(it)
+            }
+            .run {  }
+    }
+
+    private fun reloadMessages () {
+        if (this.convoId != null) {
+            MessageService.readUnreadMessages(this.convoId!!, User().id!!)
+                .subscribeOn(Schedulers.io())
+                .subscribe {  }
+                .run {  }
+
+            addMessageTxtBox.text.clear()
+            this.loadMessages(this.convoId!!) { messages ->
+                adapter = MessageAdapter(this, messages) { message ->
+
+                }
+
+                reportMessagesRecyclerView.adapter = adapter
+                val layoutManager = LinearLayoutManager(this)
+                    .apply {
+                        stackFromEnd = true
+                        reverseLayout = false
+                    }
+                reportMessagesRecyclerView.layoutManager = layoutManager
+            }
+        }
+
+    }
+
+    private val newMessageDataReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+
+            reloadMessages()
+
+        }
+    }
+
     fun sendMessage (view: View) {
+        val sendMessageBtn = findViewById<Button>(R.id.send_message_btn)
         val text = addMessageTxtBox.text.toString()
         val user = User()
         val conversationId = intent.getStringExtra("CONVERSATION_ID")
         val reportId = intent.getStringExtra("REPORT_ID")
         val teamId = intent.getStringExtra("TEAM_ID")
         val type = intent.getStringExtra("TYPE")
+        Log.d("CONVERSATION_DETAILS", "CONVERSATION_ID: $conversationId, REPORT_ID: $reportId, TEAM_ID: $teamId, TYPE: $type")
+        sendMessageBtn.isEnabled = false
 
         if (user.id != null && conversationId != null && text != "" && type != null) {
 //            val alert = AlertDialog.Builder(this)
 //                .setMessage("Sending message")
 //                .setTitle("Info")
 //            alert.show()
-            this.emitSendMessage(user.id!!, conversationId, reportId, teamId, type, text)
+            // this.emitSendMessage(user.id!!, conversationId, reportId, teamId, type, text)
+
+            this.broadcastMessage(user.id!!, conversationId, reportId, teamId, text, type) { success ->
+                if (success) {
+                    this.reloadMessages()
+                    sendMessageBtn.isEnabled = true
+                } else {
+                    val dialog = AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.error))
+                        .setMessage("Unable to send message, please check network")
+                        .setOnDismissListener {
+                            sendMessageBtn.isEnabled = true
+                        }
+                    dialog.show()
+                }
+            }
         }
 
 //        if (text == "") {

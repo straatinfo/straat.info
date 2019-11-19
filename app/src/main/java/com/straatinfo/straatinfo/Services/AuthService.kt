@@ -1,5 +1,6 @@
 package com.straatinfo.straatinfo.Services
 
+import android.provider.Settings
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -397,6 +398,50 @@ object AuthService {
             }
 
             App.prefs.requestQueue.add(validationRequest)
+        }
+    }
+
+    fun firebaseTokenUpdate (token: String, reporterId: String, email: String, deviceId: String): Observable<Boolean> {
+        return Observable.create {
+            val requestBody = JSONObject()
+            requestBody.put("reporterId", reporterId)
+            requestBody.put("token", token)
+            requestBody.put("deviceId", deviceId)
+            requestBody.put("email", email)
+            requestBody.put("platform", "ANDROID")
+
+            Log.d("FCM_REQUEST", requestBody.toString())
+
+            val firebaseTokenUpdateRequest = object: JsonObjectRequest(Method.POST, FIREBASE_TOKEN_UPDATE, null, Response.Listener { response ->
+                it.onNext(true)
+            }, Response.ErrorListener { error ->
+                try {
+                    val err = JSONObject(String(error.networkResponse.data))
+                    Log.d("FCM_ERROR", err.getString("message"))
+                }
+                 catch (e: Exception) {
+
+                 }
+                it.onNext(false)
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+                override fun getBody(): ByteArray {
+                    return requestBody.toString().toByteArray()
+                }
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(firebaseTokenUpdateRequest)
         }
     }
 }

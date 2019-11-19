@@ -63,7 +63,7 @@ class TeamDetailsActivity : AppCompatActivity() {
             }), ({ teamMember ->
                 Log.d("TEAM_CHAT", teamMember.userId)
                 this.createConvo(teamMember.userId) { success, convoId ->
-                    if (success && convoId != null) this.loadConversation(convoId!!)
+                    if (success && convoId != null) this.loadConversation(convoId!!, teamId!!, teamMember.username + " - Private chat")
                 }
             }))
 
@@ -144,9 +144,12 @@ class TeamDetailsActivity : AppCompatActivity() {
         cb(teamMembers)
     }
 
-    fun loadConversation (convoId: String) {
+    fun loadConversation (convoId: String, teamId: String, chatTitle: String) {
         val intent = Intent(this, ReportMessagesActivity::class.java)
+        intent.putExtra("CHAT_TITLE", chatTitle)
         intent.putExtra("CONVERSATION_ID", convoId)
+        intent.putExtra("TYPE", "TEAM")
+        intent.putExtra("TEAM_ID", teamId)
         this.startActivity(intent)
     }
 }

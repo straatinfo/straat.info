@@ -26,8 +26,11 @@ class App : Application() {
 
                 }
                 .on(Socket.EVENT_DISCONNECT) {
-                    socket = null
+                    // socket = null
                     Log.d("SOCKET", "disconnected")
+                }
+                .on(Socket.EVENT_RECONNECT) { data ->
+                    Log.d("SOCKET_RECONNECTING", data.toString())
                 }
                 .on("register"){
                     Log.d("SOCKET", "Socket is registered")
@@ -59,7 +62,13 @@ class App : Application() {
             }
             .on(Socket.EVENT_DISCONNECT) {
                 Log.d("SOCKET", "disconnected")
-                socket = null
+                // socket = null
+            }
+            .on(Socket.EVENT_RECONNECT) { data ->
+
+                Log.d("SOCKET_RECONNECTING",  data.count().toString())
+                Log.d("SOCKET_RECONNECTING", data[0].toString())
+
             }
             .on("register"){
                 Log.d("SOCKET", "Socket is registered")
@@ -67,3 +76,4 @@ class App : Application() {
         return mySocket
     }
 }
+

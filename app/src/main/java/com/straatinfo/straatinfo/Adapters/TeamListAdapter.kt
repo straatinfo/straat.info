@@ -45,7 +45,8 @@ class TeamListAdapter (val context: Context, val teams: MutableList<Team>, val t
         val emailTxt = itemView?.findViewById<TextView>(R.id.teamListTeamEmailTxt)
         val profileImg = itemView?.findViewById<ImageView>(R.id.teamListTeamProfileImg)
 
-        var viewMemberRequest = itemView?.findViewById<TextView>(R.id.teamListViewMemberRequestTxt)
+        // var viewMemberRequest = itemView?.findViewById<TextView>(R.id.teamListViewMemberRequestTxt)
+        var viewMemberRequest = itemView?.findViewById<View>(R.id.viewTeamRequestArea)
         val memberRequestCount = itemView?.findViewById<TextView>(R.id.teamListMemberRequestCountTxt)
 
         fun bindCategory (team: Team, context: Context) {
@@ -58,7 +59,13 @@ class TeamListAdapter (val context: Context, val teams: MutableList<Team>, val t
                     if (requests.length() > 0) {
                         viewMemberRequest.visibility = View.VISIBLE
                         memberRequestCount.visibility = View.VISIBLE
-                        memberRequestCount.text = requests.length().toString()
+
+                        var count = if (requests.length() > 9) {
+                            "9+"
+                        } else {
+                            requests.length().toString()
+                        }
+                        memberRequestCount.text = count
 
 
                         viewMemberRequest.setOnClickListener {

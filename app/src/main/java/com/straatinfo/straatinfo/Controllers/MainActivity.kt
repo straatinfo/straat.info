@@ -26,21 +26,23 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.provider.MediaStore
+import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.straatinfo.straatinfo.Adapters.CustomInfoWindowGoogleMap
 import kotlinx.android.synthetic.main.app_bar_main.*
-import android.view.View
 import android.widget.*
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
 import com.straatinfo.straatinfo.Models.*
 import com.straatinfo.straatinfo.Services.*
 import com.straatinfo.straatinfo.Utilities.*
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity(),
     var mainCatList = mutableListOf<String>()
     var subCategories = mutableListOf<SubCategory>()
     var subCatList = mutableListOf<String>()
+    var hostId: String? = null
     private var hasGps = false
     private var hasNetwork = false
     private var locationGps: Location? = null
@@ -117,10 +120,18 @@ class MainActivity : AppCompatActivity(),
 
     var markerHasDragged = false
 
+    var menuNavigation: Menu? = null
+    var textViewCount: TextView? = null
+    var teamBadgeCount: TextView? = null
+    var menuBadgeTxt: BadgeDrawerArrowDrawable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         this.isCameraIsFocused = 0
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // initialize FCM
+        FirebaseMessaging.getInstance().isAutoInitEnabled = true
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         // mapFragment.getMapAsync(this)
@@ -142,19 +153,82 @@ class MainActivity : AppCompatActivity(),
                 .subscribeOn(Schedulers.io())
                 .subscribe{
                     // progressBar.visibility = View.GONE
+                    this.getUnreadCount { count ->
+                        showBadge(count)
+                    }
                     this.checkActiveTeam()
+                    this.getTeamRequestCount {
+
+                    }
                 }
                 .run{}
         }
 
+        // this approach should be changed in the future to support multiple user + device
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                String token = instanceIdResult.getToken();
+//                // send it to server
+//            }
+//        });
+
+
+
+        val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        if (App.prefs.firebaseToken != "") {
+            if (user.id != null && user.email != null) {
+                AuthService.firebaseTokenUpdate(App.prefs.firebaseToken, user.id!!, user.email!!, deviceId)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        Log.d("FCM", App.prefs.firebaseToken)
+
+                    }
+                    .run {}
+            }
+        }
+
+
 
         LocalBroadcastManager.getInstance(this).registerReceiver(this.reportDataChangeReceiver, IntentFilter(BROADCAST_REPORT_DATA_CHANGE))
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.newMessageDataReceiver, IntentFilter(
+            BROADCAST_NEW_MESSAGE_RECEIVED)
+        )
+
 
     }
 
     private val reportDataChangeReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             reload()
+        }
+    }
+
+    private val newMessageDataReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d("NEW_MESSAGE", "NEW_MESSAGE_RECEIVED")
+            getUnreadCount { count ->
+                showBadge(count)
+            }
+        }
+    }
+
+    private fun getUnreadCount (cb: (Int) -> Unit) {
+        val userId = User().id
+        if (userId != null) {
+            MessageService.getUnreadMessagesGroupByReports(userId)
+                .subscribeOn(Schedulers.io())
+                .subscribe { response ->
+                    val a = if (response.has("a")) response.getInt("a") else 0
+                    val b = if (response.has("b")) response.getInt("b") else 0
+                    val c = if (response.has("c")) response.getInt("c") else 0
+                    val team = if (response.has("team")) response.getInt("team") else 0
+
+                    cb(a + b + c + team)
+                }
+                .run {  }
+        } else {
+            cb(0)
         }
     }
 
@@ -222,6 +296,17 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
+        this.menuNavigation = menu
+        val actionView = menu.findItem(R.id.action_reports).actionView
+
+        actionView.setOnClickListener {
+            val intent = Intent(this, ReportsActivity::class.java)
+            startActivity(intent)
+        }
+
+        textViewCount = actionView.findViewById(R.id.menu_notif_badge)
+        textViewCount?.visibility = View.INVISIBLE
+
         return true
     }
 
@@ -311,6 +396,13 @@ class MainActivity : AppCompatActivity(),
             .run {  }
     }
 
+    override fun onResume() {
+        super.onResume()
+        this.getUnreadCount { count ->
+            showBadge(count)
+        }
+    }
+
 
 
     // private functions
@@ -320,6 +412,10 @@ class MainActivity : AppCompatActivity(),
         Log.d("POST_CODE_HOST_NAME", this.getHostNameFromGeoCode(geoCode))
 
         this.getHostByName(hostName) { host ->
+
+            if (host != null) {
+                this.hostId = host?.id
+            }
 
             this.getMainCategoryA(host?.id!!) {
                 if (this.locationHost?.id != host?.id) {
@@ -362,12 +458,18 @@ class MainActivity : AppCompatActivity(),
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
+
+        menuBadgeTxt = BadgeDrawerArrowDrawable(getSupportActionBar()?.getThemedContext())
+        toggle.drawerArrowDrawable = menuBadgeTxt as BadgeDrawerArrowDrawable
+
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener())
         nav_view.setNavigationItemSelectedListener(this)
 
+        val actionView = nav_view.menu.findItem(R.id.nav_my_team).actionView // MenuItemCompat.getActionView(nav_view.menu.findItem(R.id.nav_my_team))
+        teamBadgeCount = actionView?.findViewById(R.id.menu_notif_badge)
         // progressBar.visibility = View.GONE
         cb()
     }
@@ -788,23 +890,32 @@ class MainActivity : AppCompatActivity(),
     private fun getMainCategoryB (completion: () -> Unit) {
         val language = getString(R.string.language)
         val code = "B"
+
         CategoryService.getGeneralMainCategories(code, language)
             .subscribeOn(Schedulers.io())
             .subscribe { mainCategoryList ->
-                Log.d("MAIN_CATEGORY_LIST", mainCategoryList.toString())
+
+
 
                 var overige: MainCategory? = null
                 var count = 0
 
+                this.mainCatList = mutableListOf(getString(R.string.report_select_main_category))
+                this.mainCategories = mutableListOf()
+
+
+                Log.d("MAIN_CATEGORY_LIST_B", this.mainCategories.count().toString())
+
                 for (i in 0 until mainCategoryList.length()) {
                     val mc = MainCategory(mainCategoryList[i] as JSONObject)
-                    if (mc.name!!.toLowerCase() == "others" || mc.name!!.toLowerCase() == "overige") {
-                        overige = mc
-                    } else {
-                        Log.d("LOADIN_MC", mc.subCategories.toString())
-                        this.mainCategories.add(count, mc)
-                        this.mainCatList.add(count + 1, mc.name!!)
-                        count++
+                    if (mc.reportTypeCode == "B") {
+                        if (mc.name!!.toLowerCase() == "others" || mc.name!!.toLowerCase() == "overige") {
+                            overige = mc
+                        } else {
+                            this.mainCategories.add(count, mc)
+                            this.mainCatList.add(count + 1, mc.name!!)
+                            count++
+                        }
                     }
                 }
 
@@ -921,6 +1032,66 @@ class MainActivity : AppCompatActivity(),
             Log.d("POST_CODE_ERROR", e.localizedMessage)
             return ""
         }
+    }
+
+    private fun showBadge (count: Int) {
+        this@MainActivity.runOnUiThread(java.lang.Runnable {
+            if (this.textViewCount != null) {
+                // val item = this.menuNavigation?.findItem(R.menu.main)
+                // val actionView = MenuItemCompat.getActionView(item)
+                // val itemCount = actionView.findViewById<>()
+                Log.d("BADGE", menuNavigation.toString())
+                if (count < 1) {
+                    textViewCount?.visibility = View.INVISIBLE
+                } else {
+                    textViewCount?.visibility = View.VISIBLE
+                }
+                if (count > 9) {
+                    textViewCount?.text = "9+"
+                } else {
+                    textViewCount?.text = "$count"
+                }
+            }
+        })
+    }
+
+    private fun showMenuBadges (menuBadgeCount: Int, teamBadgeCount: Int) {
+        this@MainActivity.runOnUiThread {
+            if (this.teamBadgeCount != null) {
+                if (teamBadgeCount > 0) {
+                    val teamBadgeText = if (teamBadgeCount > 9) "9+" else teamBadgeCount.toString()
+                    this.teamBadgeCount?.visibility = View.VISIBLE
+                    this.teamBadgeCount?.text = teamBadgeText
+                }
+            }
+        }
+    }
+
+    private fun showDrawableMenuBadges (count: Int) {
+        this@MainActivity.runOnUiThread {
+            if (this.menuBadgeTxt != null) {
+                if (count > 0) {
+                    val text = if (count > 9) "9+" else "$count"
+                    this.menuBadgeTxt?.setText(text)
+                    this.menuBadgeTxt?.setEnabled(true)
+                } else {
+                    this.menuBadgeTxt?.setEnabled(false)
+                }
+            }
+        }
+    }
+
+    private fun getTeamRequestCount (completion: () -> Unit) {
+        val user = User()
+        TeamService.getTeamRequestCount(user.id!!)
+            .subscribeOn(Schedulers.io())
+            .subscribe { count ->
+                Log.d("GET_TEAM_REQUEST_COUNT", "$count")
+                this.showMenuBadges(0, count)
+                this.showDrawableMenuBadges(count)
+                completion()
+            }
+            .run {  }
     }
 
     fun loadReportPointer (point: LatLng) {
@@ -1486,7 +1657,13 @@ class MainActivity : AppCompatActivity(),
             jsonReport.put("lat", this._lat)
             jsonReport.put("long", this._long)
             jsonReport.put("_reporter", user.id)
-            jsonReport.put("_host", user.host_id)
+            // fix-me
+            if (this.hostId != null) {
+                jsonReport.put("_host", hostId)
+            } else {
+                jsonReport.put("_host", user.host_id)
+            }
+
             jsonReport.put("_mainCategory", this._mainCatId)
             jsonReport.put("_reportType", REPORT_TYPE_A_ID)
 
@@ -1548,7 +1725,6 @@ class MainActivity : AppCompatActivity(),
 
 
     // REPORT TYPE B Section
-    // send report a info
     fun onCheckReportBInfo (view: View) {
         var title = getString(R.string.report_suspicious_situation)
         var message = getString(R.string.report_type_b_info)

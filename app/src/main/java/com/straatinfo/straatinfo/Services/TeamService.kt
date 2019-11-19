@@ -353,4 +353,35 @@ object TeamService {
             App.prefs.requestQueue.add(getTeamRequestCount)
         }
     }
+
+    fun getTeamIndividualChats (userId: String, teamId: String): Observable<JSONObject> {
+        val url = "$TEAM_INDIVIDUAL_CHAT/$teamId/$userId"
+
+        return Observable.create {
+            val getTeamIndChatRequest = object: JsonObjectRequest(Method.GET, url, null, Response.Listener { success ->
+                if (success.has("conversations")) {
+                    it.onNext(success)
+                } else {
+                    it.onNext(JSONObject())
+                }
+            }, Response.ErrorListener { error ->
+                it.onNext(JSONObject())
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(getTeamIndChatRequest)
+        }
+    }
 }

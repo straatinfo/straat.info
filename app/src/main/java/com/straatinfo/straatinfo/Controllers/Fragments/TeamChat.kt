@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import com.straatinfo.straatinfo.Adapters.TeamChatListAdapter
 import com.straatinfo.straatinfo.Controllers.App
 import com.straatinfo.straatinfo.Controllers.ReportMessagesActivity
+import com.straatinfo.straatinfo.Controllers.TeamAndIndividualChatActivity
 import com.straatinfo.straatinfo.Models.Team
 import com.straatinfo.straatinfo.Models.User
 
@@ -215,7 +216,9 @@ class TeamChat : Fragment() {
     private fun loadAdapter (teams: MutableList<Team>) {
         try {
             adapter = TeamChatListAdapter(context!!, teams) { team ->
-                val intent = Intent(context!!, ReportMessagesActivity::class.java)
+                // val intent = Intent(context!!, ReportMessagesActivity::class.java)
+                val intent = Intent(context!!, TeamAndIndividualChatActivity::class.java)
+                intent.putExtra("TEAM_DATA", team.toJson().toString())
                 intent.putExtra("CHAT_TITLE", team.name + " - Team chat")
                 if (team.id != null && team.conversationId != null) {
                     val conversationId = team.conversationId!!

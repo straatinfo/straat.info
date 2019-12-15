@@ -1,14 +1,33 @@
 package com.straatinfo.straatinfo.Controllers.Fragments
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.straatinfo.straatinfo.Adapters.ReportListAdapter
+import com.straatinfo.straatinfo.Controllers.App
+import com.straatinfo.straatinfo.Controllers.ReportInformationActivity
+import com.straatinfo.straatinfo.Controllers.ReportMessagesActivity
+import com.straatinfo.straatinfo.Models.Report
+import com.straatinfo.straatinfo.Models.User
 
 import com.straatinfo.straatinfo.R
+import com.straatinfo.straatinfo.Services.ReportService
+import com.straatinfo.straatinfo.Utilities.BROADCAST_NEW_MESSAGE_RECEIVED
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_report_list_government.*
+import org.json.JSONArray
+import org.json.JSONObject
+import java.lang.Exception
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,6 +48,8 @@ class ReportListGovernment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+    var reportList = mutableListOf<Report>()
+    lateinit var adapter: ReportListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +64,42 @@ class ReportListGovernment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        loadGovernmentReports {
+            this.loadAdapter()
+        }
+
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(this.newMessageDataReceiver, IntentFilter(
+            BROADCAST_NEW_MESSAGE_RECEIVED))
+
         return inflater.inflate(R.layout.fragment_report_list_government, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d("REPORT_C", "attaching on detach")
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun setInitialSavedState(state: SavedState?) {
+        Log.d("REPORT_C", "attaching on detach return")
+        super.setInitialSavedState(state)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        Log.d("REPORT_C", "attaching on detach activity created")
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onResume() {
+        Log.d("REPORT_C", "attaching on detach resume")
+        loadGovernmentReports {
+            this.loadAdapter()
+        }
+        super.onResume()
     }
 
     override fun onAttach(context: Context) {
@@ -58,6 +109,23 @@ class ReportListGovernment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+    override fun onDestroy() {
+        Log.d("REPORT_C", "detaching on destroy")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("REPORT_C", "detaching on destroy view")
+        super.onDestroyView()
+    }
+
+    private fun onReportClick (report: Report) {
+        val intent = Intent(context!!, ReportInformationActivity::class.java)
+        intent.putExtra("PREVIIOUS_LOCATION", "REPORT_A")
+        intent.putExtra("REPORT_ID", report.id)
+        context!!.startActivity(intent)
     }
 
     /**
@@ -94,5 +162,75 @@ class ReportListGovernment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    private fun reportLoader (reportArray: JSONArray, cb: (reportList: MutableList<Report>) -> Unit) {
+        reportList = mutableListOf()
+        var unreadMessage = 0
+        for (i in 0 until reportArray.length()) {
+            var reportJson = reportArray[i] as JSONObject
+
+            var report = Report(reportJson)
+
+            unreadMessage += report.getUnreadMessagesCount()
+
+            reportList.add(reportList.count(), report)
+        }
+
+        App.prefs.unreadPublicReportMessage = unreadMessage
+        cb(reportList)
+    }
+
+    fun loadGovernmentReports (cb: (reportList: MutableList<Report>) -> Unit) {
+        if (context != null) {
+            val user = User(JSONObject(App.prefs.userData))
+
+            val reporterId = user.id!!
+            val language = context!!.getString(R.string.language)
+            val reportType = "C"
+
+            ReportService.getReportList(reportType, reporterId, language)
+                .subscribeOn(Schedulers.io())
+                .subscribe { reportList ->
+                    reportLoader(reportList, cb)
+                }
+                .run {  }
+        }
+    }
+
+    private fun reloadAdapter () {
+        this.loadGovernmentReports {
+            this.loadAdapter()
+        }
+    }
+
+    private val newMessageDataReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            reloadAdapter()
+        }
+    }
+
+    private fun loadAdapter () {
+        try {
+            adapter = ReportListAdapter(context!!, reportList, ({ report -> onReportClick(report)})) { report ->
+                val intent = Intent(context!!, ReportMessagesActivity::class.java)
+                intent.putExtra("REPORT_ID", report.id)
+                intent.putExtra("CHAT_TITLE", report.mainCategoryName)
+                if (report.conversation != null && report.conversation!!.has("_id")) {
+                    val conversationId = report.conversation!!.getString("_id")
+                    intent.putExtra("CONVERSATION_ID", conversationId)
+                    intent.putExtra("REPORT_ID", report.id)
+                    intent.putExtra("TYPE", "REPORT")
+                    context!!.startActivity(intent)
+                }
+            }
+
+            report_list_government_recycler_view.adapter = adapter
+            val layoutManager = LinearLayoutManager(context!!)
+            report_list_government_recycler_view.layoutManager = layoutManager
+        }
+        catch (e: Exception) {
+
+        }
     }
 }

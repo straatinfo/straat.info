@@ -294,4 +294,16 @@
     <string name="change">Wijzig</string>
     <string name="report_info_change_status_info">Wil je de status van deze melding veranderen naar \"afgerond\"?
     </string>
+    <string name="report_communication">Bericht uw groep</string>
+    <string name="report_type_c_info">Hier kunt u berichten sturen naar de teams.</string>
+    <string name="report_message_with_map">Bericht met kaart</string>
+    <string name="send_report_type_c_select_team_info">Selecteer hier de groep(en) aan wie u uw bericht wil sturen.</string>
+    <string name="send_report_type_c_confirmation_info">Dit is een controle pagina. Indien alles akkoord is, kunt u uw
+        bericht verzenden
+    </string>
+    <string name="send_report_type_c_view_input_info">Dit is een controle pagina. Indien alles akkoord is, kunt u uw bericht verzenden.</string>
+    <string name="send_report_type_c_view_input_general_info">Algemene Informatie</string>
+    <string name="send_report_type_c_view_input_messages">Berichten</string>
+    <string name="send_report_type_c_view_input_teams_selected">Het bericht gaat naar de volgende teams:</string>
+    <string name="back">Terug</string>
 </resources>

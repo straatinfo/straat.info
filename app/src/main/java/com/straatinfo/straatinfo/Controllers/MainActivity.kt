@@ -50,6 +50,7 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_home.drawer_layout
 import kotlinx.android.synthetic.main.activity_home.nav_view
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_report_type_cview_input.*
 import org.json.JSONArray
 import java.io.IOException
 import java.util.jar.Manifest
@@ -92,8 +93,10 @@ class MainActivity : AppCompatActivity(),
     // report inputs
     var _hasSubCatId = false
     var _mainCatId: String? = null
+    var _mainCatName: String? = null
     var _subCatId: String? = null
     var _emergencyNotif: Boolean = false
+    var _reportTypeCShowInMap: Boolean = true
     var _description: String? = null
     var _img1: Media? = null
     var _img2: Media? = null
@@ -386,6 +389,8 @@ class MainActivity : AppCompatActivity(),
                 } else {
                     reportCurrentLoc.text = this.parseGeocodeData(result)
                     sendReportTypeALocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
+                    send_report_type_b_location.text = getString(R.string.location_col) + this.parseGeocodeData(result)
+                    sendReportTypeCLocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
                     this.setLocation(this.parseGeocodeData(result))
 
 
@@ -933,6 +938,52 @@ class MainActivity : AppCompatActivity(),
             .run {  }
     }
 
+    private fun getMainCategoryC (completion: () -> Unit) {
+        val language = getString(R.string.language)
+        val code = "C"
+
+        CategoryService.getGeneralMainCategories(code, language)
+            .subscribeOn(Schedulers.io())
+            .subscribe { mainCategoryList ->
+
+
+
+                var overige: MainCategory? = null
+                var count = 0
+
+                this.mainCatList = mutableListOf(getString(R.string.report_select_main_category))
+                this.mainCategories = mutableListOf()
+
+
+                Log.d("MAIN_CATEGORY_LIST_C", this.mainCategories.count().toString())
+
+                for (i in 0 until mainCategoryList.length()) {
+                    val mc = MainCategory(mainCategoryList[i] as JSONObject)
+                    if (mc.reportTypeCode == code) {
+                        if (mc.name!!.toLowerCase() == "others" || mc.name!!.toLowerCase() == "overige") {
+                            overige = mc
+                        } else {
+                            this.mainCategories.add(count, mc)
+                            this.mainCatList.add(count + 1, mc.name!!)
+                            count++
+                        }
+                    }
+                }
+
+                if (overige != null) {
+                    this.mainCategories.add(count, overige)
+                    this.mainCatList.add(count + 1, overige.name!!)
+                }
+
+
+                Log.d("MAIN_CATEGORY_LIST_P", this.mainCategories.toString())
+                Log.d("MAIN_CAT_LIST", this.mainCatList.toString())
+
+                completion()
+            }
+            .run {  }
+    }
+
 
     private fun parseGeocodeData (jsonObject: JSONObject): String {
         try {
@@ -1132,18 +1183,39 @@ class MainActivity : AppCompatActivity(),
 
     // send report page 2 section
     fun showSendReportP2 () {
+        val user = User()
+
         sendReportP1Frame.visibility = View.GONE
         sendReportP2Frame.visibility = View.VISIBLE
         sendReportPage2TB.setNavigationOnClickListener {
             this.reload()
         }
         reportTypeBBtn.visibility = View.VISIBLE
+
         reportTypeABtn.setOnClickListener {
             this.showSendReportTypeA()
         }
 
         reportTypeBBtn.setOnClickListener {
             this.showSendReportTypeB()
+        }
+
+        if (user.isVolunteer != null && !user.isVolunteer!!) {
+            reportTypeCBtn.visibility = View.VISIBLE
+            send_report_communication_report_info_btn.visibility = View.VISIBLE
+
+            reportTypeCBtn.setOnClickListener {
+                this.showSendReportTypeC()
+            }
+        } else {
+            reportTypeCBtn.visibility = View.GONE
+            send_report_communication_report_info_btn.visibility = View.GONE
+        }
+
+        if (user.isVolunteer != null && !user.isVolunteer!!) {
+            reportTypeCBtn.visibility = View.VISIBLE
+        } else {
+            reportTypeCBtn.visibility = View.GONE
         }
     }
 
@@ -1366,6 +1438,9 @@ class MainActivity : AppCompatActivity(),
                                 R.id.send_report_type_b_photo_1_btn -> this._img1 = media
                                 R.id.send_report_type_b_photo_2_btn -> this._img2 = media
                                 R.id.send_report_type_b_photo_3_btn -> this._img3 = media
+                                R.id.send_report_type_c_photo_1_btn -> this._img1 = media
+                                R.id.send_report_type_c_photo_2_btn -> this._img2 = media
+                                R.id.send_report_type_c_photo_3_btn -> this._img3 = media
                                 else -> this._img1 = media
                             }
                         }
@@ -1477,6 +1552,7 @@ class MainActivity : AppCompatActivity(),
                         Log.d("POST_CODE", this.getPostCodeFromGeoCode(result))
                         sendReportTypeALocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
                         send_report_type_b_location.text = getString(R.string.location_col) + this.parseGeocodeData(result)
+                        sendReportTypeCLocation.text = getString(R.string.location_col) + this.parseGeocodeData(result)
                         this.setLocation(this.parseGeocodeData(result))
 
                     }
@@ -1511,12 +1587,17 @@ class MainActivity : AppCompatActivity(),
         Log.d("SUB_CAT_ID", _hasSubCatId.toString() + " " + _subCatId)
         sendReportABtn.isEnabled = this._isValid && subCatValid()
         send_report_type_b_send_report_btn.isEnabled = this._isValid
+        send_report_type_c_send_report_btn.isEnabled = this._isValid
     }
 
     fun setMainCatId (id: String) {
         this._mainCatId = id
         this.evaluateInput()
         this.setButtonEnablement()
+    }
+
+    fun setMainCateName (name: String) {
+        this._mainCatName = name
     }
 
     fun unsetMainCatId () {
@@ -1558,6 +1639,12 @@ class MainActivity : AppCompatActivity(),
 
     fun setEmergencyNotif(isEmergency: Boolean) {
         this._emergencyNotif = isEmergency
+        this.evaluateInput()
+        this.setButtonEnablement()
+    }
+
+    fun setShowMap (show: Boolean) {
+        this._reportTypeCShowInMap = show
         this.evaluateInput()
         this.setButtonEnablement()
     }
@@ -1960,6 +2047,152 @@ class MainActivity : AppCompatActivity(),
                 }
                 .run {  }
         }
+    }
+
+
+    // Reoprt type C Section
+    fun onCheckReportCInfo (view: View) {
+        var title = getString(R.string.report_communication)
+        var message = getString(R.string.report_type_c_info)
+
+        val dialog = UtilService.showDefaultAlert(this, title, message)
+
+        dialog.show()
+    }
+
+    fun showSendReportTypeC () {
+        Log.d("GET_MAIN_CAT_C", "LOADING1")
+        this.getMainCategoryC {
+            Log.d("GET_MAIN_CAT_C", "LOADING")
+            this.loadRpCMainCatSpinner()
+        }
+        sendReportP2Frame.visibility = View.GONE
+        sendReportTypeAFrame.visibility = View.GONE
+        send_report_type_c_frame.visibility = View.VISIBLE
+        send_report_type_c_emergency_notif_switch.setOnCheckedChangeListener { buttonView, isChecked ->
+            when(isChecked) {
+                true -> {
+                    setEmergencyNotif(true)
+                    val dialog = AlertDialog.Builder(this)
+                        .setTitle(R.string.send_report_is_urgent_title)
+                        .setMessage(R.string.send_report_is_urgent_desc)
+                        .setPositiveButton(getString(R.string.ok)) { dialog, i ->
+                            dialog.dismiss()
+                        }
+
+                    dialog.show()
+                }
+                false -> setEmergencyNotif(false)
+            }
+        }
+        send_report_type_c_show_in_map_switch.setOnCheckedChangeListener { buttonView, isChecked ->
+            setShowMap(isChecked)
+        }
+        send_report_type_c_tb.setNavigationOnClickListener {
+            this.reload()
+        }
+    }
+
+    fun loadRpCMainCatSpinner () {
+        val uaa = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, this.mainCatList)
+        this.send_report_type_c_main_cat_spinner.adapter = uaa
+        send_report_type_c_main_cat_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+
+                Log.d("MAINCATSPIN", position.toString())
+                Log.d("MAINCATSPIN", parent.selectedItemPosition.toString())
+                if (position > 0) {
+                    mainCatSelectedPos = position
+                }
+
+                if (position == 0 && mainCatSelectedPos > 0) {
+                    val mc = mainCategories[mainCatSelectedPos - 1]
+                    setMainCatId(mc.id!!)
+                    setMainCateName(mc.name!!)
+                    Log.d("MAIN_C", mc.toString())
+                    Log.d("SUB_CAT", mc.subCategories.toString())
+                    if (mc.subCategories != null && mc.subCategories!!.length() > 0) {
+                        subCatPos = 0
+                        loadRpASubCatSpinner(mc)
+                    } else {
+                        subCatSpinner.visibility = View.GONE
+                    }
+                    send_report_type_c_main_cat_spinner.setSelection(mainCatSelectedPos)
+                }
+
+                if (position > 0 && mainCatSelectedPos > 0) {
+                    val mc = mainCategories[mainCatSelectedPos - 1]
+                    setMainCatId(mc.id!!)
+                    setMainCateName(mc.name!!)
+                    Log.d("MAIN_C", mc.toString())
+                    Log.d("SUB_CAT", mc.subCategories.toString())
+                    if (mc.subCategories != null && mc.subCategories!!.length() > 0) {
+                        subCatPos = 0
+                        loadRpASubCatSpinner(mc)
+                    } else {
+                        subCatSpinner.visibility = View.GONE
+                    }
+                }
+
+            } // to close the onItemSelected
+
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        }
+    }
+
+    fun onSendReportTypeC (view: View) {
+        mainActivityProgressBar.visibility = View.VISIBLE
+        sendReportTypeAFrame.visibility = View.GONE
+        if (!_isValid && subCatValid()) promptUser()
+        else {
+            val user = User(JSONObject(App.prefs.userData))
+
+            val jsonReport = JSONObject()
+            jsonReport.put("title", "Public Space")
+            jsonReport.put("description", this.send_report_type_c_report_details_txt_box.text.toString())
+            jsonReport.put("location", this._location)
+            jsonReport.put("lat", this._lat)
+            jsonReport.put("long", this._long)
+            jsonReport.put("_reporter", user.id)
+            jsonReport.put("mainCategoryName", this._mainCatName)
+            // fix-me
+            // host ID is fix based on unvolunteer reporter
+            jsonReport.put("_host", user.host_id)
+
+            jsonReport.put("_mainCategory", this._mainCatId)
+            jsonReport.put("_reportType", REPORT_TYPE_C_ID)
+
+            jsonReport.put("isUrgent", this._emergencyNotif)
+            jsonReport.put("isInMap", _reportTypeCShowInMap)
+
+            if (user.team_id != null) jsonReport.put("_team", user.team_id)
+
+            var uploadedPhotos = JSONArray()
+
+            if (this._img1 != null) {
+                uploadedPhotos.put(uploadedPhotos.length(), this._img1!!.jsonData)
+            }
+
+            if (this._img2 != null) {
+                uploadedPhotos.put(uploadedPhotos.length(), this._img2!!.jsonData)
+            }
+
+            if (this._img3 != null) {
+                uploadedPhotos.put(uploadedPhotos.length(), this._img3!!.jsonData)
+            }
+
+            jsonReport.put("reportUploadedPhotos", uploadedPhotos)
+
+            Log.d("REPORT_DETAILS", jsonReport.toString())
+
+
+            val chooseTeamActivity = Intent(this, ReportTypeCAddTeamActivity::class.java)
+            chooseTeamActivity.putExtra("REPORT_TYPE_C_DETAILS", jsonReport.toString())
+            startActivity(chooseTeamActivity)
+        }
+
     }
 
 }

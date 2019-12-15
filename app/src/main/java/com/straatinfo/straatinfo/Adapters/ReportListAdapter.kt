@@ -51,7 +51,10 @@ class ReportListAdapter (val context: Context, val reports: MutableList<Report>,
             if (report.attachments != null && report.attachments!!.length() > 0) {
                 val imageJson = report.attachments!![0] as JSONObject
                 val secureUrl = imageJson.getString("secure_url")
-                Picasso.get().load(secureUrl).into(img)
+                Picasso.get().load(secureUrl)
+                    .resize(60, 60)
+                    .centerCrop()
+                    .into(img)
             } else {
                 img.setImageResource(R.drawable.ic_logo)
             }

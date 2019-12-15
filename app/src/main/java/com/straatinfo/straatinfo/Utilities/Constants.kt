@@ -19,6 +19,8 @@ const val FIREBASE_TOKEN_UPDATE = "$BASE_URL/v3/api/auth/firebase"
 const val POST_CODE_API = "$BASE_URL/api/v1/utility/postcode"
 
 // report
+// @TODO need to change this to code instead of ids
+const val REPORT_TYPE_C_ID = "5a7888bb04866e4742f74957"
 const val REPORT_TYPE_B_ID = "5a7888bb04866e4742f74956"
 const val REPORT_TYPE_A_ID = "5a7888bb04866e4742f74955"
 const val REPORT_API = "$BASE_URL/v1/api/report"
@@ -35,6 +37,7 @@ const val GOOGLE_API_KEY = "AIzaSyDuQd44hbjRx-70DSsFUWuAtt2uMe_Hotk"
 // team related
 const val TEAM_API = "$BASE_URL/v1/api/team"
 const val TEAM_LIST = "$BASE_URL/v1/api/team/list/"
+const val TEAM_LIST_V3 = "$BASE_URL/v3/api/teams/list"
 const val TEAM_REQUEST = "$BASE_URL/v1/api/teamInvite/teamRequests/" // param: teamId
 const val TEAM_INFO = "$BASE_URL/v1/api/team/info/" // param: teamId
 const val TEAM_ACCEPT_MEMBER = "$BASE_URL/v1/api/teamInvite/acceptRequest/" // params: userId / teamId

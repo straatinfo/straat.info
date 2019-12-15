@@ -165,6 +165,7 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
                         this.getUnreadCount { a, b, c, team->
                             if (code == "A") this.showBadge(this, bottomNavigation!!, R.id.report_public, a)
                             if (code == "B") this.showBadge(this, bottomNavigation!!, R.id.report_suspicious, b)
+                            if (code == "C") this.showBadge(this, bottomNavigation!!, R.id.report_government, c)
                         }
 
                     }
@@ -184,6 +185,7 @@ class ReportsActivity : AppCompatActivity(), BottomNavigationView.OnNavigationIt
         this.getUnreadCount { a, b, c, team->
             this.showBadge(this, bottomNavigation!!, R.id.report_public, a)
             this.showBadge(this, bottomNavigation!!, R.id.report_suspicious, b)
+            this.showBadge(this, bottomNavigation!!, R.id.report_government, c)
             this.showBadge(this, bottomNavigation!!, R.id.report_chat, team)
         }
 

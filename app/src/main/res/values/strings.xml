@@ -352,4 +352,17 @@
     <string name="report_info_is_public_lbl">Is Public</string>
     <string name="change">Change</string>
     <string name="report_info_change_status_info">Would you like to change status to done?</string>
+    <string name="report_communication">Communication</string>
+    <string name="report_type_c_info">You can send messages to the teams</string>
+    <string name="report_message_with_map">Message with map</string>
+    <string name="send_report_type_c_select_team_info">Please select your gourp(s) to whom you lie to address your
+        message to.
+    </string>
+    <string name="send_report_type_c_confirmation_info">This is a checking page. When everthing is good to you, you can
+        send your message
+    </string>
+    <string name="send_report_type_c_view_input_info">This is a checking page. When everything is good to you, you can send your message.</string>
+    <string name="send_report_type_c_view_input_general_info">General Information</string>
+    <string name="send_report_type_c_view_input_messages">Messages</string>
+    <string name="send_report_type_c_view_input_teams_selected">Your message will be send to the following teams</string>
 </resources>

@@ -126,8 +126,17 @@ object ReportService {
         reportError = null
         val reportTypeA = "5a7888bb04866e4742f74955"
         val reportTypeB = "5a7888bb04866e4742f74956"
+        val reportTypeC = "5a7888bb04866e4742f74957"
 
-        val type = if (reportType == "B") reportTypeB else reportTypeA
+        var type: String
+
+        if (reportType == "B") {
+            type = reportTypeB
+        } else if (reportType == "C") {
+            type = reportTypeC
+        }  else {
+            type = reportTypeA
+        }
 
         val url = "$GET_PUBLIC_REPORT_LIST/?_reporter=$reporterId&_reportType=$type&language=$language"
 

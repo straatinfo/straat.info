@@ -288,12 +288,6 @@ class ReportMessagesActivity : AppCompatActivity() {
         sendMessageBtn.isEnabled = false
 
         if (user.id != null && conversationId != null && text != "" && type != null) {
-//            val alert = AlertDialog.Builder(this)
-//                .setMessage("Sending message")
-//                .setTitle("Info")
-//            alert.show()
-            // this.emitSendMessage(user.id!!, conversationId, reportId, teamId, type, text)
-
             this.broadcastMessage(user.id!!, conversationId, reportId, teamId, text, type) { success ->
                 if (success) {
                     this.reloadMessages()
@@ -309,15 +303,6 @@ class ReportMessagesActivity : AppCompatActivity() {
                 }
             }
         }
-
-//        if (text == "") {
-//            val alert = AlertDialog.Builder(this)
-//                .setMessage("Please complete the form")
-//                .setTitle("Error")
-//            alert.show()
-//        }
-
-//        this.emitSendMessage(user.id!!, conversationId, reportId, teamId, "REPORT", text)
     }
 
     fun Activity.dismissKeyboard () {

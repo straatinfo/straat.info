@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Controllers.ReportTypeCViewInput">
+
+    <TextView
+            android:id="@+id/report_type_c_view_input_info_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/send_report_type_c_view_input_info"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+            android:id="@+id/report_type_c_view_input_general_info_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/send_report_type_c_view_input_general_info"
+            android:textAllCaps="true"
+            app:layout_constraintEnd_toEndOf="@+id/report_type_c_view_input_info_txt"
+            app:layout_constraintStart_toStartOf="@+id/report_type_c_view_input_info_txt"
+            app:layout_constraintTop_toBottomOf="@+id/report_type_c_view_input_info_txt" />
+
+    <EditText
+            android:id="@+id/report_type_c_general_info_input_txt"
+            style="@style/report_input_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:editable="false"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="textPersonName"
+            android:textColorHint="@color/color_blue_dark"
+            app:layout_constraintEnd_toEndOf="@+id/report_type_c_view_input_general_info_txt"
+            app:layout_constraintStart_toStartOf="@+id/report_type_c_view_input_general_info_txt"
+            app:layout_constraintTop_toBottomOf="@+id/report_type_c_view_input_general_info_txt"
+            tools:text="uitnodiging" />
+
+    <TextView
+            android:id="@+id/textView26"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/send_report_type_c_view_input_messages"
+            android:textAllCaps="true"
+            app:layout_constraintEnd_toEndOf="@+id/report_type_c_general_info_input_txt"
+            app:layout_constraintStart_toStartOf="@+id/report_type_c_general_info_input_txt"
+            app:layout_constraintTop_toBottomOf="@+id/report_type_c_general_info_input_txt" />
+
+    <EditText
+            android:id="@+id/report_type_c_view_input_description_txt"
+            style="@style/report_input_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="textPersonName"
+            android:textColorHint="@color/color_blue_dark"
+            app:layout_constraintEnd_toEndOf="@+id/textView26"
+            app:layout_constraintStart_toStartOf="@+id/textView26"
+            app:layout_constraintTop_toBottomOf="@+id/textView26"
+            tools:text="Test text" />
+
+    <TextView
+            android:id="@+id/textView30"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/send_report_type_c_view_input_teams_selected"
+            android:textAllCaps="true"
+            app:layout_constraintEnd_toEndOf="@+id/report_type_c_view_input_description_txt"
+            app:layout_constraintStart_toStartOf="@+id/report_type_c_view_input_description_txt"
+            app:layout_constraintTop_toBottomOf="@+id/report_type_c_view_input_description_txt" />
+
+    <Spinner
+            android:id="@+id/report_type_c_view_input_spinner"
+            style="@style/Platform.Widget.AppCompat.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/send_report_spinner_bg"
+            android:popupBackground="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/textView30"
+            app:layout_constraintStart_toStartOf="@+id/textView30"
+            app:layout_constraintTop_toBottomOf="@+id/textView30" />
+
+    <Button
+            android:id="@+id/button"
+            style="@style/login_button_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="sendReport"
+            android:text="@string/report_send_report"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+            android:id="@+id/button4"
+            style="@style/login_button_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:onClick="back"
+            android:text="@string/back"
+            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintEnd_toEndOf="@+id/button"
+            app:layout_constraintStart_toStartOf="@+id/button" />
+</android.support.constraint.ConstraintLayout>

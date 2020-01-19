@@ -45,11 +45,12 @@
     </Spinner>
 
     <Button
+            android:id="@+id/registration_p3_register_btn"
+            style="@style/login_button_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/login_button_style"
-            android:text="@string/register"
-            android:onClick="register"/>
+            android:onClick="register"
+            android:text="@string/register" />
 
     <TextView
             android:layout_marginTop="@dimen/reg_notes_margin"

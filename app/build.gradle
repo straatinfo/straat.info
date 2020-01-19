@@ -11,8 +11,8 @@ android {
         applicationId 'com.straatinfo.straatinfo'
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 22
-        versionName "2.8.4"
+        versionCode 23
+        versionName "2.8.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         //
     }

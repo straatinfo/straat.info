@@ -306,4 +306,11 @@
     <string name="send_report_type_c_view_input_messages">Berichten</string>
     <string name="send_report_type_c_view_input_teams_selected">Het bericht gaat naar de volgende teams:</string>
     <string name="back">Terug</string>
+    <string name="user_profile_remove_user">Lid verwijderen</string>
+    <string name="user_profile_remove_member">Verwijder teamlid</string>
+    <string name="user_profile_remove_member_info">Info over verwijderen</string>
+    <string name="user_profile_remove_member_confirmation">Weet je zeker dat je dit teamlid wilt verwijderen?</string>
+    <string name="user_profile_member_has_been_removed">Teamlid is succesvol verwijderd</string>
+    <string name="user_proflie_member_has_not_remove">Teamlid is niet verwijderd, probeer het later nog een keer.</string>
+    <string name="team_member">TEAM LID</string>
 </resources>

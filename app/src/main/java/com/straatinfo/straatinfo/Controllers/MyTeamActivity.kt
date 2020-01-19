@@ -56,14 +56,57 @@ class MyTeamActivity : AppCompatActivity(),
             val layoutManager = LinearLayoutManager(this)
             teamListRecyclerView.layoutManager = layoutManager
 
-            if (teamList.count() == 0) {
-                // @TODO if no team seen show an alert dialog
-            } else {
-                // @TODO show add team button
+//            if (teamList.count() == 0) {
+//                // @TODO if no team seen show an alert dialog
+//            } else {
+//                // @TODO show add team button
+//                teamListAddNewTeamBtn.visibility = View.VISIBLE
+//            }
+
+            val user = User()
+            if (user.is_team_leader != null && user.is_team_leader!!) {
                 teamListAddNewTeamBtn.visibility = View.VISIBLE
+            } else {
+                teamListAddNewTeamBtn.visibility = View.GONE
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        this.loadTeamList {
+            adapter = TeamListAdapter(this, teamList) { team ->
+                // do something here
+                val intent = Intent(this, TeamDetailsActivity::class.java)
+                intent.putExtra("TEAM_ID", team.id!!)
+                intent.putExtra("TEAM_NAME", team.name!!)
+                intent.putExtra("TEAM_EMAIL", team.email!!)
+                if (team.profilePic != null) {
+                    intent.putExtra("TEAM_PROFILE_PIC", team.profilePic!!.toString())
+                }
+                startActivity(intent)
+            }
+
+            teamListRecyclerView.adapter = adapter
+            val layoutManager = LinearLayoutManager(this)
+            teamListRecyclerView.layoutManager = layoutManager
+
+//            if (teamList.count() == 0) {
+//                // @TODO if no team seen show an alert dialog
+//            } else {
+//                // @TODO show add team button
+//                teamListAddNewTeamBtn.visibility = View.VISIBLE
+//            }
+
+            val user = User()
+            if (user.is_team_leader != null && user.is_team_leader!!) {
+                teamListAddNewTeamBtn.visibility = View.VISIBLE
+            } else {
+                teamListAddNewTeamBtn.visibility = View.GONE
+            }
+        }
     }
 
     override fun onBackPressed() {

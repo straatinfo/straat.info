@@ -45,6 +45,8 @@ const val TEAM_DECLINE_MEMBER = "$BASE_URL/v1/api/teamInvite/declineRequest/" //
 const val TEAM_CREATE_NEW = "$BASE_URL/v1/api/team/new/" // param: userId
 const val TEAM_REQUEST_COUNT = "$BASE_URL/v3/api/teams/requestCount" // params userId
 const val TEAM_INDIVIDUAL_CHAT = "$BASE_URL/v3/api/teams/chat" // PARAMS teamId, userId
+const val TEAM_MEMBER_API = "$BASE_URL/v3/api/teams/member" // PARAMS teamId, userId
+const val TEAM_LEADER_API = "$BASE_URL/v3/api/teams/leader"
 
 const val EMAL_REGEX = "(?:[a-z0-9!#\$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#\$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
 const val UK_PHONE_REGEX = "^(?:(?:\\(?(?:0(?:0|11)\\)?[\\s-]?\\(?|\\+)44\\)?[\\s-]?(?:\\(?0\\)?[\\s-]?)?)|(?:\\(?0))(?:(?:\\d{5}\\)?[\\s-]?\\d{4,5})|(?:\\d{4}\\)?[\\s-]?(?:\\d{5}|\\d{3}[\\s-]?\\d{3}))|(?:\\d{3}\\)?[\\s-]?\\d{3}[\\s-]?\\d{3,4})|(?:\\d{2}\\)?[\\s-]?\\d{4}[\\s-]?\\d{4}))(?:[\\s-]?(?:x|ext\\.?|\\#)\\d{3,4})?\$"

@@ -213,6 +213,10 @@ class MainActivity : AppCompatActivity(),
             getUnreadCount { count ->
                 showBadge(count)
             }
+
+            getTeamRequestCount {
+
+            }
         }
     }
 

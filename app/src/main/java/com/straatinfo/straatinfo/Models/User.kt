@@ -31,6 +31,7 @@ class User {
     var team_email: String? = null
     var team_is_approved: Boolean? = null
     var team_is_volunteer: Boolean? = null
+    var is_team_leader: Boolean? = null
 
     var host_id: String? = null
     var isVolunteer: Boolean? = null
@@ -135,13 +136,17 @@ class User {
 
         }
 
-        if (userJson.has("_activeTeam")) {
-            val activeTeam = userJson.getJSONObject("_activeTeam")
+        if (userJsonData.has("_activeTeam")) {
+            val activeTeam = userJsonData.getJSONObject("_activeTeam")
             this.team_email = activeTeam.getString("teamEmail")
             this.team_id = activeTeam.getString("_id")
             this.team_name = activeTeam.getString("teamName")
             this.team_is_approved = activeTeam.getBoolean("isApproved")
             this.team_is_volunteer = activeTeam.getBoolean("isVolunteer")
+
+            this.is_team_leader = activeTeam.getBoolean("isLeader")
+
+            Log.d("IS_TEAM_LEADER", is_team_leader.toString())
         }
 
         if (userJsonData.has("_profilePic")) {

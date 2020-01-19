@@ -12,10 +12,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.squareup.picasso.Picasso
 import com.straatinfo.straatinfo.Models.User
 import com.straatinfo.straatinfo.R
@@ -31,6 +28,7 @@ class TeamFormActivity : AppCompatActivity() {
     var CAMERA = 1
     var GALLERY = 2
     var profileImage: Bitmap? = null
+    var buttonClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -291,6 +289,22 @@ class TeamFormActivity : AppCompatActivity() {
     }
 
     fun onCreateTeam (view: View) {
+        var progressBar = findViewById<ProgressBar>(R.id.team_form_pb)
+        var createTeamBtn = findViewById<Button>(R.id.teamFormButtonTxt)
+        if (!buttonClicked) {
+            buttonClicked = true
+            progressBar.visibility = View.VISIBLE
+            createTeamBtn.isEnabled = false
+
+            this.createTeam {
+                buttonClicked = false
+                createTeamBtn.isEnabled = true
+                progressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    fun createTeam (cb: () -> Unit) {
         val user = User(JSONObject(App.prefs.userData))
         val isVolunteer = user.isVolunteer
         Log.d("USER_DATA", App.prefs.userData)
@@ -321,6 +335,9 @@ class TeamFormActivity : AppCompatActivity() {
                             .setMessage(getString(R.string.create_new_team_failed))
                             .setPositiveButton(getString(R.string.ok)) { dialog, which ->
                                 dialog.dismiss()
+                            }
+                            .setOnDismissListener {
+                                cb()
                             }
                     }
                 }

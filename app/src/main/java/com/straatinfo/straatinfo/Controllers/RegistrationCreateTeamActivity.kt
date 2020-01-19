@@ -11,19 +11,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import com.straatinfo.straatinfo.Models.Host
 import com.straatinfo.straatinfo.Models.Media
 import com.straatinfo.straatinfo.Models.Registration
 import com.straatinfo.straatinfo.R
-import com.straatinfo.straatinfo.Services.AuthService
-import com.straatinfo.straatinfo.Services.MediaService
-import com.straatinfo.straatinfo.Services.RegexService
-import com.straatinfo.straatinfo.Services.UtilService
+import com.straatinfo.straatinfo.Services.*
 import com.straatinfo.straatinfo.Utilities.LOCATION_RECORD_CODE
+import com.straatinfo.straatinfo.Utilities.dismissKeyboard
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_registration_create_team.*
 import java.io.IOException
@@ -34,6 +29,7 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
     var CAMERA = 1
     var GALLERY = 2
     lateinit var userInput: Registration
+    var clickable = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +46,12 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
         Log.d("LOADING_INPUT_FROM_CT2", userInput.toJson().toString())
         userInput.saveInput()
         loadRegistrationBtn()
+
+        val registerBtn = findViewById<Button>(R.id.registerFromCreateTeamBtn)
+
+        registerBtn.setSafeOnClickListener {
+            if (clickable) this.register()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -239,11 +241,17 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
         pictureDialog.show()
     }
 
-    fun register (view: View) {
+    fun register () {
+        this.dismissKeyboard()
+        clickable = false
         val teamName = teamNameTxt.text.toString()
         val teamEmail = teamEmailAddressTxt.text.toString()
-
+        val progressBar = findViewById<ProgressBar>(R.id.reg_create_team_pg)
+        val createTeamBtn = findViewById<Button>(R.id.regCreateTeamBtn)
+        createTeamBtn.isEnabled = false
         if (teamEmail != "" && teamName != "" && RegexService.testEmail(teamEmail)) {
+            progressBar.visibility = View.VISIBLE
+
             userInput.teamName = teamName
             userInput.teamEmail = teamEmail
             userInput.password = App.prefs.registrationPassword
@@ -267,6 +275,11 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                             builder
                                 .setTitle(getString(R.string.error))
                                 .setMessage(getString(R.string.registration_generic_error))
+                                .setOnDismissListener {
+                                    clickable = true
+                                    progressBar.visibility = View.GONE
+                                    createTeamBtn.isEnabled = true
+                                }
 
                             builder.create()
                             builder.show()
@@ -275,6 +288,8 @@ class RegistrationCreateTeamActivity : AppCompatActivity() {
                 }
                 .run {  }
         } else {
+            clickable = true
+            createTeamBtn.isEnabled = true
             val error = getString(R.string.error)
             val dialog = UtilService.showDefaultAlert(this, error, getString(R.string.error_fill_up_all_fields))
             dialog.show()

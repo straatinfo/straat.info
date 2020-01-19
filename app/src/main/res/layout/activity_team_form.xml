@@ -67,4 +67,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="8dp" android:layout_marginEnd="8dp" style="@style/registration_button_style"
     />
+
+    <ProgressBar
+            android:id="@+id/team_form_pb"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progressTint="@color/color_blue_dark"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 </android.support.constraint.ConstraintLayout>

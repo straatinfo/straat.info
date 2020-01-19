@@ -429,4 +429,64 @@ object TeamService {
             App.prefs.requestQueue.add(getTeamIndChatRequest)
         }
     }
+
+    fun removeTeamMember (teamId: String, memberId: String): Observable<Boolean> {
+        // this API requires token
+        val url = "$TEAM_MEMBER_API/$teamId/$memberId"
+
+        return Observable.create {
+            val removeTeamMemberRequest = object: JsonObjectRequest(Method.DELETE, url, null, Response.Listener { success ->
+                it.onNext(true)
+            }, Response.ErrorListener { error ->
+                it.onNext(false)
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(removeTeamMemberRequest)
+        }
+    }
+
+    fun getTeamLeader (teamId: String, leaderId: String): Observable<JSONObject> {
+        val url = "$TEAM_LEADER_API/$teamId/$leaderId"
+
+        return Observable.create {
+            val getTeamLeaderRequest = object : JsonObjectRequest(Method.GET, url, null, Response.Listener { success ->
+                if (success.has("teamLeader")) {
+                    val teamLeader = success.getJSONObject("teamLeader")
+                    it.onNext(teamLeader)
+                } else {
+                    it.onNext(JSONObject())
+                }
+            }, Response.ErrorListener { error ->
+                it.onNext(JSONObject())
+            }) {
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
+
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    if (App.prefs.token != "") {
+                        headers.put("Authorization", "Bearer ${App.prefs.token}")
+                    }
+                    return headers
+                }
+            }
+
+            App.prefs.requestQueue.add(getTeamLeaderRequest)
+        }
+    }
 }

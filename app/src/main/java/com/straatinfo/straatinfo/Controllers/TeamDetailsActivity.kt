@@ -38,6 +38,13 @@ class TeamDetailsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        this.loadTeamDetails()
+        this.loadAdapter()
+    }
+
     private fun createConvo (chatee: String?, cb: (Boolean, String?) -> Unit) {
         val user = User()
         val userId = user.id
@@ -59,7 +66,11 @@ class TeamDetailsActivity : AppCompatActivity() {
         var teamId = intent.getStringExtra("TEAM_ID")
         this.loadTeamInfo(teamId) { teamMembers ->
             adapter = TeamMemberListAdapter(this, teamMembers, ({ teamMember: TeamMember ->
-
+                val intent = Intent(this, TeamMemberProfileActivity::class.java)
+                val teamMemberJsonString = teamMember.teamMemberJson.toString()
+                Log.d("TEAM_MEMBER_DETAILS", teamMemberJsonString)
+                intent.putExtra("TEAM_MEMBER", teamMemberJsonString)
+                startActivity(intent)
             }), ({ teamMember ->
                 Log.d("TEAM_CHAT", teamMember.userId)
                 this.createConvo(teamMember.userId) { success, convoId ->
@@ -128,13 +139,9 @@ class TeamDetailsActivity : AppCompatActivity() {
         val userData = User(JSONObject(App.prefs.userData))
 
         for (i in 0 until teamMembersArray.length()) {
-            var teamMember = TeamMember()
+
             var teamJson = teamMembersArray[i] as JSONObject
-            var user = teamJson.getJSONObject("_user")
-            teamMember.userId = user.getString("_id")
-            teamMember.userLname = user.getString("lname")
-            teamMember.userFname = user.getString("fname")
-            teamMember.username = user.getString("username")
+            var teamMember = TeamMember(teamJson)
 
             if (userData.id != teamMember.userId) {
                 teamMembers.add(teamMembers.count(), teamMember)

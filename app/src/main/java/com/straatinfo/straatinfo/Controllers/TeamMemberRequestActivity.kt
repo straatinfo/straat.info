@@ -25,27 +25,16 @@ class TeamMemberRequestActivity : AppCompatActivity() {
 
 
 
-        loadTeamList { teamRequests ->
-            Log.d("TEAM_REQUEST", teamRequests.count().toString())
-            adapter = TeamMemberRequestListAdapter(this, teamRequests, { teamRequest ->
-
-            }, { requestSuccess ->
-                when (requestSuccess) {
-                    true -> {
-                        val intent = Intent(this, MyTeamActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
-                }
-            })
-
-            teamMemberRequestRecyclerView.adapter = adapter
-            val layoutManager = LinearLayoutManager(this)
-            teamMemberRequestRecyclerView.layoutManager = layoutManager
-        }
+        this.getTeamList {  }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        this.getTeamList {  }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -53,12 +42,44 @@ class TeamMemberRequestActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun getTeamList (cb: () -> Unit) {
+        loadTeamList { teamRequests ->
+            Log.d("TEAM_REQUEST", teamRequests.count().toString())
+            if (teamRequests.count() > 0) {
+                adapter = TeamMemberRequestListAdapter(this, teamRequests, { teamRequest ->
+                    val intent = Intent(this, TeamMemberProfileActivity::class.java)
+                    val teamMemberJsonString = teamRequest.teamMemberJson.toString()
+
+                    intent.putExtra("TEAM_MEMBER", teamMemberJsonString)
+                    intent.putExtra("FROM_ACTIVITY", "TEAM_MEMBER_REQUEST_ACTIVITY")
+                    startActivity(intent)
+                }, { requestSuccess ->
+                    when (requestSuccess) {
+                        true -> {
+                            val intent = Intent(this, MyTeamActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+                })
+
+                teamMemberRequestRecyclerView.adapter = adapter
+                val layoutManager = LinearLayoutManager(this)
+                teamMemberRequestRecyclerView.layoutManager = layoutManager
+                cb()
+            } else {
+                finish()
+                cb()
+            }
+        }
+    }
+
     fun loadTeamList (cb: (MutableList<TeamMember>) -> Unit) {
         val teamId = intent.getStringExtra("TEAM_ID")
 
-        Log.d("TEAM_ID", teamId)
 
         if (teamId != null) {
+            Log.d("TEAM_ID", teamId)
             TeamService.getTeamRequests(teamId)
                 .subscribeOn(Schedulers.io())
                 .subscribe { teamRequests ->

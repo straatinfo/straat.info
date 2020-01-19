@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EBEAEA"
+        tools:context=".Controllers.TeamMemberProfileActivity">
+
+    <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/user_profile_decline_team_request_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/profile_frame_layout_container">
+
+                <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <ImageView
+                            android:id="@+id/user_profile_img"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@android:color/darker_gray"
+                            android:scaleType="centerCrop"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_menu_profile" />
+                </android.support.constraint.ConstraintLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/profile_frame_layout_container">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/user_profile_fname_lbl"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/first_name"
+                            android:textColor="@android:color/black" />
+
+                    <EditText
+                            android:id="@+id/user_profile_fname_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="@string/first_name"
+                            android:inputType="textPersonName"
+                            android:selectAllOnFocus="false"
+                            android:textColor="@android:color/black"
+                            tools:text="John" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/profile_frame_layout_container">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/user_profile_lname_lbl"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/last_name"
+                            android:textColor="@android:color/black"
+                            tools:text="@string/last_name" />
+
+                    <EditText
+                            android:id="@+id/user_profile_lname_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="@string/last_name"
+                            android:inputType="textPersonName"
+                            android:selectAllOnFocus="false"
+                            android:textColor="@android:color/black"
+                            tools:text="Doe" />
+                </LinearLayout>
+            </FrameLayout>
+
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/profile_frame_layout_container">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/user_profile_address_lbl"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/address"
+                            android:textColor="@android:color/black" />
+
+                    <EditText
+                            android:id="@+id/user_profile_house_number_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="@string/postal_number"
+                            android:inputType="textPersonName"
+                            android:selectAllOnFocus="false"
+                            android:textColor="@android:color/black"
+                            tools:text="1" />
+
+                    <EditText
+                            android:id="@+id/user_profile_post_code_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="@string/postal_code"
+                            android:inputType="textPersonName"
+                            android:selectAllOnFocus="false"
+                            android:textColor="@android:color/black"
+                            tools:text="2521AA" />
+
+                    <EditText
+                            android:id="@+id/user_profile_street_name_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="@string/street"
+                            android:inputType="textPersonName"
+                            android:selectAllOnFocus="false"
+                            android:textColor="@android:color/black"
+                            tools:text="Calandkade" />
+
+                    <EditText
+                            android:id="@+id/user_profile_city_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="@string/town"
+                            android:inputType="textPersonName"
+                            android:selectAllOnFocus="false"
+                            android:textColor="@android:color/black"
+                            tools:text="'s-Gravenhage" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/profile_frame_layout_container">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/user_profile_personal_info_lbl"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_contact_details"
+                            android:textColor="@android:color/black" />
+
+                    <EditText
+                            android:id="@+id/user_profile_email_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="@string/email_address"
+                            android:inputType="textPersonName"
+                            android:selectAllOnFocus="false"
+                            android:textColor="@android:color/black"
+                            tools:text="johndoe@domain.com" />
+
+                    <EditText
+                            android:id="@+id/user_profile_phone_number_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:hint="@string/mobile_number"
+                            android:inputType="textPersonName"
+                            android:textColor="@android:color/black"
+                            tools:text="0612345678" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/profile_frame_layout_container">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/user_profile_username_lbl"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/username"
+                            android:textColor="@android:color/black" />
+
+                    <EditText
+                            android:id="@+id/user_profile_username_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/profile_edit_text_shape"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="@string/username"
+                            android:inputType="textPersonName"
+                            android:selectAllOnFocus="false"
+                            android:textColor="@android:color/black"
+                            tools:text="test_ID:IZNXA" />
+                </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+            android:id="@+id/user_profile_decline_team_request_btn"
+            style="@style/enter_code_button_cancel_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:onClick="declineRequest"
+            android:text="@string/team_member_request_decline_confirmation_title"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/user_profile_accept_team_request_btn"
+            app:layout_constraintEnd_toEndOf="@+id/user_profile_accept_team_request_btn"
+            app:layout_constraintStart_toStartOf="@+id/user_profile_accept_team_request_btn"
+            tools:visibility="visible" />
+
+    <Button
+            android:id="@+id/user_profile_accept_team_request_btn"
+            style="@style/login_button_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="acceptRequest"
+            android:text="@string/registration_tac_accept"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/user_profile_remove_user_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
+    <Button
+            android:id="@+id/user_profile_remove_user_btn"
+            style="@style/enter_code_button_cancel_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="removeMemberRequest"
+            android:text="@string/user_profile_remove_user"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
+</android.support.constraint.ConstraintLayout>

@@ -70,19 +70,28 @@
 
     </RelativeLayout>
 
+    <ProgressBar
+            android:id="@+id/registration_pb"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foregroundTint="@color/color_blue_dark"
+            android:indeterminateTint="@color/color_blue_dark"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <RelativeLayout
                 android:id="@+id/switchableLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        />
+                android:layout_height="wrap_content" />
 
         <!--<include android:layout_height="wrap_content"-->
-                 <!--android:layout_width="match_parent"-->
-                 <!--layout="@layout/registration_step2"/>-->
+        <!--android:layout_width="match_parent"-->
+        <!--layout="@layout/registration_step2"/>-->
 
     </ScrollView>
 

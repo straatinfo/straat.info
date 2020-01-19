@@ -365,4 +365,11 @@
     <string name="send_report_type_c_view_input_general_info">General Information</string>
     <string name="send_report_type_c_view_input_messages">Messages</string>
     <string name="send_report_type_c_view_input_teams_selected">Your message will be send to the following teams</string>
+    <string name="user_profile_remove_user">Remove User</string>
+    <string name="user_profile_remove_member_info">Removing member info</string>
+    <string name="user_profile_remove_member">Remove Member</string>
+    <string name="user_profile_remove_member_confirmation">Are you sure you want to remove this member?</string>
+    <string name="user_profile_member_has_been_removed">Member has been successfully removed</string>
+    <string name="user_proflie_member_has_not_remove">Member has not been removed, try again later</string>
+    <string name="team_member">TEAM MEMBER</string>
 </resources>

@@ -611,8 +611,11 @@ class RegistrationActivity : AppCompatActivity() {
             teamSelection.setOnCheckedChangeListener{ group, checkedId ->
                 when (group.checkedRadioButtonId) {
                     R.id.joinTeamRb -> {
+                        var progressBar = findViewById<ProgressBar>(R.id.registration_pb)
+                        progressBar.visibility = View.VISIBLE
                         this.loadTeamList {
                             this.loadTeamListSpinner()
+                            progressBar.visibility = View.GONE
                         }
                     }
                     else -> {
@@ -803,6 +806,17 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     fun register (view: View) {
+        var progressBar = findViewById<ProgressBar>(R.id.registration_pb)
+        var btn = findViewById<Button>(R.id.registration_p3_register_btn)
+        progressBar.visibility = View.VISIBLE
+        btn.isEnabled = false
+        this.registerUser {
+            progressBar.visibility = View.GONE
+            btn.isEnabled = true
+        }
+    }
+
+    fun registerUser (cb: () -> Unit) {
         val hostData = App.prefs.hostData
         val host = Host(hostData)
         userInput.hostId = host.id
@@ -829,6 +843,9 @@ class RegistrationActivity : AppCompatActivity() {
                             .setMessage(getString(R.string.registration_generic_error))
                             .setPositiveButton(getString(R.string.ok)) { dialog, i ->
                                 dialog.dismiss()
+                            }
+                            .setOnDismissListener {
+                                cb()
                             }
 
                         builder.create()
